@@ -15,5 +15,9 @@ def create():
 def report():
     return render_template("report.html")
 
+@app.route("/default")
+def create_default():
+    return "Webpage under construction"
+
 if __name__ == "__main__":
     app.run(debug=True)
