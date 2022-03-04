@@ -17,7 +17,7 @@ def report():
 
 @app.route("/default")
 def create_default():
-    return "Webpage under construction"
+    return render_template("default.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
