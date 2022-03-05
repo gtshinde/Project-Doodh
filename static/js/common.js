@@ -4,13 +4,13 @@ document.write(`
 <script src="../static/js/script.js"> </script>
 
 <span style="font-size:30px;cursor:pointer; color:white; " onclick="openNav()">&#9776;</span>
-<h1>PROJECT DOODH</h1>
+<h1>Project Doodh</h1>
 
  <div id="mySidenav" class="sidenav">
   <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
   <a href="report">Report</a>
   <a href="default">Default Milk</a>
-  <a href="#" style="font-size:21px">Change past day milk quantity</a>
-  </div>
+  <a href="create">Change Milk Quantity</a>
+</div>
 `);
 
