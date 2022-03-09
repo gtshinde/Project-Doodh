@@ -1,15 +1,10 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
+{% block head %}
+<link rel="stylesheet" type="text/css" href="../static/css/report_css.css">	
+{% endblock %}
 
-<head>
-	<title>Milk Report</title>
-	<link rel="stylesheet" type="text/css" href="../static/css/report_css.css">
-	<script src="../static/js/common.js"> </script>
-</head>
-<body >
-
-<h1><strong>MILK  REPORT</strong></h1>
-
+{% block content %}
+<h1><strong>Milk Report</strong></h1>
  <table id="customers">
   <tr>
     <th>Date</th>
@@ -59,7 +54,5 @@
     <td>Canada</td>
     <td>Canada</td>
   </tr>
-
 </table>
-</body>
-</html>
+{% endblock %}

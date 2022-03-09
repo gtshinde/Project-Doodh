@@ -1,15 +1,6 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-	<title>Doodh</title>
-	<script src="../static/js/common.js"> </script>
-</head>
-
-<body >
-
+{% extends "base.html" %}
+{% block content %}
 <form action="/action_page.php">
-
   <table class="Tbl">
     <tr>
       <th class="alignh">Cow Milk</th>
@@ -43,11 +34,8 @@
   </table>
   <!--br>
   <br-->
-  
   <br><br>
   
   <input type="submit" value="Submit">
 </form>
-
-</body>
-</html>
+{% endblock %}

@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-	<title>Doodh</title>
-  <script src="../static/js/common.js"> </script>
-</head>
+{% extends "base.html" %}
+{% block content %}
 <style>
 /* The Modal (background) */
 .modal {
@@ -53,7 +48,7 @@
   cursor: pointer;
 }
 </style>
-<body>
+
 <div  id="myModal" class="modal">
   <div class="modal-content">
   <span class="close">&times;</span> 
@@ -94,22 +89,15 @@
       </th>
       </tr>
   </table>
-  <!--br>
-  <br-->
-  
   <br><br>
-  
   <input type="submit" value="Submit">
 </form>
 <script>
 // Get the modal
 var modal = document.getElementById("myModal");
 
-
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
-
-
 
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() {
@@ -123,5 +111,4 @@ window.onclick = function(event) {
   }
 }
 </script>
-</body>
-</html>
+{% endblock %}
