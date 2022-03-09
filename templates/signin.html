@@ -1,9 +1,6 @@
-<!DOCTYPE html>
-<html>
-
-<head>
+{% extends "base.html" %}
+{% block head %}
   <title>Doodh</title>
-  <script src="../static/js/common.js"> </script>
    <meta name="google-signin-client_id"
   content="619500584057-gk7d4vh5v052kek376h4o64s7hbcafoe.apps.googleusercontent.com">
   <script src="https://apis.google.com/js/platform.js" async defer></script>
@@ -30,9 +27,9 @@ height: 115px;
   }
   
 </style>
-</head>
+{% endblock %}
 
-<body >
+{% block content %}
 <div class="bg-image"></div>
 <div id="usrname"></div>
 
@@ -75,14 +72,11 @@ height: 115px;
   document.querySelector('#usrname').innerText="Hello  "+googleUser.getBasicProfile().getGivenName()+"!";
 }
 
-
   function signOut() {
     var auth2 = gapi.auth2.getAuthInstance();
     auth2.signOut().then(function () {
       console.log('User signed out.');
     });
   }
-
 </script>
-</body>
-</html>
+{% endblock %}
