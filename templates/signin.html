@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Doodh</title>
+  <script src="../static/js/common.js"> </script>
+   <meta name="google-signin-client_id"
+  content="619500584057-gk7d4vh5v052kek376h4o64s7hbcafoe.apps.googleusercontent.com">
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <style>
+  .googlebtn{
+    position: absolute;
+    bottom: 25px;
+    left: 40%;
+    top: 80%;
+  }
+  #usrname{
+    display: block;
+    height: 40px;
+    color:white;
+    font-size: 35px;
+    position: absolute;
+    top:10%;
+    right:2%;
+  }
+  #lowerbox{
+font-size:20px; 
+border-top: 1px solid white;
+height: 115px;
+  }
+  
+</style>
+</head>
+
+<body >
+<div class="bg-image"></div>
+<div id="usrname"></div>
+
+</div>
+<div class="bg-text">
+<form action="/action_page.php">
+
+ <input type="text" name="Username" placeholder="Username" style="position: relative; top: 50%;">
+ <br>
+ <input type="text" name="Password" placeholder="Password">
+  <!--br-->
+  <br>
+   <input type="submit" value="Login" style="width:60%">
+  <br>
+
+<div id="lowerbox">
+  <p>_______OR_______</p>
+  
+ <div class="googlebtn">
+<div style="margin-right: 30px;" class="g-signin2" data-onsuccess="onSignIn"></div>
+</div>
+</div>
+</form>
+</div>
+<script>
+  // function onSignIn(googleUser){
+    // document.querySelector('#Username').innerText=googleUser.getBasicProfile().getGivenName();
+
+  //   var Profile= googleUser.getBasicProfile();
+  //   $("#usrname").text(Profile.getName());
+  // }
+  function onSignIn(googleUser) {
+  var profile = googleUser.getBasicProfile();
+  console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+  console.log('Name: ' + profile.getName());
+  console.log('Image URL: ' + profile.getImageUrl());
+  console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+
+  location.replace("http://localhost:5000")
+  document.querySelector('#usrname').innerText="Hello  "+googleUser.getBasicProfile().getGivenName()+"!";
+}
+
+
+  function signOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      console.log('User signed out.');
+    });
+  }
+
+</script>
+</body>
+</html>
