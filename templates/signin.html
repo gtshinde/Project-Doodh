@@ -1,6 +1,10 @@
-{% extends "base.html" %}
-{% block head %}
+<!DOCTYPE html>
+<html>
+
+<head>
   <title>Doodh</title>
+   <link rel="icon" type="image/x-icon" href="../static/images/milk_1.png">
+    <link rel="stylesheet" type="text/css" href="../static/css/home_css.css">
    <meta name="google-signin-client_id"
   content="619500584057-gk7d4vh5v052kek376h4o64s7hbcafoe.apps.googleusercontent.com">
   <script src="https://apis.google.com/js/platform.js" async defer></script>
@@ -27,13 +31,14 @@ height: 115px;
   }
   
 </style>
-{% endblock %}
+</head>
 
-{% block content %}
+<body >
+
 <div class="bg-image"></div>
 <div id="usrname"></div>
 
-</div>
+<button style="float:right;" onclick="signOut();">Sign out</button>
 <div class="bg-text">
 <form action="/action_page.php">
 
@@ -55,12 +60,7 @@ height: 115px;
 </form>
 </div>
 <script>
-  // function onSignIn(googleUser){
-    // document.querySelector('#Username').innerText=googleUser.getBasicProfile().getGivenName();
 
-  //   var Profile= googleUser.getBasicProfile();
-  //   $("#usrname").text(Profile.getName());
-  // }
   function onSignIn(googleUser) {
   var profile = googleUser.getBasicProfile();
   console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
@@ -77,6 +77,9 @@ height: 115px;
     auth2.signOut().then(function () {
       console.log('User signed out.');
     });
+    location.replace("http://localhost:5000/signin")
   }
 </script>
-{% endblock %}
+
+</body>
+</html>
