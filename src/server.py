@@ -27,10 +27,12 @@ def items():
         item_name = request.form.get("ItemName")
         item_price = request.form.get("ItemPrice")
         connection.insert_into_items(item_name, item_price)
-        return "Added into the database! (Hopefully)"
+        submitted = "Yes"
+        return render_template("admin.html", submitted=submitted)
     # item = connection.connect()
     # return (str(item))
-    return render_template("admin.html")
+    submitted = "No"
+    return render_template("admin.html", submitted=submitted)
 
 @app.route("/signin")
 def signin():
