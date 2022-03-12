@@ -1,6 +1,4 @@
-from multiprocessing import connection
-from sqlite3 import connect
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, request, url_for
 import connection
 
 
@@ -23,10 +21,16 @@ def report():
 def create_default():
     return render_template("default.html")
 
-@app.route("/items")
+@app.route("/items", methods = ["GET", "POST"])
 def items():
-    (item, price) = connection.connect()
-    return (str(item)+str(price))
+    if(request.method == "POST"):
+        item_name = request.form.get("ItemName")
+        item_price = request.form.get("ItemPrice")
+        connection.insert_into_items(item_name, item_price)
+        return "Added into the database! (Hopefully)"
+    # item = connection.connect()
+    # return (str(item))
+    return render_template("admin.html")
 
 @app.route("/signin")
 def signin():

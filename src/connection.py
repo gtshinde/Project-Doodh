@@ -1,19 +1,31 @@
-import cx_Oracle
+import os
+import psycopg2
+
 def connect():
-    cx_Oracle.init_oracle_client(lib_dir=r"C:\Users\gshinde\Downloads\instantclient-basic-windows.x64-19.9.0.0.0dbru\instantclient_19_9")
-    #constr="sys/SYS1234@localhost:1521/xepdb1"
+    conn = psycopg2.connect(
+        host="localhost",
+        database="postgres",
+        user='postgres',
+        password='postgres')
 
-    conn = cx_Oracle.connect(user="sys", password="SYS1234",
-                                dsn="localhost/xepdb1",
-                                mode=cx_Oracle.SYSDBA, encoding="UTF-8")
+    # Open a cursor to perform database operations
+    # cur = conn.cursor()
+    # sqlTxt='SELECT Item_Type FROM ITEMS'
+    # cur.execute(sqlTxt)
+    # # print(cur.execute(sqlTxt))
+    # item_name = cur.fetchone()
+    # cur.close()
+    # conn.close()
+    # return item_name
+    
+    return conn
 
-    #conn=cx_Oracle.connect(constr)
-
-    cur=conn.cursor()
-    sqlTxt='SELECT Item_Type, Price FROM ITEMS'
-    cur.execute(sqlTxt)
-    # print(cur.execute(sqlTxt))
-    (item_name, price) = cur.fetchone()
+def insert_into_items(item_type, item_price):
+    conn = connect()
+    cur = conn.cursor()
+    sql_txt="""INSERT INTO ITEMS (Item_ID,Item_Type,Price, created_date, last_updated_date) 
+                VALUES (nextval('item_id_seq'),'"""+str(item_type)+"""','"""+str(item_price)+"""', current_date, current_date);"""
+    cur.execute(sql_txt)
+    conn.commit()
     cur.close()
     conn.close()
-    return (item_name, price)
