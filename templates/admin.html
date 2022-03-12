@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form action="/items" method="POST">
+  <table class="Tbl">
+    <tr>
+      <th style="font-size:70%;">Item Name</th>
+      <th>
+        <input type="text" name="ItemName">
+      </th>
+      </tr>
+      <br>
+      <tr>
+      <th style="font-size:70%;">Item Price</th>
+      <th>
+         <input type="text" name="ItemPrice">
+      </th>
+      </tr>
+  </table>
+  <!--br>
+  <br-->
+  
+  <br><br>
+  
+  <input type="submit" value="Submit" class="submitbutton">
+</form>
+
+{% endblock %}
