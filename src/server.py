@@ -1,3 +1,4 @@
+from operator import methodcaller
 from flask import Flask, render_template, redirect, request, url_for
 import connection
 
@@ -9,8 +10,20 @@ def redirect_to_create():
     return redirect(url_for("create"))
     # this will redirect to the create() python function
 
-@app.route("/create")
+@app.route("/create",methods = ["GET", "POST"])
 def create():
+    if (request.method == "POST"):
+        item_id = 1
+        item_qty = request.form.get("cm")
+        if (item_qty != '0.0'):
+            connection.insert_into_change(item_id, item_qty)  
+        item_id = 2
+        item_qty = request.form.get("bm")
+        if (item_qty != '0.0'):
+            connection.insert_into_change(item_id, item_qty)  
+        submitted = "Yes"
+        return render_template("create.html", submitted=submitted)
+    submitted = "No"            
     return render_template("create.html")
 
 @app.route("/report")

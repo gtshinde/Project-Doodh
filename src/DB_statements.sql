@@ -76,7 +76,7 @@ create table Change_Details (
 Change_ID INTEGER PRIMARY KEY,
 Change_DATE DATE,
 Item_ID INTEGER,
-QTY INTEGER,
+QTY FLOAT,
 User_ID INTEGER
 );
 
@@ -87,10 +87,13 @@ CREATE SEQUENCE Default_ID START WITH 1000;
 create table Default_Details (
 Default_ID INTEGER PRIMARY KEY,
 Item_ID INTEGER,
-Qty  INTEGER,
+Qty  FLOAT,
 User_ID INTEGER,
 Created_Date DATE,
 Last_Updated_Date DATE
 );
 
 SELECT * FROM Default_Details
+
+ALTER TABLE Change_Details
+ALTER COLUMN QTY TYPE FLOAT;
