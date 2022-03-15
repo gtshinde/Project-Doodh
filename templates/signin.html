@@ -15,30 +15,19 @@
     left: 40%;
     top: 80%;
   }
-  #usrname{
-    display: block;
-    height: 40px;
-    color:white;
-    font-size: 35px;
-    position: absolute;
-    top:10%;
-    right:2%;
-  }
   #lowerbox{
-font-size:20px; 
-border-top: 1px solid white;
-height: 115px;
+    font-size:20px; 
+    border-top: 1px solid white;
+    height: 115px;
   }
-  
-</style>
+  </style>
 </head>
 
 <body >
 
 <div class="bg-image"></div>
-<div id="usrname"></div>
 
-<button style="float:right;" onclick="signOut();">Sign out</button>
+<h1>Project Doodh</h1>
 <div class="bg-text">
 <form action="/action_page.php">
 
@@ -69,16 +58,8 @@ height: 115px;
   console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
 
   location.replace("http://localhost:5000/signin-success/Google/"+profile.getEmail()+"/"+profile.getName())
-  document.querySelector('#usrname').innerText="Hello  "+googleUser.getBasicProfile().getGivenName()+"!";
+  // document.querySelector('#usrname').innerText="Hello  "+googleUser.getBasicProfile().getGivenName()+"!";
 }
-
-  function signOut() {
-    var auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(function () {
-      console.log('User signed out.');
-    });
-    location.replace("http://localhost:5000/signin")
-  }
 </script>
 
 </body>
