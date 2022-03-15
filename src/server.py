@@ -7,8 +7,8 @@ app = Flask(__name__, template_folder='../templates', static_folder="../static")
 
 @app.route("/")
 def redirect_to_create():
-    return redirect(url_for("create"))
-    # this will redirect to the create() python function
+    return redirect(url_for("signin"))
+    # this will redirect to the signin() python function
 
 @app.route("/create",methods = ["GET", "POST"])
 def create():
@@ -50,6 +50,11 @@ def items():
 @app.route("/signin")
 def signin():
     return render_template("signin.html")
+
+@app.route("/signin-success/<social_media_platform>/<user_email>/<user_name>")
+def signin_success(social_media_platform, user_email, user_name):
+    connection.insert_users(user_email, user_name, social_media_platform)
+    return redirect(url_for("create"))
 
 if __name__ == "__main__":
     app.run(debug=True)
