@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="icon" type="image/x-icon" href="../static/images/milk_1.png">
-        <link rel="stylesheet" type="text/css" href="../static/css/home_css.css">
+        <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='images/milk_1.png')}}">
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/home_css.css')}}">
         <script src="../static/js/script.js"> </script>
          <meta name="google-signin-client_id"
           content="619500584057-gk7d4vh5v052kek376h4o64s7hbcafoe.apps.googleusercontent.com">
@@ -29,9 +29,9 @@
         <button style="float:right;" onclick="signOut();">Sign out</button>
         <div id="mySidenav" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <a href="report">Report</a>
-            <a href="default">Default Milk</a>
-            <a href="create">Change Milk Quantity</a>
+            <a href="{{url_for('report')}}">Report</a>
+            <a href="{{url_for('create_default')}}">Default Milk</a>
+            <a href="{{url_for('create')}}">Change Milk Quantity</a>
         </div>
          {% block content %}
         {% endblock %}
