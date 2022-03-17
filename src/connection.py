@@ -52,12 +52,13 @@ def insert_into_change(item_id, item_qty):
     cur.execute(get_records)
     count = cur.fetchone()[0]
     print('count is ', count)
-    sql_txt_insert="""INSERT INTO Change_Details (Change_ID,Item_ID,Change_DATE,qty) 
-                VALUES (nextval('Change_ID'),'"""+str(item_id)+"""',current_date,'"""+str(item_qty)+"""');"""
-    sql_txt_update="""UPDATE Change_Details SET QTY="""+str(item_qty)+""" WHERE ITEM_ID="""+str(item_id)+"""AND Change_DATE=current_date;"""
+    
     if  count > 0 :
+        sql_txt_update="""UPDATE Change_Details SET QTY="""+str(item_qty)+""" WHERE ITEM_ID="""+str(item_id)+"""AND Change_DATE=current_date;"""
         cur.execute(sql_txt_update)
     else:
+        sql_txt_insert="""INSERT INTO Change_Details (Change_ID,Item_ID,Change_DATE,qty) 
+                VALUES (nextval('Change_ID'),'"""+str(item_id)+"""',current_date,'"""+str(item_qty)+"""');"""
         cur.execute(sql_txt_insert)
     conn.commit()
     cur.close()
