@@ -56,5 +56,9 @@ def signin_success(social_media_platform, user_email, user_name):
     connection.insert_users(user_email, user_name, social_media_platform)
     return redirect(url_for("create"))
 
+@app.route("/signup")
+def signup():
+    return render_template("signup.html")
+
 if __name__ == "__main__":
     app.run(debug=True)
