@@ -26,7 +26,7 @@ POSTGRES DB
 create table items (
 Item_ID integer PRIMARY KEY,
 Item_Type VARCHAR(100),
-Item_UOM VARCHAR(20),
+-- Item_UOM VARCHAR(20),
 Price   integer, 
 Effective_From  DATE,
 Effective_To DATE,
