@@ -98,9 +98,11 @@ SELECT * FROM Default_Details
 ALTER TABLE Change_Details
 ALTER COLUMN QTY TYPE FLOAT;
 
-ALTER TABLE default_details
+ALTER TABLE users
     RENAME Social_Media_Username TO social_media_email;
 
 ALTER TABLE default_details
     ADD COLUMN Effective_From DATE,
     ADD COLUMN Effective_To DATE;
+	
+commit;
