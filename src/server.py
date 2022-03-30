@@ -1,5 +1,5 @@
 # from operator import methodcaller
-from crypt import methods
+# from crypt import methods
 from flask import Flask, render_template, redirect, request, url_for
 import connection
 
@@ -34,17 +34,21 @@ def report():
 @app.route("/default", methods=["GET", "POST"])
 def create_default():
     if(request.method == "POST"):
+        postInfo = request.get_json()
+        print(postInfo)
         # userEmailID = request.form.get("userEmailID")
         item_id = 1
-        item_qty = request.form.get("cm")
+        # item_qty = request.form.get("cm")
+        item_qty = postInfo['cmQty']
         if(item_qty != '0.0'):
             # connection.insert_into_default(item_id, item_qty, userEmailID)
-            print('connection.insert_into_default(item_id, item_qty, userEmailID)')
+            print('connection.insert_into_default(1, '+str(item_qty)+', '+str(postInfo))
         item_id = 2
-        item_qty = request.form.get("bm")
+        # item_qty = request.form.get("bm")
+        item_qty = postInfo['bmQty']
         if (item_qty != '0.0'):
             # connection.insert_into_default(item_id, item_qty, userEmailID)  
-            print('connection.insert_into_default(item_id, item_qty, userEmailID)')
+            print('connection.insert_into_default(2, '+str(item_qty)+', '+str(postInfo))
     return render_template("default.html")
 
 @app.route("/items", methods = ["GET", "POST"])

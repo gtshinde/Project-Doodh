@@ -4,6 +4,7 @@
         <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='images/milk_1.png')}}">
         <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/home_css.css')}}">
         <script src="../static/js/script.js"> </script>
+        
          <meta name="google-signin-client_id"
           content="619500584057-gk7d4vh5v052kek376h4o64s7hbcafoe.apps.googleusercontent.com">
           <script src="https://apis.google.com/js/platform.js" async defer></script>
@@ -25,6 +26,7 @@
         <span style="font-size:30px;cursor:pointer; color:white; " onclick="openNav()">&#9776;</span>
         <h1>Project Doodh</h1>
         <div id="usrname"></div>
+        <div id="emailID" style="display: none;"></div>
         <div style="display: none;" class="g-signin2" data-onsuccess="onSignIn"></div>
         <button style="float:right;" onclick="signOut();">Sign out</button>
         <div id="mySidenav" class="sidenav">
@@ -44,7 +46,8 @@
           console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
 
           // location.replace("http://localhost:5000")
-          document.querySelector('#usrname').innerText="Hello  "+googleUser.getBasicProfile().getGivenName()+"!";
+          document.querySelector('#usrname').innerText="Hello  "+googleUser.getBasicProfile().getGivenName()+" !";
+          document.querySelector('#emailID').innerText=String(profile.getEmail());
         }
 
           function signOut() {
