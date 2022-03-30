@@ -65,23 +65,28 @@ def insert_into_change(item_id, item_qty):
     cur.close()
     conn.close()
 
-def insert_into_default(item_id, item_qty, userEmailID):
+def insert_into_default(item_id, item_qty, userEmailID, effDateFrom):
     conn = connect()
     cur = conn.cursor()
     get_records = """SELECT COUNT(1) FROM default_details 
                         WHERE item_id= '"""+str(item_id)+"""'
-                        AND user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(userEmailID)+"""');"""
+                        AND user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(userEmailID)+"""')
+                        AND Effective_From = TO_DATE('"""+str(effDateFrom)+"""','YYYY-MM-DD');"""
     cur.execute(get_records)
     count = cur.fetchone()[0]
     print('Count is ', count)
     if (count > 0):
-        sql_txt_update = """UPDATE default_details SET qty = '"""+str(item_qty)+"""', last_modified_date = current_date
+        sql_txt_update = """UPDATE default_details SET qty = '"""+str(item_qty)+"""', last_updated_date = current_date
                                 WHERE item_id = '"""+str(item_id)+"""' 
-                                    AND user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(userEmailID)+"""');"""
+                                    AND user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(userEmailID)+"""')
+                                    AND Effective_From = TO_DATE('"""+str(effDateFrom)+"""','YYYY-MM-DD');"""
         cur.execute(sql_txt_update)
     else:
-        sql_txt_insert="""INSERT INTO default_details (default_id, item_id, qty, user_id, created_date, last_updated_date) 
-                            VALUES (nextval('default_id'),'"""+str(item_id)+"""','"""+str(item_qty)+"""', (SELECT user_id FROM users WHERE social_media_email = '"""+str(userEmailID)+"""'), current_date, current_date);"""
+        # sql_txt_prev_update = """UPDATE default_details SET effective_to = 1 - TO_DATE('+"""+str(effDateFrom)+"""', 'YYYY-MM-DD')
+        
+        # """
+        sql_txt_insert="""INSERT INTO default_details (default_id, item_id, qty, user_id, created_date, last_updated_date,Effective_From) 
+                            VALUES (nextval('default_id'),'"""+str(item_id)+"""','"""+str(item_qty)+"""', (SELECT user_id FROM users WHERE social_media_email = '"""+str(userEmailID)+"""'), current_date, current_date,TO_DATE('"""+str(effDateFrom)+"""','YYYY-MM-DD'));"""
         cur.execute(sql_txt_insert)
     conn.commit()
     cur.close()

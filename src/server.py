@@ -37,18 +37,19 @@ def create_default():
         postInfo = request.get_json()
         print(postInfo)
         userEmailID = postInfo['emailID']
+        effDateFrom = postInfo['effDateFrom']
         item_id = 1
         # item_qty = request.form.get("cm")
         item_qty = postInfo['cmQty']
         if(item_qty != '0.0'):
-            connection.insert_into_default(item_id, item_qty, userEmailID)
-            print('connection.insert_into_default(1, '+str(item_qty)+', '+str(postInfo))
+            connection.insert_into_default(item_id, item_qty, userEmailID,effDateFrom)
+            print('connection.insert_into_default(1, '+str(item_qty)+', '+str(postInfo)+', '+str(effDateFrom))
         item_id = 2
         # item_qty = request.form.get("bm")
         item_qty = postInfo['bmQty']
         if (item_qty != '0.0'):
-            connection.insert_into_default(item_id, item_qty, userEmailID)  
-            print('connection.insert_into_default(2, '+str(item_qty)+', '+str(postInfo))
+            connection.insert_into_default(item_id, item_qty, userEmailID,effDateFrom)
+            print('connection.insert_into_default(2, '+str(item_qty)+', '+str(postInfo)+', '+str(effDateFrom))
     return render_template("default.html")
 
 @app.route("/items", methods = ["GET", "POST"])

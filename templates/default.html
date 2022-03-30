@@ -47,7 +47,7 @@
       <tr>
         <th class="alignh">Effective From</th>
         <th>
-          <input type="date" name="effectiveFrom">
+          <input type="date" name="effectiveFrom" id="effectiveFrom">
           <!-- here have to put a calendar -->
         </th>
       </tr>
@@ -81,13 +81,15 @@ function getEmailID(){
 }
 function onsubmitfunc(){
  var emailstr = document.getElementById("emailID").innerText;
- var username = emailstr.trim();
+ var username = emailstr.trim();  
+ var effectiveDate = String(document.getElementById("effectiveFrom").value);
 // let emailID = $("#usrname").html();
 // let cmQty = $('#cm').html()
 // let bmQty = $('#bm').html()
 var defaultData = {emailID: username ,
             cmQty: (document.getElementById("cm")).value,
             bmQty: (document.getElementById("bm")).value,
+            effDateFrom: effectiveDate
           }
 $.ajax({
     type: 'post',
