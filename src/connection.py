@@ -63,3 +63,24 @@ def insert_into_change(item_id, item_qty):
     conn.commit()
     cur.close()
     conn.close()
+
+def insert_into_default(item_id, item_qty, userEmailID):
+    conn = connect()
+    cur = conn.cursor()
+    get_records = """SELECT COUNT(1) FROM default_details 
+                        WHERE item_id= '"""+str(item_id)+"""'
+                        AND qty = '"""+str(item_qty)+"""'
+                        AND user_id = (SELECT user_id FROM users WHERE social_media_username = '"""+str(userEmailID)+"""' """
+    cur.execute(get_records)
+    count = cur.fetchone()[0]
+    print('Count is ', count)
+    if (count > 0):
+        sql_txt_update="""UPDATE default_details SET qty="""+str(item_qty)+""" WHERE item_id="""+str(item_id)+"""AND Change_DATE=current_date;"""
+        cur.execute(sql_txt_update)
+    else:
+        sql_txt_insert="""INSERT INTO default_details (Change_ID,Item_ID,Change_DATE,qty) 
+                VALUES (nextval('Change_ID'),'"""+str(item_id)+"""',current_date,'"""+str(item_qty)+"""');"""
+        cur.execute(sql_txt_insert)
+    conn.commit()
+    cur.close()
+    conn.close()

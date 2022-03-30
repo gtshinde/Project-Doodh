@@ -1,4 +1,5 @@
-from operator import methodcaller
+# from operator import methodcaller
+from crypt import methods
 from flask import Flask, render_template, redirect, request, url_for
 import connection
 
@@ -30,8 +31,20 @@ def create():
 def report():
     return render_template("report.html")
 
-@app.route("/default")
+@app.route("/default", methods=["GET", "POST"])
 def create_default():
+    if(request.method == "POST"):
+        # userEmailID = request.form.get("userEmailID")
+        item_id = 1
+        item_qty = request.form.get("cm")
+        if(item_qty != '0.0'):
+            # connection.insert_into_default(item_id, item_qty, userEmailID)
+            print('connection.insert_into_default(item_id, item_qty, userEmailID)')
+        item_id = 2
+        item_qty = request.form.get("bm")
+        if (item_qty != '0.0'):
+            # connection.insert_into_default(item_id, item_qty, userEmailID)  
+            print('connection.insert_into_default(item_id, item_qty, userEmailID)')
     return render_template("default.html")
 
 @app.route("/items", methods = ["GET", "POST"])
