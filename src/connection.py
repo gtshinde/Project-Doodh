@@ -70,18 +70,18 @@ def insert_into_default(item_id, item_qty, userEmailID):
     cur = conn.cursor()
     get_records = """SELECT COUNT(1) FROM default_details 
                         WHERE item_id= '"""+str(item_id)+"""'
-                        AND user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(userEmailID)+"""';"""
+                        AND user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(userEmailID)+"""');"""
     cur.execute(get_records)
     count = cur.fetchone()[0]
     print('Count is ', count)
     if (count > 0):
         sql_txt_update = """UPDATE default_details SET qty = '"""+str(item_qty)+"""', last_modified_date = current_date
                                 WHERE item_id = '"""+str(item_id)+"""' 
-                                    AND user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(userEmailID)+"""';"""
+                                    AND user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(userEmailID)+"""');"""
         cur.execute(sql_txt_update)
     else:
         sql_txt_insert="""INSERT INTO default_details (default_id, item_id, qty, user_id, created_date, last_updated_date) 
-                            VALUES (nextval('default_id'),'"""+str(item_id)+"""','"""+str(item_qty)+"""', (SELECT user_id FROM users WHERE social_media_email = ')"""+str(userEmailID)+""", current_date, current_date);"""
+                            VALUES (nextval('default_id'),'"""+str(item_id)+"""','"""+str(item_qty)+"""', (SELECT user_id FROM users WHERE social_media_email = '"""+str(userEmailID)+"""'), current_date, current_date);"""
         cur.execute(sql_txt_insert)
     conn.commit()
     cur.close()
