@@ -97,3 +97,6 @@ SELECT * FROM Default_Details
 
 ALTER TABLE Change_Details
 ALTER COLUMN QTY TYPE FLOAT;
+
+ALTER TABLE default_details
+    RENAME Social_Media_Username TO social_media_email
