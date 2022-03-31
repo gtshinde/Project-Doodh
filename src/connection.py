@@ -82,9 +82,11 @@ def insert_into_default(item_id, item_qty, userEmailID, effDateFrom):
                                     AND Effective_From = TO_DATE('"""+str(effDateFrom)+"""','YYYY-MM-DD');"""
         cur.execute(sql_txt_update)
     else:
-        # sql_txt_prev_update = """UPDATE default_details SET effective_to = 1 - TO_DATE('+"""+str(effDateFrom)+"""', 'YYYY-MM-DD')
-        
-        # """
+        sql_txt_prev_update = """UPDATE default_details SET effective_to = TO_DATE('+"""+str(effDateFrom)+"""', 'YYYY-MM-DD') - 1
+                                    WHERE item_id = '"""+str(item_id)+"""'
+                                        AND user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(userEmailID)+"""')
+                                        AND effective_to IS NULL;"""
+        cur.execute(sql_txt_prev_update)
         sql_txt_insert="""INSERT INTO default_details (default_id, item_id, qty, user_id, created_date, last_updated_date,Effective_From) 
                             VALUES (nextval('default_id'),'"""+str(item_id)+"""','"""+str(item_qty)+"""', (SELECT user_id FROM users WHERE social_media_email = '"""+str(userEmailID)+"""'), current_date, current_date,TO_DATE('"""+str(effDateFrom)+"""','YYYY-MM-DD'));"""
         cur.execute(sql_txt_insert)
