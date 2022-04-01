@@ -3,6 +3,7 @@
 from flask import Flask, render_template, redirect, request, url_for
 import connection
 
+is_admin = False
 
 app = Flask(__name__, template_folder='../templates', static_folder="../static")
 
@@ -13,6 +14,7 @@ def redirect_to_create():
 
 @app.route("/create",methods = ["GET", "POST"])
 def create():
+    global is_admin
     if (request.method == "POST"):
         item_id = 1
         item_qty = request.form.get("cm")
@@ -23,9 +25,10 @@ def create():
         if (item_qty != '0.0'):
             connection.insert_into_change(item_id, item_qty)  
         submitted = "Yes"
-        return render_template("create.html", submitted=submitted)
-    submitted = "No"            
-    return render_template("create.html")
+        return render_template("create.html", submitted=submitted, is_admin=is_admin)
+    submitted = "No" 
+    print(str(is_admin)+' before create')           
+    return render_template("create.html",is_admin=is_admin)
 
 @app.route("/report")
 def report():
@@ -67,12 +70,19 @@ def items():
 
 @app.route("/signin")
 def signin():
+    global is_admin 
+    is_admin = False
     return render_template("signin.html")
 
 @app.route("/signin-success/<social_media_platform>/<user_email>/<user_name>")
 def signin_success(social_media_platform, user_email, user_name):
+    global is_admin
     connection.insert_users(user_email, user_name, social_media_platform)
+    # return redirect(url_for("create"))
+    is_admin = connection.is_admin(user_email)
+    print(is_admin) 
     return redirect(url_for("create"))
+    # return render_template("create.html",isadmin=isadmin)
 
 @app.route("/signup")
 def signup():

@@ -35,6 +35,18 @@ def insert_users(user_email, user_name, social_media_platform):
     cur.close()
     conn.close()
 
+def is_admin(user_email):
+    conn = connect()
+    cur = conn.cursor()
+    sql_txt = "SELECT Is_Admin FROM users WHERE social_media_email = '"+str(user_email)+"';" 
+    cur.execute(sql_txt)  
+    v_is_admin = cur.fetchone()[0]
+    print(v_is_admin) 
+    conn.commit()
+    cur.close()
+    conn.close() 
+    return v_is_admin
+
 def insert_into_items(item_type, item_price):
     conn = connect()
     cur = conn.cursor()
