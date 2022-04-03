@@ -1,5 +1,6 @@
 # from operator import methodcaller
 # from crypt import methods
+from re import sub
 from flask import Flask, render_template, redirect, request, url_for
 import connection
 
@@ -60,7 +61,14 @@ def items():
     if(request.method == "POST"):
         item_name = request.form.get("ItemName")
         item_price = request.form.get("ItemPrice")
-        connection.insert_into_items(item_name, item_price)
+        try:
+            connection.insert_into_items(item_name, item_price)
+        except Exception as e:
+            submitted = "No"
+            display_error_message = """We were unable to enter the item to the database. 
+                                    Error details:
+                                    """+str(e.__str__)
+            render_template("admin.html", submitted=submitted, display_error_message=display_error_message)
         submitted = "Yes"
         return render_template("admin.html", submitted=submitted, is_admin=is_admin)
     # item = connection.connect()

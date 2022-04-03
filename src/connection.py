@@ -1,24 +1,28 @@
-import os
 import psycopg2
 
 def connect():
-    conn = psycopg2.connect(
-        host="localhost",
-        database="postgres",
-        user='postgres',
-        password='postgres')
+    try:
+        conn = psycopg2.connect(
+            host="localhost",
+            database="postgres",
+            user='postgres',
+            password='postgres')
+        return conn
+    except psycopg2.Error as e:
+        print("Error in connecting to PostgreSQL database")
+        print("Eror Code: "+str(e.pgcode))
+        print(e.pgerror)
+        raise e
 
-    # Open a cursor to perform database operations
-    # cur = conn.cursor()
-    # sqlTxt='SELECT Item_Type FROM ITEMS'
-    # cur.execute(sqlTxt)
-    # # print(cur.execute(sqlTxt))
-    # item_name = cur.fetchone()
-    # cur.close()
-    # conn.close()
-    # return item_name
+    # conn = psycopg2.connect(
+    #     host="localhost",
+    #     database="postgres",
+    #     user='postgres',
+    #     password='postgres')
+
+    # need to check how to securely pass database credentials above
     
-    return conn
+    # return conn
 
 def insert_users(user_email, user_name, social_media_platform):
     conn = connect()
@@ -48,14 +52,22 @@ def is_admin(user_email):
     return v_is_admin
 
 def insert_into_items(item_type, item_price):
-    conn = connect()
-    cur = conn.cursor()
-    sql_txt="""INSERT INTO ITEMS (Item_ID,Item_Type,Price, created_date, last_updated_date) 
-                VALUES (nextval('item_id_seq'),'"""+str(item_type)+"""','"""+str(item_price)+"""', current_date, current_date);"""
-    cur.execute(sql_txt)
-    conn.commit()
-    cur.close()
-    conn.close()
+    try:
+        conn = connect()
+        with conn:
+            with conn.cursor() as cur:
+                sql_txt="""INSERT INTO ITEMS (Item_ID,Item_Type,Price, created_date, last_updated_date) 
+                    VALUES (nextval('item_id_seq'),'"""+str(item_type)+"""','"""+str(item_price)+"""', current_date, current_date);"""
+                cur.execute(sql_txt)
+    except psycopg2.OperationalError as e:
+        print("Operational Error occured, Eror Code: "+str(e.pgcode))
+        print(e.pgerror)
+    except psycopg2.Error as e:
+        print("Error occured, Eror Code: "+str(e.pgcode))
+        print(e.pgerror)
+        raise e
+    finally:
+        conn.close()
 
 def insert_into_change(item_id, item_qty):
     conn = connect()
@@ -77,30 +89,30 @@ def insert_into_change(item_id, item_qty):
     cur.close()
     conn.close()
 
-def insert_into_default(item_id, item_qty, userEmailID, effDateFrom):
+def insert_into_default(item_id, item_qty, user_email_id, eff_date_from):
     conn = connect()
     cur = conn.cursor()
     get_records = """SELECT COUNT(1) FROM default_details 
                         WHERE item_id= '"""+str(item_id)+"""'
-                        AND user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(userEmailID)+"""')
-                        AND Effective_From = TO_DATE('"""+str(effDateFrom)+"""','YYYY-MM-DD');"""
+                        AND user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(user_email_id)+"""')
+                        AND Effective_From = TO_DATE('"""+str(eff_date_from)+"""','YYYY-MM-DD');"""
     cur.execute(get_records)
     count = cur.fetchone()[0]
     print('Count is ', count)
     if (count > 0):
         sql_txt_update = """UPDATE default_details SET qty = '"""+str(item_qty)+"""', last_updated_date = current_date
                                 WHERE item_id = '"""+str(item_id)+"""' 
-                                    AND user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(userEmailID)+"""')
-                                    AND Effective_From = TO_DATE('"""+str(effDateFrom)+"""','YYYY-MM-DD');"""
+                                    AND user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(user_email_id)+"""')
+                                    AND Effective_From = TO_DATE('"""+str(eff_date_from)+"""','YYYY-MM-DD');"""
         cur.execute(sql_txt_update)
     else:
-        sql_txt_prev_update = """UPDATE default_details SET effective_to = TO_DATE('+"""+str(effDateFrom)+"""', 'YYYY-MM-DD') - 1
+        sql_txt_prev_update = """UPDATE default_details SET effective_to = TO_DATE('+"""+str(eff_date_from)+"""', 'YYYY-MM-DD') - 1
                                     WHERE item_id = '"""+str(item_id)+"""'
-                                        AND user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(userEmailID)+"""')
+                                        AND user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(user_email_id)+"""')
                                         AND effective_to IS NULL;"""
         cur.execute(sql_txt_prev_update)
         sql_txt_insert="""INSERT INTO default_details (default_id, item_id, qty, user_id, created_date, last_updated_date,Effective_From) 
-                            VALUES (nextval('default_id'),'"""+str(item_id)+"""','"""+str(item_qty)+"""', (SELECT user_id FROM users WHERE social_media_email = '"""+str(userEmailID)+"""'), current_date, current_date,TO_DATE('"""+str(effDateFrom)+"""','YYYY-MM-DD'));"""
+                            VALUES (nextval('default_id'),'"""+str(item_id)+"""','"""+str(item_qty)+"""', (SELECT user_id FROM users WHERE social_media_email = '"""+str(user_email_id)+"""'), current_date, current_date,TO_DATE('"""+str(eff_date_from)+"""','YYYY-MM-DD'));"""
         cur.execute(sql_txt_insert)
     conn.commit()
     cur.close()
