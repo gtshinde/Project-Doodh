@@ -15,14 +15,14 @@
     <tr>
       <th style="font-size:70%;">Item Name</th>
       <th>
-        <input type="text" name="ItemName">
+        <input type="text" name="ItemName" id="itemname" required>
       </th>
       </tr>
       <br>
       <tr>
       <th style="font-size:70%;">Item Price</th>
       <th>
-         <input type="text" name="ItemPrice">
+         <input type="text" name="ItemPrice" id="itemprice" onkeypress='return validate(event)'  required>
       </th>
       </tr>
   </table>
@@ -31,7 +31,7 @@
   
   <br><br>
   
-  <input type="submit" value="Submit" class="submitbutton">
+  <input type="submit" value="Submit" class="submitbutton" >
 </form>
 <script>
   // Get the modal
@@ -50,6 +50,16 @@
     if (event.target == modal) {
       modal.style.display = "none";
     }
+  }
+
+  function validate(e){
+
+    var x = e.which || e.keycode;
+             if ((x >= 48 && x <= 57))
+                 return true;
+             else
+                alert('plz enter a number');
+                 return false;
   }
   </script>
 {% endblock %}
