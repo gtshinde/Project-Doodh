@@ -32,7 +32,7 @@ def create():
 
 @app.route("/report")
 def report():
-    return render_template("report.html")
+    return render_template("report.html",is_admin=is_admin)
 
 @app.route("/default", methods=["GET", "POST"])
 def create_default():
@@ -53,7 +53,7 @@ def create_default():
         if (item_qty != '0.0'):
             connection.insert_into_default(item_id, item_qty, userEmailID,effDateFrom)
             print('connection.insert_into_default(2, '+str(item_qty)+', '+str(postInfo)+', '+str(effDateFrom))
-    return render_template("default.html")
+    return render_template("default.html", is_admin=is_admin)
 
 @app.route("/items", methods = ["GET", "POST"])
 def items():
@@ -62,11 +62,11 @@ def items():
         item_price = request.form.get("ItemPrice")
         connection.insert_into_items(item_name, item_price)
         submitted = "Yes"
-        return render_template("admin.html", submitted=submitted)
+        return render_template("admin.html", submitted=submitted, is_admin=is_admin)
     # item = connection.connect()
     # return (str(item))
     submitted = "No"
-    return render_template("admin.html", submitted=submitted)
+    return render_template("admin.html", submitted=submitted, is_admin=is_admin)
 
 @app.route("/signin")
 def signin():
