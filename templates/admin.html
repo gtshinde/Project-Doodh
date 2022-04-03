@@ -71,8 +71,13 @@ var x = e.which || e.keycode;
              alert('plz do not enter a number in item name field');
              return false;
         }
-         else
+         else if (((x >= 65 && x <= 90) || (x >= 97 && x <= 122) ))
              return true;
+         else
+            {
+            alert('Please enter a valid input in the item name field')
+            return false;
+            }
 }
   </script>
 {% endblock %}
