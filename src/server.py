@@ -67,8 +67,8 @@ def items():
             submitted = "No"
             display_error_message = """We were unable to enter the item to the database. 
                                     Error details:
-                                    """+str(e.__str__)
-            render_template("admin.html", submitted=submitted, display_error_message=display_error_message)
+                                    """+str(e)
+            return render_template("admin.html", submitted=submitted, display_error_message=display_error_message)
         submitted = "Yes"
         return render_template("admin.html", submitted=submitted, is_admin=is_admin)
     # item = connection.connect()
