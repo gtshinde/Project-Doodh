@@ -15,7 +15,7 @@
     <tr>
       <th style="font-size:70%;">Item Name</th>
       <th>
-        <input type="text" name="ItemName" id="itemname" required>
+        <input type="text" name="ItemName" id="itemname" onkeypress='return validate_txt(event)' required>
       </th>
       </tr>
       <br>
@@ -55,11 +55,24 @@
   function validate(e){
 
     var x = e.which || e.keycode;
-             if ((x >= 48 && x <= 57))
+             if ((x >= 48 && x <= 57 ))
                  return true;
              else
-                alert('plz enter a number');
+             {
+                alert('plz enter a number in item price field');
                  return false;
+              }
   }
+function validate_txt(e){
+
+var x = e.which || e.keycode;
+         if ((x >= 48 && x <= 57 ))
+         {
+             alert('plz do not enter a number in item name field');
+             return false;
+        }
+         else
+             return true;
+}
   </script>
 {% endblock %}
