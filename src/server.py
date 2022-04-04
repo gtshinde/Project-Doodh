@@ -1,10 +1,12 @@
 # from operator import methodcaller
 # from crypt import methods
+from operator import is_
 from re import sub
 from flask import Flask, render_template, redirect, request, url_for
 import connection
 
 is_admin = False
+user_email_val = '' 
 
 app = Flask(__name__, template_folder='../templates', static_folder="../static")
 
@@ -58,6 +60,8 @@ def create_default():
 
 @app.route("/items", methods = ["GET", "POST"])
 def items():
+    global user_email_val
+    is_admin = connection.is_admin(user_email_val)
     if(request.method == "POST"):
         item_name = request.form.get("ItemName")
         item_price = request.form.get("ItemPrice")
@@ -73,8 +77,13 @@ def items():
         return render_template("admin.html", submitted=submitted, is_admin=is_admin)
     # item = connection.connect()
     # return (str(item))
-    submitted = "No"
-    return render_template("admin.html", submitted=submitted, is_admin=is_admin)
+
+    print(is_admin) 
+    if ( is_admin == True ):
+        submitted = "No"
+        return render_template("admin.html", submitted=submitted, is_admin=is_admin)
+    else:
+        return redirect(url_for("create"))
 
 @app.route("/signin")
 def signin():
@@ -85,6 +94,11 @@ def signin():
 @app.route("/signin-success/<social_media_platform>/<user_email>/<user_name>")
 def signin_success(social_media_platform, user_email, user_name):
     global is_admin
+    global user_email_val 
+    print(social_media_platform)
+    print(user_email)
+    print(user_name)
+    user_email_val = user_email 
     connection.insert_users(user_email, user_name, social_media_platform)
     # return redirect(url_for("create"))
     is_admin = connection.is_admin(user_email)
@@ -92,9 +106,25 @@ def signin_success(social_media_platform, user_email, user_name):
     return redirect(url_for("create"))
     # return render_template("create.html",isadmin=isadmin)
 
-@app.route("/signup")
+@app.route("/signup",methods = ["GET", "POST"])
 def signup():
-    return render_template("signup.html")
+    if ( request.method== "POST"):
+        user_email = request.form.get("email")
+        user_name  = request.form.get("username")
+        social_media_platform = ''
+        count= connection.insert_users(user_email, user_name, social_media_platform)
+        if count > 0 :
+            submitted = "No"
+            display_error_message = """This email id already exists into the database. 
+                                        """ 
+            return render_template("signup.html",submitted=submitted,display_error_message=display_error_message)           
+        # return redirect(url_for("create"))
+        is_admin = connection.is_admin(user_email)
+        print(is_admin)  
+        submitted="Yes"   
+        return render_template("signup.html",submitted=submitted)
+    submitted="No"
+    return render_template("signup.html",submitted=submitted)
 
 if __name__ == "__main__":
     app.run(debug=True)
