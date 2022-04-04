@@ -27,6 +27,9 @@ def connect():
 def insert_users(user_email, user_name, social_media_platform):
     conn = connect()
     cur = conn.cursor()
+    print('conn email',user_email)
+    print('conn name',user_name)
+    print('conn',social_media_platform)
     sql_txt = "SELECT COUNT(*) FROM users WHERE social_media_email = '"+str(user_email)+"';" 
     cur.execute(sql_txt)
     count = cur.fetchone()[0]

@@ -112,15 +112,19 @@ def signup():
         user_email = request.form.get("email")
         user_name  = request.form.get("username")
         social_media_platform = ''
+        print(user_email)
+        print(user_name)
         count= connection.insert_users(user_email, user_name, social_media_platform)
+        print('the count after calling connection.insert users is:',count)
         if count > 0 :
             submitted = "No"
-            display_error_message = """This email id already exists into the database. 
+            display_error_message = """This email id already exists in the database! 
+                                       Please sign up with a different email id. 
                                         """ 
             return render_template("signup.html",submitted=submitted,display_error_message=display_error_message)           
         # return redirect(url_for("create"))
-        is_admin = connection.is_admin(user_email)
-        print(is_admin)  
+        # is_admin = connection.is_admin(user_email)
+        # print(is_admin)  
         submitted="Yes"   
         return render_template("signup.html",submitted=submitted)
     submitted="No"
