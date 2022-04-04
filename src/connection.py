@@ -12,7 +12,7 @@ def connect():
         print("Error in connecting to PostgreSQL database")
         print("Eror Code: "+str(e.pgcode))
         print(e.pgerror)
-        raise e
+        raise Exception("Error in connecting to PostgreSQL database")
 
     # conn = psycopg2.connect(
     #     host="localhost",
@@ -62,10 +62,15 @@ def insert_into_items(item_type, item_price):
     except psycopg2.OperationalError as e:
         print("Operational Error occured, Eror Code: "+str(e.pgcode))
         print(e.pgerror)
+        raise Exception("An operational error occured in the database. Please try again")
+    except psycopg2.DataError as e:
+        print("Error occured, Eror Code: "+str(e.pgcode))
+        print(e.pgerror)
+        raise Exception("A data error occured. Please recheck your inputs and try again.")
     except psycopg2.Error as e:
         print("Error occured, Eror Code: "+str(e.pgcode))
         print(e.pgerror)
-        raise e
+        raise Exception("An error occured in the database. Please recheck your inputs and try again.")
     finally:
         conn.close()
 
