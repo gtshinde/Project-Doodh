@@ -27,7 +27,7 @@ def connect():
 def insert_users(user_email, user_name, social_media_platform):
     conn = connect()
     cur = conn.cursor()
-    sql_txt = "SELECT COUNT(*) FROM users WHERE social_media_email = '"+str(user_email)+"' AND Social_Media_Type = '"+str(social_media_platform)+"';"
+    sql_txt = "SELECT COUNT(*) FROM users WHERE social_media_email = '"+str(user_email)+"';" 
     cur.execute(sql_txt)
     count = cur.fetchone()[0]
     print('count is ', count)
@@ -35,6 +35,9 @@ def insert_users(user_email, user_name, social_media_platform):
         sql_txt_insert="""INSERT INTO users
                         VALUES (nextval('User_ID'), '"""+str(user_name)+"""', '"""+str(user_email)+"""', '"""+str(social_media_platform)+"""', 'N');"""
         cur.execute(sql_txt_insert)
+    else:
+        print('This email already exists!')
+    return count
     conn.commit()
     cur.close()
     conn.close()
