@@ -68,6 +68,8 @@ Social_Media_Type  VARCHAR(100),
 Is_Admin Boolean
 );
 
+ALTER TABLE USERS ADD column Password_o text;
+
 SELECT * FROM USERS
 
 CREATE SEQUENCE Change_ID START WITH 1000;

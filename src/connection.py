@@ -24,19 +24,20 @@ def connect():
     
     # return conn
 
-def insert_users(user_email, user_name, social_media_platform):
+def insert_users(user_email, user_name, social_media_platform,user_pwd):
     conn = connect()
     cur = conn.cursor()
     print('conn email',user_email)
     print('conn name',user_name)
     print('conn',social_media_platform)
+    print('conn',user_pwd)
     sql_txt = "SELECT COUNT(*) FROM users WHERE social_media_email = '"+str(user_email)+"';" 
     cur.execute(sql_txt)
     count = cur.fetchone()[0]
     print('count is ', count)
     if  count == 0 :
         sql_txt_insert="""INSERT INTO users
-                        VALUES (nextval('User_ID'), '"""+str(user_name)+"""', '"""+str(user_email)+"""', '"""+str(social_media_platform)+"""', 'N');"""
+                        VALUES (nextval('User_ID'), '"""+str(user_name)+"""', '"""+str(user_email)+"""', '"""+str(social_media_platform)+"""', 'N','"""+str(user_pwd)+"""');"""
         cur.execute(sql_txt_insert)
     else:
         print('This email already exists!')
@@ -129,3 +130,24 @@ def insert_into_default(item_id, item_qty, user_email_id, eff_date_from):
     conn.commit()
     cur.close()
     conn.close()
+
+def validate_user(user_email):
+    conn = connect()
+    cur = conn.cursor()   
+    get_count = """SELECT count(password) FROM users 
+                        WHERE Social_Media_email= '"""+str(user_email)+"""';"""    
+    get_pwd = """SELECT password FROM users 
+                        WHERE Social_Media_email= '"""+str(user_email)+"""';"""
+    cur.execute(get_count)
+    pwd_count = cur.fetchone()[0]
+    print('conn pwd_count is ', pwd_count)  
+    if pwd_count==1:                      
+        cur.execute(get_pwd)
+        pwd = cur.fetchone()[0]
+        print('conn pwd is ', pwd)  
+    else:
+        pwd=0
+    conn.commit()
+    cur.close()
+    conn.close()    
+    return pwd;  

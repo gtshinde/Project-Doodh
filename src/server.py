@@ -1,9 +1,11 @@
 # from operator import methodcaller
 # from crypt import methods
+from passlib.hash import sha256_crypt
 from operator import is_
 from re import sub
 from flask import Flask, render_template, redirect, request, url_for
 import connection
+
 
 is_admin = False
 user_email_val = '' 
@@ -85,10 +87,24 @@ def items():
     else:
         return redirect(url_for("create"))
 
-@app.route("/signin")
+@app.route("/signin",methods = ["GET" , "POST"])
 def signin():
     global is_admin 
     is_admin = False
+    if(request.method == "POST"):
+        user_email  = request.form.get("email")
+        user_pwd  = request.form.get("password")
+        print('signin',user_email)
+        print('signin',user_pwd)    
+        db_pwd= connection.validate_user(user_email)
+        print('db_pwd',db_pwd) 
+
+        if (db_pwd==0):
+            print('User with this email id has not signed up, please signup')
+        elif(sha256_crypt.verify(user_pwd, db_pwd)):
+            return redirect(url_for("create"))
+        else:
+            print('Invalid credentials!')
     return render_template("signin.html")
 
 @app.route("/signin-success/<social_media_platform>/<user_email>/<user_name>")
@@ -111,10 +127,14 @@ def signup():
     if ( request.method== "POST"):
         user_email = request.form.get("email")
         user_name  = request.form.get("username")
+        user_pwd  = request.form.get("password")
         social_media_platform = ''
         print(user_email)
         print(user_name)
-        count= connection.insert_users(user_email, user_name, social_media_platform)
+        print(user_pwd)
+        user_pwd = sha256_crypt.encrypt(user_pwd)
+        print('after hasing',user_pwd)
+        count= connection.insert_users(user_email, user_name, social_media_platform,user_pwd)
         print('the count after calling connection.insert users is:',count)
         if count > 0 :
             submitted = "No"
