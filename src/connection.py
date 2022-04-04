@@ -40,10 +40,11 @@ def insert_users(user_email, user_name, social_media_platform):
         cur.execute(sql_txt_insert)
     else:
         print('This email already exists!')
-    return count
+    
     conn.commit()
     cur.close()
     conn.close()
+    return count
 
 def is_admin(user_email):
     conn = connect()
