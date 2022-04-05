@@ -107,4 +107,14 @@ ALTER TABLE default_details
     ADD COLUMN Effective_From DATE,
     ADD COLUMN Effective_To DATE;
 	
+INSERT INTO Default_Details VALUES (nextval('Default_ID'),
+									1,2,1000,current_date,current_date,
+									TO_DATE('05-04-22','DD-MM-YY'),TO_DATE('10-04-22','DD-MM-YY'))
+INSERT INTO Default_Details VALUES (nextval('Default_ID'),
+									2,2,1000,current_date,current_date,
+									TO_DATE('11-04-22','DD-MM-YY'),TO_DATE('18-04-22','DD-MM-YY'))
+INSERT INTO Default_Details VALUES (nextval('Default_ID'),
+									1,3,1000,current_date,current_date,
+									TO_DATE('11-04-22','DD-MM-YY'),TO_DATE('18-04-22','DD-MM-YY'))                                                                  
+
 commit;

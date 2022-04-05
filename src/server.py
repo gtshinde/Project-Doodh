@@ -127,7 +127,7 @@ def signin_success(social_media_platform, user_email, user_name):
     print(user_email)
     print(user_name)
     user_email_val = user_email 
-    connection.insert_users(user_email, user_name, social_media_platform)
+    connection.insert_users(user_email, user_name, social_media_platform,'')
     # return redirect(url_for("create"))
     is_admin = connection.is_admin(user_email)
     print(is_admin) 
