@@ -1,4 +1,5 @@
 import psycopg2
+from calendar import monthrange
 
 def connect():
     try:
@@ -150,4 +151,31 @@ def validate_user(user_email):
     conn.commit()
     cur.close()
     conn.close()    
-    return pwd;  
+    return pwd; 
+
+def report_logic(month, year, user_email):
+    report_list = [None]
+    # list should have same number of items as number of days of the month
+    num_days_in_month = monthrange(int(year), int(month))
+    num_days_in_month = num_days_in_month[1]
+    report_list = report_list * (num_days_in_month)
+    for day in range(1, num_days_in_month+1):
+        try:
+            conn = connect()
+            with conn:
+                with conn.cursor() as cur:
+                    sql_txt="""SELECT (SELECT i.item_type FROM items i WHERE i.item_id = dd.item_id),  dd.qty 
+                                FROM default_details dd
+                                WHERE TO_DATE('"""+str(day)+"""-"""+str(month)+"""-"""+str(year)+"""','DD-MM-YYYY') between dd.Effective_From AND COALESCE(dd.Effective_To, TO_DATE('5874897-01-01','YYYY-MM-DD')) 
+                                    AND dd.user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(user_email)+"""');"""
+                    cur.execute(sql_txt)
+                    for record in cur.fetchall():
+                        print("Type = "+str(record[0]))
+                        print("Qty = "+str(record[1]))
+                        report_list[day-1] = {"type": record[0], "qty": record[1]}
+        except Exception as e:
+            print(e)
+            raise e
+        finally:
+            conn.close()
+    return report_list

@@ -37,6 +37,18 @@ def create():
 
 @app.route("/report")
 def report():
+    # if user has not provided the month or year
+    # find the system month and year
+    # find out how to get the user_email
+    # report_list = report_logic(month, year, user_email)
+    return render_template("report.html",is_admin=is_admin)
+
+@app.route("/report/<month>/<year>")
+def report_month_year(month, year):
+    # find out how to get the user_email
+    report_list = connection.report_logic(month, year, 'rishabh.kaushick@gmail.com')
+    print (report_list)
+    print (len(report_list))
     return render_template("report.html",is_admin=is_admin)
 
 @app.route("/default", methods=["GET", "POST"])
