@@ -139,6 +139,53 @@
     position: relative;
     top: -22px;
   }
+  	/* The Modal (background) */
+.modal {
+  
+  position: fixed; /* Stay in place */
+  z-index: 100; /* Sit on top */
+  padding-top: 250px; /* Location of the box */
+  left: 0;
+  top: 0;
+  display: block;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #FFD700;
+  margin: auto;
+  color:white;
+  padding: 30px;
+  border: 1px solid #888;
+  width: 40%;
+  height: 40%;
+  font-size: 22px;
+  padding-top: 35px;
+ 
+}
+
+/* The Close Button */
+.close {
+  color: white;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  position: relative;
+  bottom:35px;
+  left:10px;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
   </style>
 </head>
 
@@ -146,6 +193,14 @@
 <div class="bg-image"></div>
 <h1>Project Doodh</h1> 
 <!-- Need to fix this to use the h1 from home_css.css -->`
+{%  if display_error_message|length %}
+<div  id="myModal" class="modal">
+  <div class="modal-content">
+  <span class="close">&times;</span> 
+  <strong>{{ display_error_message }}</strong>
+  </div>
+</div>
+{%  endif  %}
 <div class="signup-form">
   <form action="/signin" method="POST">
     <h2>Sign In</h2>
@@ -192,6 +247,27 @@
   location.replace("http://localhost:5000/signin-success/Google/"+profile.getEmail()+"/"+profile.getName())
   // document.querySelector('#usrname').innerText="Hello  "+googleUser.getBasicProfile().getGivenName()+"!";
 }
+
+
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}	
+
+
 </script>
 
 </body>

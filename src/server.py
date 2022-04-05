@@ -103,6 +103,8 @@ def items():
 def signin():
     global is_admin 
     is_admin = False
+    display_error_message=""
+
     if(request.method == "POST"):
         user_email  = request.form.get("email")
         user_pwd  = request.form.get("password")
@@ -113,11 +115,13 @@ def signin():
 
         if (db_pwd==0):
             print('User with this email id has not signed up, please signup')
+            display_error_message="User with this email id has not signed up,''\n'' please signup!"
         elif(sha256_crypt.verify(user_pwd, db_pwd)):
             return redirect(url_for("create"))
         else:
             print('Invalid credentials!')
-    return render_template("signin.html")
+            display_error_message="Invalid credentials!"
+    return render_template("signin.html",display_error_message=display_error_message)
 
 @app.route("/signin-success/<social_media_platform>/<user_email>/<user_name>")
 def signin_success(social_media_platform, user_email, user_name):
