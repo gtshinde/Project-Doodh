@@ -5,7 +5,25 @@
 
 {% block content %}
 <h1><strong>Milk Report</strong></h1>
- <table id="customers">
+<table id="customers">
+  <tr>
+    <th>Date</th>
+    <th>Item Type</th>
+    <th>Item Qty</th>
+    <th>Price</th>
+  </tr>
+  {% for day_item in report_list %}
+    {% for item in day_item %}
+      <tr>
+        <td>Date</td>
+        <td> {{ item['type'] }} </td>
+        <td> {{ item['qty'] }} </td>
+        <td> Price </td>
+      </tr>
+    {% endfor %}
+  {% endfor %}
+</table>
+ <!-- <table id="customers">
   <tr>
     <th>Date</th>
     <th>Cow</th>
@@ -54,5 +72,5 @@
     <td>Canada</td>
     <td>Canada</td>
   </tr>
-</table>
+</table> -->
 {% endblock %}

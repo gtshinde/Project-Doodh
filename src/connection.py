@@ -172,7 +172,10 @@ def report_logic(month, year, user_email):
                     for record in cur.fetchall():
                         print("Type = "+str(record[0]))
                         print("Qty = "+str(record[1]))
-                        report_list[day-1] = {"type": record[0], "qty": record[1]}
+                        if(report_list[day-1] is None):
+                            report_list[day-1] = [{"type": record[0], "qty": record[1]}]
+                        else:
+                            report_list[day-1].append({"type": record[0], "qty": record[1]})
         except Exception as e:
             print(e)
             raise e

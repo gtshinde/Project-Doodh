@@ -41,7 +41,8 @@ def report():
     # find the system month and year
     # find out how to get the user_email
     # report_list = report_logic(month, year, user_email)
-    return render_template("report.html",is_admin=is_admin)
+    report_list = [[None]]*31
+    return render_template("report.html",is_admin=is_admin, report_list=report_list)
 
 @app.route("/report/<month>/<year>")
 def report_month_year(month, year):
@@ -49,7 +50,7 @@ def report_month_year(month, year):
     report_list = connection.report_logic(month, year, 'rishabh.kaushick@gmail.com')
     print (report_list)
     print (len(report_list))
-    return render_template("report.html",is_admin=is_admin)
+    return render_template("report.html",is_admin=is_admin, report_list=report_list)
 
 @app.route("/default", methods=["GET", "POST"])
 def create_default():
