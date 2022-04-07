@@ -15,10 +15,10 @@
   {% for day_item in report_list %}
     {% for item in day_item %}
       <tr>
-        <td>Date</td>
+        <td> {{ item['date'] }} </td>
         <td> {{ item['type'] }} </td>
         <td> {{ item['qty'] }} </td>
-        <td> Price </td>
+        <td> {{item['price']}} </td>
       </tr>
     {% endfor %}
   {% endfor %}
