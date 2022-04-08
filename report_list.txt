@@ -1,0 +1,29 @@
+report_list
+[
+	[
+		{'date': '1 March 2022', 
+		'type': 'COW MILK', '
+		qty': 2.0, 
+		'price': 58},
+		{'date': '1 March 2022',
+		 'type': 'BUFFALO MILK', 
+		 'qty': 3.0, 
+		 'price': 60}
+	],
+	[{'date': '2 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '2 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '3 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '3 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '4 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '4 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '5 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '5 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '6 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '6 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '7 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '7 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '8 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '8 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], 
+	[
+	  	{
+	  		'date': '9 March 2022', 
+	  		'type': 'COW MILK', 
+	  		'qty': 2.0, 
+	  		'price': 58},
+	  	{
+	  		'date': '9 March 2022', 
+	  		'type': 'BUFFALO MILK', 
+	  		'qty': 3.0, 
+	  		'price': 60
+	  	}
+	  	
+	], 
+
+	  [{'date': '10 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '10 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '11 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '11 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '12 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '12 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '13 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '13 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '14 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '14 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '15 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '15 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '16 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '16 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '17 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '17 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '18 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '18 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '19 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '19 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '20 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '20 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '21 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '21 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '22 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '22 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '23 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '23 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '24 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '24 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '25 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '25 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '26 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '26 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '27 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '27 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '28 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '28 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '29 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '29 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '30 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '30 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}], [{'date': '31 March 2022', 'type': 'COW MILK', 'qty': 2.0, 'price': 58}, {'date': '31 March 2022', 'type': 'BUFFALO MILK', 'qty': 3.0, 'price': 60}]]
