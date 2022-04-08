@@ -85,21 +85,27 @@ def insert_into_items(item_type, item_price):
     finally:
         conn.close()
 
-def insert_into_change(item_id, item_qty):
+def insert_into_change(item_id, item_qty, email_id):
     conn = connect()
     cur = conn.cursor()
-    get_records="""SELECT COUNT(1) FROM Change_Details WHERE ITEM_ID="""+str(item_id)+"""AND Change_DATE=current_date;"""
+    get_records="""SELECT COUNT(1) 
+                    FROM Change_Details 
+                    WHERE ITEM_ID="""+str(item_id)+"""
+                    AND Change_DATE=current_date+1
+                    AND user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(email_id)+"""');"""
     cur.execute(get_records)
     count = cur.fetchone()[0]
     print('count is ', count)
     
     if  count > 0 :
         sql_txt_update="""UPDATE Change_Details SET QTY = """+str(item_qty)+""" 
-                            WHERE ITEM_ID="""+str(item_id)+""" AND Change_DATE=current_date;"""
+                            WHERE ITEM_ID="""+str(item_id)+""" 
+                            AND Change_DATE=current_date+1
+                            AND user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(email_id)+"""');"""
         cur.execute(sql_txt_update)
     else:
-        sql_txt_insert="""INSERT INTO Change_Details (Change_ID,Item_ID,Change_DATE,qty) 
-                VALUES (nextval('Change_ID'),'"""+str(item_id)+"""',current_date,'"""+str(item_qty)+"""');"""
+        sql_txt_insert="""INSERT INTO Change_Details (Change_ID,Item_ID,Change_DATE,qty, user_id) 
+                            VALUES (nextval('Change_ID'),'"""+str(item_id)+"""',current_date+1,'"""+str(item_qty)+"""', (SELECT user_id FROM users WHERE social_media_email = '"""+str(email_id)+"""'));"""
         cur.execute(sql_txt_insert)
     conn.commit()
     cur.close()
@@ -159,7 +165,7 @@ def report_logic(month, year, user_email):
     # first need to get the default milk data for the entire month
     report_list = default_report_logic(month, year, user_email)
     # next need to check where all there was a change
-    # report_list = change_report_logic(month, year, user_email, report_list)
+    report_list = change_report_logic(month, year, user_email, report_list)
     # next need to get the total bill for the month
     #  = bill_report_logic(report_list)
     return (report_list)
@@ -204,4 +210,22 @@ def default_report_logic(month, year, user_email):
     return report_list
 
 def change_report_logic(month, year, user_email, report_list):
-    pass
+    conn = connect()
+    with conn:
+        with conn.cursor() as cur:
+            sql_txt = """SELECT (SELECT i.item_type FROM items i WHERE i.item_id = cd.item_id) item_type, cd.qty, cd.change_date, DATE_PART('day',cd.change_date)
+                            FROM change_details cd
+                            WHERE cd.user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(user_email)+"""')
+                            AND DATE_PART('month', cd.change_date) =  '"""+str(month)+"""';"""
+            cur.execute(sql_txt)
+            for record in cur.fetchall():
+                item_type = record[0]
+                item_qty = record[1]
+                # change_date = record[2]
+                change_day = record[3]
+                for i in range (0, len(report_list[int(change_day)-1])):
+                    if (report_list[int(change_day)-1][i]['type'] == item_type):
+                        report_list[int(change_day)-1][i]['qty'] = item_qty
+                else:
+                    pass
+    return report_list

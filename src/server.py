@@ -21,14 +21,17 @@ def redirect_to_create():
 def create():
     global is_admin
     if (request.method == "POST"):
+        # remember to take the email from ajax call in the future
+        email_id = 'rishabh.kaushick@gmail.com'
         item_id = 1
         item_qty = request.form.get("cm")
+        # before insert_into_change need to check if time is less than 10pm
         if (item_qty != '0.0'):
-            connection.insert_into_change(item_id, item_qty)  
+            connection.insert_into_change(item_id, item_qty, email_id)  
         item_id = 2
         item_qty = request.form.get("bm")
         if (item_qty != '0.0'):
-            connection.insert_into_change(item_id, item_qty)  
+            connection.insert_into_change(item_id, item_qty, email_id)  
         submitted = "Yes"
         return render_template("create.html", submitted=submitted, is_admin=is_admin)
     submitted = "No" 
