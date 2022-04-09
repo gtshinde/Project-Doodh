@@ -67,6 +67,7 @@ Social_Media_Username VARCHAR(100),
 Social_Media_Type  VARCHAR(100),
 Is_Admin Boolean
 );
+ALTER TABLE users ADD signed_in VARCHAR(1);
 
 ALTER TABLE USERS ADD column Password_o text;
 
@@ -118,3 +119,4 @@ INSERT INTO Default_Details VALUES (nextval('Default_ID'),
 									TO_DATE('11-04-22','DD-MM-YY'),TO_DATE('18-04-22','DD-MM-YY'))                                                                  
 
 commit;
+
