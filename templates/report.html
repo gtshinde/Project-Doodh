@@ -5,9 +5,12 @@
 
 {% block content %}
 <h1 style="font-size: 30px;"><strong> {{month_string}} Milk Report  </strong></h1>
-<div>
+<div id="mySidenav" class="sidenav_months" style="display: block;">
+  <marquee style="font-size: 16px;" behavior="scroll" direction="left"><strong>Please note that the data only can be viewed for past six months...</strong> </marquee>
+  <br>
+  <br>
   {% for month_year in past_months_list %}
-  <a href="{{url_for('report_month_year', month=(month_year[0]), year=(month_year[1]))}}">{{month_year[2]}} {{month_year[1]}}</a>
+  <a href="{{url_for('report_month_year',user_id=user_id ,month=(month_year[0]), year=(month_year[1]))}}">{{month_year[2]}} {{month_year[1]}}</a>
   <br/>
   {% endfor %}
 </div>
@@ -25,7 +28,7 @@
         <td> {{ item['date'] }} </td>
         <td> {{ item['type'] }} </td>
         <td> {{ item['qty'] }} </td>
-        <td> {{item['price']}} </td>
+        <td> 0 </td>
       </tr>
     {% endfor %}
   {% endfor %}

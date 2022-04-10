@@ -63,7 +63,7 @@ CREATE SEQUENCE User_ID START WITH 1000;
 create table users (
 User_ID integer PRIMARY KEY,
 Social_Media_Name VARCHAR(100),
-Social_Media_Username VARCHAR(100),
+Social_Media_Email VARCHAR(100),
 Social_Media_Type  VARCHAR(100),
 Is_Admin Boolean
 );

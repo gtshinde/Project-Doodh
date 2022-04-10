@@ -21,9 +21,23 @@
                 top:10%;
                 right:2%;
                 }
+                .btn{
+                  width: 8%;
+    background-color: #ffd700;
+    color: white;
+    padding: 9px 3px;
+    margin: 2px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 20px;
+                  }
+                  .btn:hover {background-color: #DAA520;}
+
     </style>
     <body>
         <span style="font-size:30px;cursor:pointer; color:white; " onclick="openNav()">&#9776;</span>
+        <button style="float:right;" onclick="signOut();" class="btn">Sign out</button>
         <h1>Project Doodh</h1>
         {% if display_error_message|length %}
         <div  id="myModal" class="modal">
@@ -33,17 +47,22 @@
           </div>
         </div>
         {% endif %}
-        <div id="usrname"></div>
+        {% if user_email|length %}
+        <div id="usrname">Hello {{user_email}}!</div>
+        {% else %}        
+        <div id="usrname"></div>        
+        {% endif %}
+        
         <div id="emailID" style="display: none;"></div>
         <div style="display: none;" class="g-signin2" data-onsuccess="onSignIn"></div>
-        <button style="float:right;" onclick="signOut();">Sign out</button>
+        
         <div id="mySidenav" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <a href="{{url_for('report')}}">Report</a>
-            <a href="{{url_for('create_default')}}">Default Milk</a>
-            <a href="{{url_for('create')}}">Change Milk Quantity</a>
+            <a href="{{url_for('report',user_id=user_id)}}">Report</a>
+            <a href="{{url_for('default',user_id=user_id)}}">Default Milk</a>
+            <a href="{{url_for('create',user_id=user_id)}}">Change Milk Quantity</a>
             {% if is_admin == true %}
-              <a href="{{url_for('items')}}">Items</a>
+              <a href="{{url_for('items',user_id=user_id)}}">Items</a>
             {% endif %}            
         </div>
        
@@ -58,7 +77,8 @@
           console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
 
           // location.replace("http://localhost:5000")
-          document.querySelector('#usrname').innerText="Hello  "+googleUser.getBasicProfile().getGivenName()+" !";
+          //document.querySelector('#usrname').innerText="Hello  "+googleUser.getBasicProfile().getGivenName()+" !";
+          document.querySelector('#usrname').innerText="Hello  "+profile.getEmail()+"!";          
           document.querySelector('#emailID').innerText=String(profile.getEmail());
         }
 
@@ -67,7 +87,10 @@
             auth2.signOut().then(function () {
               console.log('User signed out.');
             });
-            location.replace("http://localhost:5000/signin")
+           var string=document.querySelector('#usrname').innerText
+          //  to remove Hello and '!' from the string
+           var user_email=string.substring(6,string.length-1)  
+            location.replace("http://localhost:5000/signout/"+user_email)
           }
 
 // Get the modal

@@ -26,10 +26,105 @@ def connect():
     # need to check how to securely pass database credentials above
     
     # return conn
+def verify_user_exists(user_id):
+    conn=connect()
+    cur=conn.cursor()
+    sql_txt = "SELECT COUNT(*) FROM users WHERE user_id = '"+str(user_id)+"';" 
+    cur.execute(sql_txt)
+    count = cur.fetchone()[0]
+    print('count of user exists is ', count)
+    return count
+def verify_useremail_exists(user_email):
+    conn=connect()
+    cur=conn.cursor()
+    sql_txt = "SELECT COUNT(*) FROM users WHERE social_media_email = '"+str(user_email)+"';" 
+    cur.execute(sql_txt)
+    count = cur.fetchone()[0]
+    print('count of useremail exists is ', count)
+    return count
+
+def get_user_email(user_id):
+
+    print('conn user_id:',user_id)
+    count=verify_user_exists(user_id)
+    if count!=0:
+        conn = connect()
+        cur = conn.cursor()
+        sql_txt = "SELECT social_media_email FROM users WHERE user_id = '"+str(user_id)+"';" 
+        cur.execute(sql_txt)
+        useremail = cur.fetchone()[0]
+        print('user is ', useremail)
+        conn.commit()
+        cur.close()
+        conn.close()
+        return useremail
+    return 0
+
+def get_user_id(user_email):
+ 
+    print('conn user_id:',user_email)
+    count=verify_useremail_exists(user_email)
+    if count!=0:
+        conn = connect()
+        cur = conn.cursor()
+        sql_txt = "SELECT user_id FROM users WHERE social_media_email = '"+str(user_email)+"';" 
+        cur.execute(sql_txt)
+        userid = cur.fetchone()[0]
+        print('user is ', userid)
+        conn.commit()
+        cur.close()
+        conn.close()
+        return userid
+    return 0
+
+def validate_user_signin(user_id):
+
+    print('conn user_id:',user_id)
+    count=verify_user_exists(user_id)
+    if count!=0:
+        conn = connect()
+        cur = conn.cursor()
+        sqltext="SELECT signed_in FROM USERS WHERE user_id='"+str(user_id)+"';"
+        cur.execute(sqltext)
+        user_signed = cur.fetchone()[0]
+        sqltext="SELECT is_admin FROM USERS WHERE user_id='"+str(user_id)+"';"
+        cur.execute(sqltext)
+        is_admin = cur.fetchone()[0]  
+        sqltext="SELECT Social_Media_Email FROM USERS WHERE user_id='"+str(user_id)+"';"
+        cur.execute(sqltext)
+        user_email = cur.fetchone()[0]    
+        sqltext="SELECT Social_Media_Name FROM USERS WHERE user_id='"+str(user_id)+"';"
+        cur.execute(sqltext)
+        user_name = cur.fetchone()[0]      
+        user_details = [user_signed,is_admin,user_email,user_name]
+        print('user sigined in check: ', user_signed)
+        print('user admin  check: ', is_admin)
+        print('user name  check: ', user_email) 
+        print('user user_name  check: ', user_name)   
+        print('user_detaisl:',user_details)
+        conn.commit()
+        cur.close()
+        conn.close()
+       
+    else:
+        user_details = ['Y',False,'','']
+    return user_details        
+
+def update_user_signin_status(user_email,sigin_val):
+    conn = connect()
+    cur = conn.cursor()
+    print('conn user_email:',user_email)
+    sqltext="UPDATE USERS SET signed_in='"+str(sigin_val)+"'WHERE social_media_email = '"+str(user_email)+"';" 
+    cur.execute(sqltext)
+    conn.commit()
+    cur.close()
+    conn.close()
+       
 
 def insert_users(user_email, user_name, social_media_platform,user_pwd):
     conn = connect()
     cur = conn.cursor()
+    first_sigin=False                     
     print('conn email',user_email)
     print('conn name',user_name)
     print('conn',social_media_platform)
@@ -42,13 +137,14 @@ def insert_users(user_email, user_name, social_media_platform,user_pwd):
         sql_txt_insert="""INSERT INTO users
                         VALUES (nextval('User_ID'), '"""+str(user_name)+"""', '"""+str(user_email)+"""', '"""+str(social_media_platform)+"""', 'N','"""+str(user_pwd)+"""');"""
         cur.execute(sql_txt_insert)
+        first_sigin=True                        
     else:
         print('This email already exists!')
     
     conn.commit()
     cur.close()
     conn.close()
-    return count
+    return count,first_sigin
 
 def is_admin(user_email):
     conn = connect()
