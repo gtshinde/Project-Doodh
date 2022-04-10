@@ -5,6 +5,9 @@ from operator import is_
 from re import sub
 from flask import Flask, render_template, redirect, request, url_for
 import connection
+from datetime import date
+import calendar
+from pandas import DateOffset
 
 
 is_admin = False
@@ -42,18 +45,36 @@ def create():
 def report():
     # if user has not provided the month or year
     # find the system month and year
+    todays_date = date.today()
+    month = int(todays_date.month)
+    year = int(todays_date.year)
     # find out how to get the user_email
     # report_list = report_logic(month, year, user_email)
-    report_list = [[None]]*31
-    return render_template("report.html",is_admin=is_admin, report_list=report_list)
+    # report_list = [[None]]*31
+    month_string = calendar.month_name[month]
+    report_list = connection.report_logic(month, year, 'rishabh.kaushick@gmail.com')
+    past_months_list = []
+    for i in range(1, 6):
+        offset_date = todays_date - DateOffset(months=i)
+        past_months_list.append([str(offset_date.month), str(offset_date.year), calendar.month_name[offset_date.month]])
+    # past_month_list = [ [3, 2022, March], [2, 2022, February], [1, 2022, January], ... ] considering current_date is in APRIL 2022
+    print (report_list)
+    return render_template("report.html",is_admin=is_admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list)
 
 @app.route("/report/<month>/<year>")
 def report_month_year(month, year):
     # find out how to get the user_email
     report_list = connection.report_logic(month, year, 'rishabh.kaushick@gmail.com')
+    month_string = calendar.month_name[int(month)]
+    past_months_list = []
+    todays_date = date.today()
+    for i in range(1, 6):
+        offset_date = todays_date - DateOffset(months=i)
+        past_months_list.append([str(offset_date.month), str(offset_date.year), calendar.month_name[offset_date.month]])
+    # past_month_list = [ [3, 2022, March], [2, 2022, February], [1, 2022, January], ... ] considering current_date is in APRIL 2022
     print (report_list)
     print (len(report_list))
-    return render_template("report.html",is_admin=is_admin, report_list=report_list)
+    return render_template("report.html",is_admin=is_admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list)
 
 @app.route("/default", methods=["GET", "POST"])
 def create_default():
