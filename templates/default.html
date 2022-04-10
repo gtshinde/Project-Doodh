@@ -10,6 +10,16 @@
   <strong>Kindly help us know your default milk requirement!</strong>
   </div>
 </div>
+{{ submitted }}
+{% if submitted=="Yes" %}
+<div  id="myModal" class="modal">
+  <div class="modal-content">
+  <span class="close">&times;</span> 
+  <strong>Thank you, your request has been registered!</strong>
+  </div>
+ 
+</div>
+{% endif %}			   
 
 <form  onsubmit="onsubmitfunc()">
   <table class="Tbl">
@@ -92,8 +102,8 @@ var defaultData = {emailID: username ,
             effDateFrom: effectiveDate
           }
 $.ajax({
-    type: 'post',
-    url: '/default',
+    type: 'POST',
+    url: '/default/{{user_id}}',
     // data: JSON.stringify(emailID),
     dataType: 'json',
     data: JSON.stringify(defaultData),

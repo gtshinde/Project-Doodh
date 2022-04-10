@@ -132,12 +132,12 @@
   background-color: #FFD700;
   margin: auto;
   color:white;
-  padding: 30px;
+  padding: 44px;
   border: 1px solid #888;
   width: 40%;
   height: 40%;
   font-size: 22px;
-  padding-top: 35px;
+  padding-top: 12px;
  
 }
 
@@ -181,12 +181,13 @@
   </div>
 </div>
 {% endif %} -->
-{% if submitted=="Yes" %}
+{% if submitted=="No" %}
 <div  id="myModal" class="modal">
 	<div class="modal-content">
-	<span class="close">&times;</span> 
+	<span class="close"></span> 
 	<strong>Thank you for signing up with us!</strong><br>
 	<p>Please login to continue further</p>
+	<button onclick="signupsuccess()" class="btn" style="color:black">OK</button>										  
 	</div>
 </div>
 {% elif display_error_message|length %}
@@ -240,7 +241,7 @@
             <button type="submit" class="btn btn-primary btn-lg" >Sign Up</button>
         </div>
     </form>
-	<div class="text-center">Already have an account? <a href="signin">Login here</a></div>
+	<div class="text-center">Already have an account? <a href="/signin">Login here</a></div>
 </div>
 
 <script type="text/javascript">
@@ -268,6 +269,9 @@ window.onclick = function(event) {
     modal.style.display = "none";
   }
 }	
+function signupsuccess(){
+	location.replace("http://localhost:5000/signin")
+}
 </script>
 
 
