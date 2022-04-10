@@ -163,6 +163,7 @@ def validate_user(user_email):
 
 def report_logic(month, year, user_email):
     # first need to get the default milk data for the entire month
+    print("report_logic("+str(month)+", "+str(year)+", "+str(user_email)+")") #for debugging 
     report_list = default_report_logic(month, year, user_email)
     # next need to check where all there was a change
     report_list = change_report_logic(month, year, user_email, report_list)
@@ -228,4 +229,7 @@ def change_report_logic(month, year, user_email, report_list):
                         report_list[int(change_day)-1][i]['qty'] = item_qty
                 else:
                     pass
+
+    # if(report_list = [None]*calendar.monthrange(int(year), int(month))[1]):
+    #     pass
     return report_list
