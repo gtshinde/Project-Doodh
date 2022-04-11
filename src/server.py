@@ -53,8 +53,9 @@ def create(user_id):
     else:
         return render_template("url_not_found.html") 
 
-@app.route("/report/<user_id>")
-def report(user_id):
+@app.route("/report/<user_id>/<FromDate>")
+def report(user_id,FromDate):
+    print('FRomDate is:',FromDate)
     user_details=connection.validate_user_signin(user_id)
     print('in the server user details:',user_details)
     signin=user_details[0]
@@ -77,7 +78,14 @@ def report(user_id):
         # past_month_list = [ [3, 2022, March], [2, 2022, February], [1, 2022, January], ... ] considering current_date is in APRIL 2022
         print (report_list)
         print (len(report_list))
-        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id)
+        # if FromDate=='null':
+        #     FromDate= calendar.monthrange(int(year), int(month)) #get no. of days in that month, will be used to display data for all days in that month when page loads
+        #     FromDate=str(FromDate[1])  #The abv line returns a tuple e.g(4,30) which means APR month 30 days, we want 30 days so FromDate[1]
+        #     print('On pg load FRomDate:',FromDate)
+        if FromDate!='null':
+            FromDate=str(int(FromDate))+' '+month_string+' '+str(year)
+        print('FRomDate after modifcation is:',FromDate)
+        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id,FromDate=FromDate)
     else:
         return render_template('url_not_found.html')
         
@@ -215,12 +223,19 @@ def signin():
     return render_template("signin.html",display_error_message=display_error_message)
 @app.route("/signin-success/<social_media_platform>/<user_email>/<user_name>")
 def signin_success(social_media_platform, user_email, user_name):
+    global first_usersigin
     connection.update_user_signin_status(user_email,'Y')
     user_id=connection.get_user_id(user_email)
     user_details=connection.validate_user_signin(user_id) #if a google user signins first time, record for this user wont be inserted into db at this pt in the code, goto connection.py for more clarity on this
     print('in the server user details:',user_details)
     signin=user_details[0]
     admin=user_details[1]
+    referrer=request.referrer
+    print('req  is coming from:',referrer)
+    #signin status should be true ONLY when on success route comes from signin page, nobody shd manually enter this url and let the insertion of the users happen in the db
+    if referrer=="http://localhost:5000/signin":
+        signin=True
+        admin=False
     print('user sign in status',signin)
     print('user admin status',admin)
     if (signin):
@@ -232,7 +247,11 @@ def signin_success(social_media_platform, user_email, user_name):
         count,first_sigin=connection.insert_users(user_email, user_name, social_media_platform,'')
         connection.update_user_signin_status(user_email,'Y')
         user_id=connection.get_user_id(user_email)
-        if(first_sigin):
+        print("count after insert is:",count)
+        if count==0:  #first signin shd be set to True only when NEW google user signs in, withotu this condition it would always set firstsign in to True when google user logs in
+            first_usersigin[user_id]=True
+        if(first_usersigin[user_id]):
+            first_usersigin[user_id]=False
             return redirect(url_for("default",user_id=user_id))
         else:
             return redirect(url_for("create",user_id=user_id))

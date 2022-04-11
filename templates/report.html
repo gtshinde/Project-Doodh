@@ -14,6 +14,13 @@
   <br/>
   {% endfor %}
 </div>
+<label style=" position: absolute; color:white; font-size: 20px;
+margin-left: 17%;"><strong>From Date:</strong></label>
+<input type="date" name="FromDate" id="FromDate" style=" position: absolute;
+margin-left: 25%;"> 
+ <input style="position: absolute;
+margin-left: 34%;" type="button" value="Go" onclick="qget()" id="Go"/>
+<br><br>
 
 <table id="customers">
   <tr>
@@ -22,16 +29,29 @@
     <th>Item Qty</th>
     <th>Price</th>
   </tr>
+ {{FromDate}}
   {% for day_item in report_list %}
+    
     {% for item in day_item %}
+    {% if FromDate=='null' %}
+    <tr>
+      <td> {{ item['date'] }} </td>
+      <td> {{ item['type'] }} </td>
+      <td> {{ item['qty'] }} </td>
+      <td> 0 </td>
+    </tr>    
+    {%  elif item['date']==FromDate  %}
       <tr>
         <td> {{ item['date'] }} </td>
         <td> {{ item['type'] }} </td>
         <td> {{ item['qty'] }} </td>
         <td> 0 </td>
       </tr>
+    {% endif %}
     {% endfor %}
+    
   {% endfor %}
+
 </table>
  <!-- <table id="customers">
   <tr>
@@ -83,4 +103,16 @@
     <td>Canada</td>
   </tr>
 </table> -->
+<script>
+
+  function qget () {
+    // (A) APPEND DATA
+    var x = document.getElementById("FromDate").value;
+    var datevalue= x.substring(x.length-2); //to get the day from the date eg 2022-04-19 then get 19
+    // (B) URL + REDIRECT
+    location.replace("/report"+'/{{user_id}}/' + datevalue);
+     
+  }
+  </script>
 {% endblock %}
+

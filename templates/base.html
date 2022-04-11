@@ -49,8 +49,7 @@
         {% endif %}
         {% if user_email|length %}
         <div id="usrname">Hello {{user_email}}!</div>
-        {% else %}        
-        <div id="usrname"></div>        
+
         {% endif %}
         
         <div id="emailID" style="display: none;"></div>
@@ -58,7 +57,7 @@
         
         <div id="mySidenav" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <a href="{{url_for('report',user_id=user_id)}}">Report</a>
+            <a href="{{url_for('report',user_id=user_id,FromDate='null')}}">Report</a>
             <a href="{{url_for('default',user_id=user_id)}}">Default Milk</a>
             <a href="{{url_for('create',user_id=user_id)}}">Change Milk Quantity</a>
             {% if is_admin == true %}
@@ -78,7 +77,7 @@
 
           // location.replace("http://localhost:5000")
           //document.querySelector('#usrname').innerText="Hello  "+googleUser.getBasicProfile().getGivenName()+" !";
-          document.querySelector('#usrname').innerText="Hello  "+profile.getEmail()+"!";          
+          // document.querySelector('#usrname').innerText="Hello  "+profile.getEmail()+"!";          
           document.querySelector('#emailID').innerText=String(profile.getEmail());
         }
 

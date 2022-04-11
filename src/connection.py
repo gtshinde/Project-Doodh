@@ -107,7 +107,7 @@ def validate_user_signin(user_id):
         conn.close()
        
     else:
-        user_details = ['Y',False,'','']
+        user_details = [False,False,'','']
     return user_details        
 
 def update_user_signin_status(user_email,sigin_val):
@@ -271,7 +271,7 @@ def default_report_logic(month, year, user_email):
     report_list = [None]
     # list should have same number of items as number of days of the month
     num_days_in_month = calendar.monthrange(int(year), int(month))
-    num_days_in_month = num_days_in_month[1]
+    num_days_in_month = num_days_in_month[1] #The abv line returns a tuple e.g(4,30) which means APR month 30 days, we want 30 days so FromDate[1]
     report_list = report_list * (num_days_in_month)
     for day in range(1, num_days_in_month+1):
         try:
