@@ -143,6 +143,19 @@ input[type=text]{
   font-size: 25px;
 }*/
 
+#box{
+  background: rgb(251, 215, 35);
+  border: 5px solid white;
+  border-radius: 20px;
+  padding: 18px;
+  width: 40%;
+  position: relative;
+  margin: auto;
+   color: white;
+   font-size: 25px;
+   text-align: center;
+}
+
 /* The Modal (background) */
 .modal {
   
