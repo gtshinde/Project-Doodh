@@ -8,8 +8,22 @@
   </div>
 </div>
 {% endif %}
+{{ display_date }}
+{% if display_date=='True' %}
+  <div id="box" class="box">
+    <strong>Change Milk Quantity for Past Date</strong>
+  </div>
+{% else %}
+  <div id="box" class="box">
+    <strong>Change Milk Quantity for Tomorrow!</strong>
+  </div>
+{% endif%}
 <form action="/create/{{user_id}}" method="POST">
   <table class="Tbl">
+    <tr id="past_date_row" style="display: none;">
+      <th class="alignh">Date</th>
+      <input class="past_date_input" type="date"/>
+    </tr>
     <tr>
       <th class="alignh">Cow Milk</th>
       <th>
@@ -65,6 +79,11 @@
     if (event.target == modal) {
       modal.style.display = "none";
     }
+  }
+  var display_past_date = '{{display_date}}'
+  console.log(display_past_date)
+  if(display_past_date){
+    document.getElementById('past_date_row').style.display="block";
   }
   </script>
 {% endblock %}

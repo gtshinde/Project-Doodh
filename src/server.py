@@ -27,17 +27,21 @@ def signout(user_email):
       connection.update_user_signin_status(user_email,'N')                                         
       return redirect(url_for("signin"))
 
-@app.route("/create/<user_id>",methods = ["GET", "POST"])
-def create(user_id):
+@app.route("/create/<user_id>-<display_date>",methods = ["GET", "POST"])
+def create(user_id, display_date):
     user_details=connection.validate_user_signin(user_id)
     print('in the server user details:',user_details)
     signin=user_details[0]
     admin=user_details[1]
     user_email=user_details[2]
+    print('display_date', display_date)
     print('user sign in status',signin)
     print('user admin status',admin)
     if (signin):
         if (request.method == "POST"):
+            # past_date = request.form.get("")
+            # if(past_date is NULL):
+                # past_date = "current_date+1"
             item_id = 1
             item_qty = request.form.get("cm")
             if (item_qty != '0.0'):
@@ -47,9 +51,9 @@ def create(user_id):
             if (item_qty != '0.0'):
                 connection.insert_into_change(item_id, item_qty)  
             submitted = "Yes"
-            return render_template("create.html", submitted=submitted, is_admin=is_admin,user_email=user_email,user_id=user_id)
+            return render_template("create.html", submitted=submitted, is_admin=is_admin,user_email=user_email,user_id=user_id, display_date=display_date)
         submitted = "No"
-        return render_template("create.html",submitted=submitted,is_admin=admin,user_email=user_email,user_id=user_id)
+        return render_template("create.html",submitted=submitted,is_admin=admin,user_email=user_email,user_id=user_id, display_date=display_date)
     else:
         return render_template("url_not_found.html") 
 
@@ -176,7 +180,7 @@ def items(user_id):
             submitted = "No"
             return render_template("admin.html", submitted=submitted, is_admin=admin,user_email=user_email,user_id=user_id)
         else:
-            return redirect(url_for("create"))
+            return redirect(url_for("create", user_id=user_id, display_date=False))
     else:
         return render_template("url_not_found.html")
 
@@ -215,12 +219,13 @@ def signin():
                 first_usersigin[user_id]=False
                 return redirect(url_for("default",user_id=user_id))
             else:
-                return redirect(url_for("create",user_id=user_id))
+                return redirect(url_for("create",user_id=user_id, display_date=False))
             
         else:
             print('Invalid credentials!')
             display_error_message="Invalid credentials!"
     return render_template("signin.html",display_error_message=display_error_message)
+
 @app.route("/signin-success/<social_media_platform>/<user_email>/<user_name>")
 def signin_success(social_media_platform, user_email, user_name):
     global first_usersigin
@@ -254,7 +259,7 @@ def signin_success(social_media_platform, user_email, user_name):
             first_usersigin[user_id]=False
             return redirect(url_for("default",user_id=user_id))
         else:
-            return redirect(url_for("create",user_id=user_id))
+            return redirect(url_for("create",user_id=user_id, display_date=False))
     else:
         return render_template("url_not_found.html")
 @app.route("/signup",methods = ["GET", "POST"])
