@@ -236,7 +236,7 @@ def insert_into_default(item_id, item_qty, user_email_id, eff_date_from):
     cur.close()
     conn.close()
 
-def validate_user(user_email):
+def get_user_pwd_from_db(user_email):
     conn = connect()
     cur = conn.cursor()   
     get_count = """SELECT count(password) FROM users 

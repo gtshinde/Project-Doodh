@@ -214,7 +214,7 @@ def signin():
         print('signin',user_email)
         print('signin',user_pwd)    
         print('user_id',user_id)
-        db_pwd= connection.validate_user(user_email)
+        db_pwd= connection.get_user_pwd_from_db(user_email)
         print('db_pwd',db_pwd) 
         if db_pwd=='':
             db_pwd='invalidgooglepwd'  #to handle invalid google login in the login pg
