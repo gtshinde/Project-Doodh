@@ -96,6 +96,7 @@ def report(user_id,FromDate):
         
 @app.route("/report/<user_id>/<month>/<year>")
 def report_month_year(user_id,month, year):
+    FromDate = 'null'
     user_details=connection.validate_user_signin(user_id)
     print('in the server user details:',user_details)
     signin=user_details[0]
@@ -114,9 +115,14 @@ def report_month_year(user_id,month, year):
         # past_month_list = [ [3, 2022, March], [2, 2022, February], [1, 2022, January], ... ] considering current_date is in APRIL 2022
         print (report_list)
         print (len(report_list))        
-        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id) 
+        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id, FromDate=FromDate) 
     else:
         return render_template('url_not_found.html') 
+
+# "/report/1000/2020-03-01:2020-04-21"
+@app.route("/report/<user_id>/<from_date>:<to_date>")
+def report_for_date_range(user_id, from_date, to_date):
+    pass
 
 @app.route("/default/<user_id>", methods=["GET", "POST"])
 def default(user_id):
