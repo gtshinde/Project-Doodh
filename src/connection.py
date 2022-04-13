@@ -296,6 +296,10 @@ def default_report_logic(month, year, user_email):
                         print("Qty = "+str(record[1]))
                         print("Price = "+str(record[2]))
                         if(report_list[day-1] is None):
+                            # for the report_list[day-1] - for this day if there is value None, it means we have to add the value from the database 
+                            # first iteration it will be None, so if we get Cow Milk, it will get added here
+                            # next iteration, if buffalo milk is there for the same day, if None condition will not be satisfied
+                            #  therefore for buffalo milk it will go to the else condition wherein we will append insteaad of '='
                             report_list[day-1] = [{"date": str(day)+" "+calendar.month_name[int(month)]+" "+str(year), "type": record[0], "qty": record[1], "price": record[2]}]
                         else:
                             report_list[day-1].append({"date": str(day)+" "+calendar.month_name[int(month)]+" "+str(year), "type": record[0], "qty": record[1], "price": record[2]})
