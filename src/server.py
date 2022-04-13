@@ -34,6 +34,7 @@ def create(user_id, display_date):
     signin=user_details[0]
     admin=user_details[1]
     user_email=user_details[2]
+    email_id=connection.get_user_email(user_id)
     print('display_date', display_date)
     print('user sign in status',signin)
     print('user admin status',admin)
@@ -45,11 +46,11 @@ def create(user_id, display_date):
             item_id = 1
             item_qty = request.form.get("cm")
             if (item_qty != '0.0'):
-                connection.insert_into_change(item_id, item_qty)  
+                connection.insert_into_change(item_id, item_qty,email_id)  
             item_id = 2
             item_qty = request.form.get("bm")
             if (item_qty != '0.0'):
-                connection.insert_into_change(item_id, item_qty)  
+                connection.insert_into_change(item_id, item_qty,email_id)  
             submitted = "Yes"
             return render_template("create.html", submitted=submitted, is_admin=is_admin,user_email=user_email,user_id=user_id, display_date=display_date)
         submitted = "No"
@@ -126,10 +127,10 @@ def default(user_id):
     user_email=user_details[2]    
     print('user sign in status',signin)
     print('user admin status',admin)
-    submitted="No"
+    
     if (signin):
         if(request.method == "POST"):
-            submitted="Yes"
+            
             postInfo = request.get_json()
             print(postInfo)
             userEmailID = postInfo['emailID']
@@ -146,8 +147,10 @@ def default(user_id):
             if (item_qty != '0.0'):
                 connection.insert_into_default(item_id, item_qty, userEmailID,effDateFrom)
                 print('connection.insert_into_default(2, '+str(item_qty)+', '+str(postInfo)+', '+str(effDateFrom))
-            
-        
+            print("submitted val in default post:",submitted)
+            submitted="Yes"
+            return render_template("default.html",submitted=submitted,is_admin=admin,user_email=user_email,user_id=user_id)
+        submitted="No"
         return render_template("default.html",is_admin=admin,user_email=user_email,user_id=user_id,submitted=submitted)
     else:
         return render_template('url_not_found.html')
