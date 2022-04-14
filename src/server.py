@@ -40,19 +40,29 @@ def create(user_id, display_date):
     print('user admin status',admin)
     if (signin):
         if (request.method == "POST"):
-            # past_date = request.form.get("")
-            # if(past_date is NULL):
-                # past_date = "current_date+1"
+            form_data=request.form 
+            if (display_date=='True'):
+                 #request.form gets all the form data and returns it as a dictionary of key value pairs
+                # past_date = request.form.get("past_date_input")
+                # past_date=form_data['past_date_input']
+                # print('past_date_input from form:',past_date)
+                print("create pg form data :",form_data)
+                past_date = form_data['past_date_input']
+                print('form_data[past_date_input]:',form_data['past_date_input'])
+            else:
+                past_date = "current_date+1"
             item_id = 1
             item_qty = request.form.get("cm")
+            cm=form_data['cm']
             if (item_qty != '0.0'):
-                connection.insert_into_change(item_id, item_qty,email_id)  
+                connection.insert_into_change(item_id, item_qty,email_id,past_date)  
             item_id = 2
             item_qty = request.form.get("bm")
+            bm=form_data['bm']
             if (item_qty != '0.0'):
-                connection.insert_into_change(item_id, item_qty,email_id)  
+                connection.insert_into_change(item_id, item_qty,email_id,past_date)  
             submitted = "Yes"
-            return render_template("create.html", submitted=submitted, is_admin=is_admin,user_email=user_email,user_id=user_id, display_date=display_date)
+            return render_template("create.html", submitted=submitted, is_admin=admin,user_email=user_email,user_id=user_id, display_date=display_date,cm=cm,bm=bm,past_date=past_date)
         submitted = "No"
         return render_template("create.html",submitted=submitted,is_admin=admin,user_email=user_email,user_id=user_id, display_date=display_date)
     else:
@@ -136,24 +146,24 @@ def default(user_id):
     
     if (signin):
         if(request.method == "POST"):
-            
+            form_data=request.form
+            print("create pg form data :",form_data)
             postInfo = request.get_json()
             print(postInfo)
-            userEmailID = postInfo['emailID']
             effDateFrom = postInfo['effDateFrom']
             item_id = 1
             # item_qty = request.form.get("cm")
             item_qty = postInfo['cmQty']
             if(item_qty != '0.0'):
-                connection.insert_into_default(item_id, item_qty, userEmailID,effDateFrom)
+                connection.insert_into_default(item_id, item_qty, user_id,effDateFrom)
                 print('connection.insert_into_default(1, '+str(item_qty)+', '+str(postInfo)+', '+str(effDateFrom))
             item_id = 2
             # item_qty = request.form.get("bm")
             item_qty = postInfo['bmQty']
             if (item_qty != '0.0'):
-                connection.insert_into_default(item_id, item_qty, userEmailID,effDateFrom)
+                connection.insert_into_default(item_id, item_qty, user_id,effDateFrom)
                 print('connection.insert_into_default(2, '+str(item_qty)+', '+str(postInfo)+', '+str(effDateFrom))
-            print("submitted val in default post:",submitted)
+   
             submitted="Yes"
             return render_template("default.html",submitted=submitted,is_admin=admin,user_email=user_email,user_id=user_id)
         submitted="No"

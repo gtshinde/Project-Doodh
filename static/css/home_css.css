@@ -202,3 +202,16 @@ input[type=text]{
   text-decoration: none;
   cursor: pointer;
 }
+
+#past_date_input {
+  height: 6%;
+    width: 19%;
+    position: absolute;
+    left: 49%;
+}
+.DateAlign {
+    text-align: left;
+    position: absolute;
+    left: 30%;
+    font-size: 30px;
+}

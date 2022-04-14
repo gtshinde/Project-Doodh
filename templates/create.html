@@ -2,9 +2,23 @@
 {% block content %}
 {% if submitted=="Yes" %}
 <div  id="myModal" class="modal">
-  <div class="modal-content">
+  <div class="modal-content" style="height: 18%; width:50%;">
   <span class="close">&times;</span> 
-  <strong>Thank you, your request has been registered!</strong>
+  <strong>Thank you, below inputs have been registered!</strong>
+  <br>
+  <br>
+  <script>
+    var cm = '{{ cm }}'
+    var bm= '{{ bm }}'
+
+  document.write("Cow Milk:"+cm+"lts &nbsp;&nbsp;&nbsp;") 
+  document.write("Buffalow Milk:"+bm+"lts &nbsp;&nbsp;&nbsp;")
+  if ('{{ display_date }}'=="True")
+  {
+    past_date='{{ past_date }}'
+    document.write("Date:"+past_date)
+  }
+  </script>
   </div>
 </div>
 {% endif %}
@@ -18,12 +32,18 @@
     <strong>Change Milk Quantity for Tomorrow!</strong>
   </div>
 {% endif%}
-<form action="/create/{{user_id}}" method="POST">
+<p id="try"></p> 
+<form action="/create/{{user_id}}-{{display_date}}" method="POST">
+
   <table class="Tbl">
-    <tr id="past_date_row" style="display: none;">
-      <th class="alignh">Date</th>
-      <input class="past_date_input" type="date"/>
-    </tr>
+  <tr>
+    {% if display_date=='True' %}
+    <div  id="past_date_row" style="display: block;">
+         <label class="DateAlign"><strong>Date</strong></label>
+        <input id="past_date_input" name="past_date_input" type="date" onclick="minmaxdate()">
+     </div>
+    {% endif %}
+  </tr>
     <tr>
       <th class="alignh">Cow Milk</th>
       <th>
@@ -56,8 +76,7 @@
       </th>
       </tr>
   </table>
-  <!--br>
-  <br-->
+ 
   <br><br>
   
   <input type="submit" value="Submit">
@@ -80,10 +99,25 @@
       modal.style.display = "none";
     }
   }
-  var display_past_date = '{{display_date}}'
-  console.log(display_past_date)
-  if(display_past_date){
-    document.getElementById('past_date_row').style.display="block";
-  }
+
+document.getElementById("past_date_input").addEventListener("change",minmaxdate)
+function minmaxdate() {
+    let d = new Date()
+    let today = d.toISOString().substr(0, 10);
+    var input = document.getElementById("past_date_input");
+  //   let d2= new Date().getFullYear();
+  //   d2= d2.getMonth() - 1;
+  //  d2= d2.getDate();
+  //  let past = d2.toISOString().substr(0, 10);
+   
+    
+    input.setAttribute("max", today);
+    let date = new Date()
+    let d2= d2.setdate(date.getdate() - 90);
+   
+    let past = d2.toISOString().substr(0, 10);
+    input.setAttribute("min", past);
+//  document.getElementById('try').innerHTML='ok done';
+}
   </script>
 {% endblock %}

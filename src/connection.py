@@ -181,13 +181,19 @@ def insert_into_items(item_type, item_price):
     finally:
         conn.close()
 
-def insert_into_change(item_id, item_qty, email_id):
+def insert_into_change(item_id, item_qty, email_id,past_date):
     conn = connect()
     cur = conn.cursor()
+    print('printing past_date in connection:',past_date)
+    if (past_date=="current_date+1"):
+        past_date='current_date+1'
+    else:
+        past_date="""to_date('"""+str(past_date)+"""','YYYY-MM-DD')"""
+
     get_records="""SELECT COUNT(1) 
                     FROM Change_Details 
                     WHERE ITEM_ID="""+str(item_id)+"""
-                    AND Change_DATE=current_date+1
+                    AND Change_DATE="""+str(past_date)+"""
                     AND user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(email_id)+"""');"""
     cur.execute(get_records)
     count = cur.fetchone()[0]
@@ -196,23 +202,23 @@ def insert_into_change(item_id, item_qty, email_id):
     if  count > 0 :
         sql_txt_update="""UPDATE Change_Details SET QTY = """+str(item_qty)+""" 
                             WHERE ITEM_ID="""+str(item_id)+""" 
-                            AND Change_DATE=current_date+1
+                            AND Change_DATE="""+str(past_date)+"""
                             AND user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(email_id)+"""');"""
         cur.execute(sql_txt_update)
     else:
         sql_txt_insert="""INSERT INTO Change_Details (Change_ID,Item_ID,Change_DATE,qty, user_id) 
-                            VALUES (nextval('Change_ID'),'"""+str(item_id)+"""',current_date+1,'"""+str(item_qty)+"""', (SELECT user_id FROM users WHERE social_media_email = '"""+str(email_id)+"""'));"""
+                            VALUES (nextval('Change_ID'),'"""+str(item_id)+"""',"""+str(past_date)+""",'"""+str(item_qty)+"""', (SELECT user_id FROM users WHERE social_media_email = '"""+str(email_id)+"""'));"""
         cur.execute(sql_txt_insert)
     conn.commit()
     cur.close()
     conn.close()
 
-def insert_into_default(item_id, item_qty, user_email_id, eff_date_from):
+def insert_into_default(item_id, item_qty, user_id, eff_date_from):
     conn = connect()
     cur = conn.cursor()
     get_records = """SELECT COUNT(1) FROM default_details 
                         WHERE item_id= '"""+str(item_id)+"""'
-                        AND user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(user_email_id)+"""')
+                        AND user_id = '"""+str(user_id)+"""'
                         AND Effective_From = TO_DATE('"""+str(eff_date_from)+"""','YYYY-MM-DD');"""
     cur.execute(get_records)
     count = cur.fetchone()[0]
@@ -220,17 +226,17 @@ def insert_into_default(item_id, item_qty, user_email_id, eff_date_from):
     if (count > 0):
         sql_txt_update = """UPDATE default_details SET qty = '"""+str(item_qty)+"""', last_updated_date = current_date
                                 WHERE item_id = '"""+str(item_id)+"""' 
-                                    AND user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(user_email_id)+"""')
+                                    AND user_id = '"""+str(user_id)+"""'
                                     AND Effective_From = TO_DATE('"""+str(eff_date_from)+"""','YYYY-MM-DD');"""
         cur.execute(sql_txt_update)
     else:
         sql_txt_prev_update = """UPDATE default_details SET effective_to = TO_DATE('+"""+str(eff_date_from)+"""', 'YYYY-MM-DD') - 1
                                     WHERE item_id = '"""+str(item_id)+"""'
-                                        AND user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(user_email_id)+"""')
+                                        AND user_id = '"""+str(user_id)+"""'
                                         AND effective_to IS NULL;"""
         cur.execute(sql_txt_prev_update)
         sql_txt_insert="""INSERT INTO default_details (default_id, item_id, qty, user_id, created_date, last_updated_date,Effective_From) 
-                            VALUES (nextval('default_id'),'"""+str(item_id)+"""','"""+str(item_qty)+"""', (SELECT user_id FROM users WHERE social_media_email = '"""+str(user_email_id)+"""'), current_date, current_date,TO_DATE('"""+str(eff_date_from)+"""','YYYY-MM-DD'));"""
+                            VALUES (nextval('default_id'),'"""+str(item_id)+"""','"""+str(item_qty)+"""', '"""+str(user_id)+"""', current_date, current_date,TO_DATE('"""+str(eff_date_from)+"""','YYYY-MM-DD'));"""
         cur.execute(sql_txt_insert)
     conn.commit()
     cur.close()
