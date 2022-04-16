@@ -1,5 +1,7 @@
 import psycopg2
 import calendar
+from pandas import to_datetime
+import datetime
 
 from server import report
 
@@ -261,25 +263,29 @@ def get_user_pwd_from_db(user_email):
     conn.commit()
     cur.close()
     conn.close()    
-    return pwd; 
+    return pwd
 
-def report_logic(month, year, user_email):
-    # first need to get the default milk data for the entire month
-    print("report_logic("+str(month)+", "+str(year)+", "+str(user_email)+")") #for debugging 
-    report_list = default_report_logic(month, year, user_email)
+def report_logic(from_date, to_date, user_id):
+    print("From Date ", from_date),
+    print("To Date: ", to_date)
+    # first need to get the default milk data for the date between from_date and to_date
+    print("report_logic("+str(from_date)+", "+str(to_date)+", "+str(user_id)+")") #for debugging 
+    report_list = default_report_logic(from_date, to_date, user_id)
     # next need to check where all there was a change
-    report_list = change_report_logic(month, year, user_email, report_list)
+    report_list = change_report_logic(from_date, to_date, user_id, report_list)
     # next need to get the total bill for the month
     #  = bill_report_logic(report_list)
     return (report_list)
 
-def default_report_logic(month, year, user_email):
+def default_report_logic(from_date, to_date, user_id):
     report_list = [None]
     # list should have same number of items as number of days of the month
-    num_days_in_month = calendar.monthrange(int(year), int(month))
-    num_days_in_month = num_days_in_month[1] #The abv line returns a tuple e.g(4,30) which means APR month 30 days, we want 30 days so FromDate[1]
-    report_list = report_list * (num_days_in_month)
-    for day in range(1, num_days_in_month+1):
+    from_date = to_datetime(from_date, format='%Y-%m-%d')
+    to_date = to_datetime(to_date, format='%Y-%m-%d')
+    num_days_between_fromDate_toDate = (to_date - from_date).days
+    # num_days_in_month = num_days_in_month[1] #The abv line returns a tuple e.g(4,30) which means APR month 30 days, we want 30 days so FromDate[1]
+    report_list = report_list * (num_days_between_fromDate_toDate)
+    for day in range(0, num_days_between_fromDate_toDate):
         try:
             conn = connect()
             with conn:
@@ -289,15 +295,16 @@ def default_report_logic(month, year, user_email):
                                     dd.qty, 
                                     (SELECT i.price 
                                         FROM items i 
-                                        WHERE TO_DATE('"""+str(day)+"""-"""+str(month)+"""-"""+str(year)+"""','DD-MM-YYYY') 
+                                        WHERE TO_DATE('"""+str((from_date+datetime.timedelta(days=day)))+"""','YYYY-MM-DD') 
                                             BETWEEN i.Effective_From AND COALESCE(i.Effective_To, TO_DATE('5874897-01-01','YYYY-MM-DD'))
                                             AND i.item_id = dd.item_id)
                                 FROM default_details dd
-                                WHERE TO_DATE('"""+str(day)+"""-"""+str(month)+"""-"""+str(year)+"""','DD-MM-YYYY') between dd.Effective_From AND COALESCE(dd.Effective_To, TO_DATE('5874897-01-01','YYYY-MM-DD')) 
-                                    AND dd.user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(user_email)+"""');"""
+                                WHERE TO_DATE('"""+str((from_date+datetime.timedelta(days=day)))+"""','YYYY-MM-DD') between dd.Effective_From AND COALESCE(dd.Effective_To, TO_DATE('5874897-01-01','YYYY-MM-DD')) 
+                                    AND dd.user_id = '"""+str(user_id)+"""';"""
                     cur.execute(sql_txt)
                     for record in cur.fetchall():
-                        print("Date = "+str(day)+" "+calendar.month_name[int(month)]+" "+str(year))
+                        print("Date = "+str((from_date+datetime.timedelta(days=day))).split(" ")[0])
+                        # Eg: split function will give ['2022-04-15', '00:00:00'] - so we only need [0]
                         print("Type = "+str(record[0]))
                         print("Qty = "+str(record[1]))
                         print("Price = "+str(record[2]))
@@ -306,9 +313,9 @@ def default_report_logic(month, year, user_email):
                             # first iteration it will be None, so if we get Cow Milk, it will get added here
                             # next iteration, if buffalo milk is there for the same day, if None condition will not be satisfied
                             #  therefore for buffalo milk it will go to the else condition wherein we will append insteaad of '='
-                            report_list[day-1] = [{"date": str(day)+" "+calendar.month_name[int(month)]+" "+str(year), "type": record[0], "qty": record[1], "price": record[2]}]
+                            report_list[day-1] = [{"date": str((from_date+datetime.timedelta(days=day))).split(" ")[0], "type": record[0], "qty": record[1], "price": record[2]}]
                         else:
-                            report_list[day-1].append({"date": str(day)+" "+calendar.month_name[int(month)]+" "+str(year), "type": record[0], "qty": record[1], "price": record[2]})
+                            report_list[day-1].append({"date": str((from_date+datetime.timedelta(days=day))).split(" ")[0], "type": record[0], "qty": record[1], "price": record[2]})
         except Exception as e:
             print(e)
             raise e
@@ -316,26 +323,42 @@ def default_report_logic(month, year, user_email):
             conn.close()
     return report_list
 
-def change_report_logic(month, year, user_email, report_list):
+def change_report_logic(from_date, to_date, user_id, report_list):
     conn = connect()
-    with conn:
-        with conn.cursor() as cur:
-            sql_txt = """SELECT (SELECT i.item_type FROM items i WHERE i.item_id = cd.item_id) item_type, cd.qty, cd.change_date, DATE_PART('day',cd.change_date)
+    from_date = to_datetime(from_date, format='%Y-%m-%d')
+    to_date = to_datetime(to_date, format='%Y-%m-%d')
+    num_days_between_fromDate_toDate = (to_date - from_date).days
+    for day in range(0, num_days_between_fromDate_toDate):
+        with conn:
+            with conn.cursor() as cur:
+                sql_txt = """SELECT 
+                                (SELECT i.item_type 
+                                    FROM items i 
+                                    WHERE i.item_id = cd.item_id) item_type, 
+                                cd.qty, 
+                                cd.change_date,
+                                (SELECT i.price 
+                                        FROM items i 
+                                        WHERE TO_DATE('"""+str((from_date+datetime.timedelta(days=day)))+"""','YYYY-MM-DD') 
+                                            BETWEEN i.Effective_From AND COALESCE(i.Effective_To, TO_DATE('5874897-01-01','YYYY-MM-DD'))
+                                            AND i.item_id = cd.item_id)
                             FROM change_details cd
-                            WHERE cd.user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(user_email)+"""')
-                            AND DATE_PART('month', cd.change_date) =  '"""+str(month)+"""';"""
-            cur.execute(sql_txt)
-            for record in cur.fetchall():
-                item_type = record[0]
-                item_qty = record[1]
-                # change_date = record[2]
-                change_day = record[3]
-                for i in range (0, len(report_list[int(change_day)-1])):
-                    if (report_list[int(change_day)-1][i]['type'] == item_type):
-                        report_list[int(change_day)-1][i]['qty'] = item_qty
-                else:
-                    pass
-
-    # if(report_list = [None]*calendar.monthrange(int(year), int(month))[1]):
-    #     pass
+                            WHERE cd.user_id = '"""+str(user_id)+"""'
+                                AND cd.change_date =  TO_DATE('"""+str((from_date+datetime.timedelta(days=day)))+"""','YYYY-MM-DD')"""
+                cur.execute(sql_txt)
+                for record in cur.fetchall():
+                    item_type = record[0]
+                    item_qty = record[1]
+                    change_date = record[2]
+                    price = record[3]
+                    # below for looop is for the items in default report list
+                    change_present_in_default = False
+                    for i in range (0, len(report_list[day])):
+                        if (report_list[day][i]['type'] == item_type):
+                            report_list[day][i]['qty'] = item_qty
+                            change_present_in_default = True
+                            break 
+                            #once it matches and upadtes we don't need to check other items in default report list for that day
+                    if(not change_present_in_default):
+                        report_list[day].append({"date": change_date, "type": item_type, "qty": item_qty, "price": price})
     return report_list

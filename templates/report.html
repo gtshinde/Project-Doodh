@@ -16,10 +16,10 @@
 </div>
 <label style=" position: absolute; color:white; font-size: 20px;
 margin-left: 17%;"><strong>From Date:</strong></label>
-<input type="date" name="FromDate" id="FromDate" style=" position: absolute;
-margin-left: 25%;"> 
- <input style="position: absolute;
-margin-left: 34%;" type="button" value="Go" onclick="qget()" id="Go"/>
+<input type="date" name="fromDate" id="fromDate" style=" position: absolute; margin-left: 25%;" required="required"> 
+<label style="position: absolute; color: white; font-size: 20px; margin-left: 50%;"><strong>To Date:</strong></label>
+<input type="date" name="toDate" id="toDate" style="position: absolute; margin-left: 60%;" required="required">
+ <input style="position: absolute; margin-left: 80%;" type="button" value="Go" onclick="get_reports_for_dates()" id="Go">
 <br><br>
 
 <table id="customers">
@@ -29,29 +29,18 @@ margin-left: 34%;" type="button" value="Go" onclick="qget()" id="Go"/>
     <th>Item Qty</th>
     <th>Price</th>
   </tr>
- {{FromDate}}
   {% for day_item in report_list %}
     {% if day_item is not none %}
       {% for item in day_item %}
-        {% if FromDate=='null' %}
         <tr>
           <td> {{ item['date'] }} </td>
           <td> {{ item['type'] }} </td>
           <td> {{ item['qty'] }} </td>
-          <td> 0 </td>
-        </tr>    
-        {% elif item['date']==FromDate  %}
-          <tr>
-            <td> {{ item['date'] }} </td>
-            <td> {{ item['type'] }} </td>
-            <td> {{ item['qty'] }} </td>
-            <td> 0 </td>
-          </tr>
-        {% endif %}
+          <td> {{ item['price'] }} </td>
+        </tr>
       {% endfor %}
     {% endif %}
   {% endfor %}
-
 </table>
  <!-- <table id="customers">
   <tr>
@@ -105,13 +94,12 @@ margin-left: 34%;" type="button" value="Go" onclick="qget()" id="Go"/>
 </table> -->
 <script>
 
-  function qget () {
+  function get_reports_for_dates() {
     // (A) APPEND DATA
-    var x = document.getElementById("FromDate").value;
-    var datevalue= x.substring(x.length-2); //to get the day from the date eg 2022-04-19 then get 19
+    var fromDate = document.getElementById("fromDate").value;
+    var toDate = document.getElementById("toDate").value;
     // (B) URL + REDIRECT
-    location.replace("/report"+'/{{user_id}}/' + datevalue);
-     
+    location.replace("/report"+'/{{user_id}}/' + fromDate + ':' + toDate);
   }
   </script>
 {% endblock %}
