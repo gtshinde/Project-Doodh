@@ -3,8 +3,6 @@ import calendar
 from pandas import to_datetime
 import datetime
 
-from server import report
-
 def connect():
     try:
         conn = psycopg2.connect(
