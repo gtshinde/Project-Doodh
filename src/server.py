@@ -1,6 +1,6 @@
 # from operator import methodcaller
 # from crypt import methods
-from ast import And
+from pprint import pprint
 from passlib.hash import sha256_crypt
 from operator import is_
 from re import sub
@@ -8,7 +8,7 @@ from flask import Flask, render_template, redirect, request, url_for
 import connection
 from datetime import date
 import calendar
-from pandas import DateOffset
+from pandas import DateOffset, to_datetime
 
 
 is_admin = False
@@ -69,16 +69,16 @@ def create(user_id, display_date):
     else:
         return render_template("url_not_found.html") 
 
-@app.route("/report/<user_id>/<FromDate>")
-def report(user_id,FromDate):
-    print('FRomDate is:',FromDate)
+@app.route("/report/<user_id>")
+def report(user_id):
+    # print('FRomDate is:',FromDate)
     user_details=connection.validate_user_signin(user_id)
     print('in the server user details:',user_details)
     signin=user_details[0]
     admin=user_details[1]
     user_email=user_details[2]    
-    print('user sign in status',signin)
-    print('user admin status',admin)
+    print('Report page: user sign in status',signin)
+    print('Report page:user admin status',admin)
     if (signin): 
         # if user has not provided the month or year
         # find the system month and year
@@ -86,22 +86,24 @@ def report(user_id,FromDate):
         month = int(todays_date.month)
         year = int(todays_date.year)
         month_string = calendar.month_name[month]
-        report_list = connection.report_logic(month, year, user_email )
+        report_list = connection.report_logic(str(year)+"-"+str(month)+"-01", str(todays_date), user_id)
         past_months_list = []
         for i in range(1, 6):
             offset_date = todays_date - DateOffset(months=i)
             past_months_list.append([str(offset_date.month), str(offset_date.year), calendar.month_name[offset_date.month]])
         # past_month_list = [ [3, 2022, March], [2, 2022, February], [1, 2022, January], ... ] considering current_date is in APRIL 2022
-        print (report_list)
+        pprint(report_list)
         print (len(report_list))
         # if FromDate=='null':
         #     FromDate= calendar.monthrange(int(year), int(month)) #get no. of days in that month, will be used to display data for all days in that month when page loads
         #     FromDate=str(FromDate[1])  #The abv line returns a tuple e.g(4,30) which means APR month 30 days, we want 30 days so FromDate[1]
         #     print('On pg load FRomDate:',FromDate)
-        if FromDate!='null':
-            FromDate=str(int(FromDate))+' '+month_string+' '+str(year)
-        print('FRomDate after modifcation is:',FromDate)
-        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id,FromDate=FromDate)
+        # the above was previous logic which was already commented
+        # below logic has been newly commented
+        # if FromDate!='null':
+        #     FromDate=str(int(FromDate))+' '+month_string+' '+str(year)
+        # print('FRomDate after modifcation is:',FromDate)
+        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id)
     else:
         return render_template('url_not_found.html')
         
@@ -115,8 +117,9 @@ def report_month_year(user_id,month, year):
     user_email=user_details[2]    
     print('user sign in status',signin)
     print('user admin status',admin)  
-    if (signin):    
-        report_list = connection.report_logic(month, year, user_email )
+    if (signin):
+        num_days_in_month = calendar.monthrange(int(year), int(month))[1]    
+        report_list = connection.report_logic(str(year)+"-"+str(month)+"-01", str(year)+"-"+str(month)+"-"+str(num_days_in_month), user_id)
         month_string = calendar.month_name[int(month)]
         past_months_list = []
         todays_date = date.today()
@@ -124,16 +127,38 @@ def report_month_year(user_id,month, year):
             offset_date = todays_date - DateOffset(months=i)
             past_months_list.append([str(offset_date.month), str(offset_date.year), calendar.month_name[offset_date.month]])
         # past_month_list = [ [3, 2022, March], [2, 2022, February], [1, 2022, January], ... ] considering current_date is in APRIL 2022
-        print (report_list)
+        pprint (report_list)
         print (len(report_list))        
-        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id, FromDate=FromDate) 
+        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id) 
     else:
         return render_template('url_not_found.html') 
 
 # "/report/1000/2020-03-01:2020-04-21"
 @app.route("/report/<user_id>/<from_date>:<to_date>")
 def report_for_date_range(user_id, from_date, to_date):
-    pass
+    user_details = connection.validate_user_signin(user_id)
+    print('Report page (fromDate-toDate): in the server user details:',user_details)
+    signin=user_details[0]
+    admin=user_details[1]
+    user_email=user_details[2]    
+    print('Report page (fromDate-toDate): user sign in status',signin)
+    print('Report page (fromDate-toDate): user admin status',admin)  
+    if (signin):
+        report_list = connection.report_logic(from_date, to_date, user_id)
+        from_date = to_datetime(from_date, format='%Y-%m-%d')
+        to_date = to_datetime(to_date, format='%Y-%m-%d')
+        month_string = ""
+        past_months_list = []
+        todays_date = date.today()
+        for i in range(1, 6):
+            offset_date = todays_date - DateOffset(months=i)
+            past_months_list.append([str(offset_date.month), str(offset_date.year), calendar.month_name[offset_date.month]])
+        # past_month_list = [ [3, 2022, March], [2, 2022, February], [1, 2022, January], ... ] considering current_date is in APRIL 2022
+        pprint (report_list)
+        print (len(report_list)) 
+        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id) 
+    else:
+        return render_template('url_not_found.html')
 
 @app.route("/default/<user_id>", methods=["GET", "POST"])
 def default(user_id):
