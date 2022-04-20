@@ -103,21 +103,20 @@
 document.getElementById("past_date_input").addEventListener("change",minmaxdate)
 function minmaxdate() {
     let d = new Date()
+    // d will have value like - "Wed Apr 20 2022 12:58:53 GMT+0530 (India Standard Time)"
     let today = d.toISOString().substr(0, 10);
+    // toISOString() will return the date as "2022-04-20T07:35:36.917Z". Since we need only till index 10, we are taking the substring
+    // today will have string 'YYYY-MM-DD' of the current day
     var input = document.getElementById("past_date_input");
-  //   let d2= new Date().getFullYear();
-  //   d2= d2.getMonth() - 1;
-  //  d2= d2.getDate();
-  //  let past = d2.toISOString().substr(0, 10);
-   
-    
+  
+    let d2 = new Date()
+    d2.setFullYear(d.getFullYear(), d.getMonth()-5, 1)
+    // setFullYear ('2022', 6months back, 1st day of the month)
+    // when we do -5, it takes the date as 6 months back, and also goes to the previous year
+    past_date = d2.toISOString().substr(0, 10);
+
+    input.setAttribute("min", past_date);
     input.setAttribute("max", today);
-    let date = new Date()
-    let d2= d2.setdate(date.getdate() - 90);
-   
-    let past = d2.toISOString().substr(0, 10);
-    input.setAttribute("min", past);
-//  document.getElementById('try').innerHTML='ok done';
 }
   </script>
 {% endblock %}
