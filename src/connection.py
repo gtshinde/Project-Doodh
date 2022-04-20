@@ -339,3 +339,16 @@ def change_report_logic(month, year, user_email, report_list):
     # if(report_list = [None]*calendar.monthrange(int(year), int(month))[1]):
     #     pass
     return report_list
+
+def check_default_details(user_id): #function to check if user has entered any default details when they login 1st time, if not then  re-direct them to the default pg again
+    conn = connect()
+    with conn:
+        with conn.cursor() as cur:
+            sql_txt="""SELECT count(default_id) FROM DEFAULT_DETAILS WHERE USER_ID='"""+str(user_id)+"""';"""
+            try:
+                cur.execute(sql_txt)
+                count=cur.fetchone()[0]
+            except Exception as e:
+                print(e)
+                raise e
+    return count

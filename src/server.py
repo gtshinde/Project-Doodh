@@ -1,5 +1,6 @@
 # from operator import methodcaller
 # from crypt import methods
+from ast import And
 from passlib.hash import sha256_crypt
 from operator import is_
 from re import sub
@@ -234,7 +235,10 @@ def signin():
         elif(sha256_crypt.verify(user_pwd, db_pwd)):
             connection.update_user_signin_status(user_email,'Y')
             print(first_usersigin[user_id])
-            if(first_usersigin[user_id]):
+            #function to check if user has entered any default details when they login 1st time, if not then  re-direct them to the default pg again            
+            default_details_count=connection.check_default_details(user_id) 
+            print('user has entered default details? default_details_count:',default_details_count)
+            if(first_usersigin[user_id] or default_details_count==0):
                 first_usersigin[user_id]=False
                 return redirect(url_for("default",user_id=user_id))
             else:
@@ -272,9 +276,12 @@ def signin_success(social_media_platform, user_email, user_name):
         connection.update_user_signin_status(user_email,'Y')
         user_id=connection.get_user_id(user_email)
         print("count after insert is:",count)
-        if count==0:  #first signin shd be set to True only when NEW google user signs in, withotu this condition it would always set firstsign in to True when google user logs in
+        if count==0:  #first signin shd be set to True only when NEW google user signs in, without this condition it would always set firstsign in to True when google user logs in
             first_usersigin[user_id]=True
-        if(first_usersigin[user_id]):
+        #function to check if user has entered any default details when they login 1st time, if not then  re-direct them to the default pg again            
+        default_details_count=connection.check_default_details(user_id) 
+        print('user has entered default details? default_details_count:',default_details_count)
+        if(first_usersigin[user_id] or default_details_count==0):            
             first_usersigin[user_id]=False
             return redirect(url_for("default",user_id=user_id))
         else:
