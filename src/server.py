@@ -169,30 +169,33 @@ def default(user_id):
     user_email=user_details[2]    
     print('user sign in status',signin)
     print('user admin status',admin)
-    
     if (signin):
         if(request.method == "POST"):
-            form_data=request.form
-            print("create pg form data :",form_data)
-            postInfo = request.get_json()
-            print(postInfo)
-            effDateFrom = postInfo['effDateFrom']
+            # print("Coming inside the post block - default")
+            # form_data=request.form
+            # print("create pg form data :",form_data)
+            # postInfo = request.get_json()
+            # print(postInfo)
+            # effDateFrom = postInfo['effDateFrom']
             item_id = 1
             # item_qty = request.form.get("cm")
-            item_qty = postInfo['cmQty']
-            if(item_qty != '0.0'):
-                connection.insert_into_default(item_id, item_qty, user_id,effDateFrom)
-                print('connection.insert_into_default(1, '+str(item_qty)+', '+str(postInfo)+', '+str(effDateFrom))
+            # item_qty = postInfo['cmQty']
+            posted_info = request.form
+            eff_date_from = posted_info['effectiveFrom']
+            cm_item_qty = posted_info['cm']
+            if(cm_item_qty != '0.0'):
+                connection.insert_into_default(item_id, cm_item_qty, user_id,eff_date_from)
+                print('connection.insert_into_default(1, '+str(cm_item_qty)+', '+str(posted_info)+', '+str(eff_date_from))
             item_id = 2
-            # item_qty = request.form.get("bm")
-            item_qty = postInfo['bmQty']
-            if (item_qty != '0.0'):
-                connection.insert_into_default(item_id, item_qty, user_id,effDateFrom)
-                print('connection.insert_into_default(2, '+str(item_qty)+', '+str(postInfo)+', '+str(effDateFrom))
-   
+            bm_item_qty = posted_info["bm"]
+            if (bm_item_qty != '0.0'):
+                connection.insert_into_default(item_id, bm_item_qty, user_id,eff_date_from)
+                print('connection.insert_into_default(2, '+str(bm_item_qty)+', '+str(posted_info)+', '+str(eff_date_from))
             submitted="Yes"
-            return render_template("default.html",submitted=submitted,is_admin=admin,user_email=user_email,user_id=user_id)
+            print("Submitted", submitted)
+            return render_template("default.html",submitted=submitted,is_admin=admin,user_email=user_email,user_id=user_id, posted_info=posted_info)
         submitted="No"
+        print("Submitted is ", submitted)
         return render_template("default.html",is_admin=admin,user_email=user_email,user_id=user_id,submitted=submitted)
     else:
         return render_template('url_not_found.html')

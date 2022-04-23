@@ -3,23 +3,31 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 {% endblock %}
 {% block content %}
-
 <div  id="box" class="box">
   <strong>Kindly help us know your daily default milk requirement!</strong>
   </div>
-
-{{ submitted }}
 {% if submitted=="Yes" %}
 <div  id="myModal" class="modal">
-  <div class="modal-content">
-  <span class="close">&times;</span> 
-  <strong>Thank you, your request has been registered!</strong>
+  <div class="modal-content" style="height: fit-content; width:50%;">
+    <span class="close">&times;</span> 
+    <strong>Thank you, your request has been registered!</strong>
+    <br>
+    <br>
+    <script>
+      var cm = "{{ posted_info['cm'] }}"
+      var bm = "{{ posted_info['bm'] }}"
+      var dateValue = "{{ posted_info['effectiveFrom'] }}"
+      document.write("Effective From: "+dateValue+" &nbsp;")
+      document.write("Cow Milk: "+cm+"L &nbsp;") 
+      document.write("Buffalow Milk: "+bm+"L &nbsp;")
+    </script>
+    <br>
+    <br>
   </div>
- 
 </div>
 {% endif %}			   
 
-<form  onsubmit="onsubmitfunc()">
+<form action="/default/{{user_id}}" method="POST">
   <table class="Tbl">
     <tr>
       <th class="alignh">Cow Milk</th>
@@ -59,7 +67,6 @@
           <!-- here have to put a calendar -->
         </th>
       </tr>
-
   </table>
   <br><br>
   <input type="submit" value="Submit">
@@ -82,35 +89,34 @@ window.onclick = function(event) {
     modal.style.display = "none";
   }
 }
-function getEmailID(){
-  console.log("The getEmailID function is able to use the below?")
-  console.log(googleUser.getBasicProfile().getGivenName());
-  // return googleUser.getBasicProfile().getGivenName();
-}
-function onsubmitfunc(){
- var emailstr = document.getElementById("emailID").innerText;
- var username = emailstr.trim();  
- var effectiveDate = String(document.getElementById("effectiveFrom").value);
-// let emailID = $("#usrname").html();
-// let cmQty = $('#cm').html()
-// let bmQty = $('#bm').html()
-var defaultData = {emailID: username ,
-            cmQty: (document.getElementById("cm")).value,
-            bmQty: (document.getElementById("bm")).value,
-            effDateFrom: effectiveDate
-          }
-$.ajax({
-    type: 'POST',
-    url: '/default/{{user_id}}',
-    // data: JSON.stringify(emailID),
-    dataType: 'json',
-    data: JSON.stringify(defaultData),
-    contentType: "application/json; charset=utf-8",
-    success: function (data) {
-        console.log(data);
-    }
-})
-};
-
+// function getEmailID(){
+//   console.log("The getEmailID function is able to use the below?")
+//   console.log(googleUser.getBasicProfile().getGivenName());
+//   // return googleUser.getBasicProfile().getGivenName();
+// }
+// function onsubmitfunc(){
+//  var emailstr = document.getElementById("emailID").innerText;
+//  var username = emailstr.trim();  
+//  var effectiveDate = String(document.getElementById("effectiveFrom").value);
+// // let emailID = $("#usrname").html();
+// // let cmQty = $('#cm').html()
+// // let bmQty = $('#bm').html()
+// var defaultData = {emailID: username ,
+//             cmQty: (document.getElementById("cm")).value,
+//             bmQty: (document.getElementById("bm")).value,
+//             effDateFrom: effectiveDate
+//           }
+// $.ajax({
+//     type: 'POST',
+//     url: '/default/{{user_id}}',
+//     // data: JSON.stringify(emailID),
+//     dataType: 'json',
+//     data: JSON.stringify(defaultData),
+//     contentType: "application/json; charset=utf-8",
+//     success: function (data) {
+//         console.log(data);
+//     }
+// })
+// };
 </script>
 {% endblock %}
