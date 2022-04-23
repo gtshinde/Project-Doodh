@@ -85,6 +85,11 @@ User_ID INTEGER
 
 SELECT * FROM Change_Details
 
+ALTER TABLE Change_Details
+    ADD COLUMN Effective_From DATE,
+    ADD COLUMN Effective_To DATE;
+
+
 CREATE SEQUENCE Default_ID START WITH 1000;
 
 create table Default_Details (
@@ -104,6 +109,10 @@ ALTER COLUMN QTY TYPE FLOAT;
 ALTER TABLE default_details
 ALTER COLUMN qty TYPE FLOAT;
 
+ALTER TABLE default_details
+    ADD COLUMN Effective_From DATE,
+    ADD COLUMN Effective_To DATE;
+
 ALTER TABLE users
     RENAME Social_Media_Username TO social_media_email;
 
@@ -120,6 +129,7 @@ INSERT INTO Default_Details VALUES (nextval('Default_ID'),
 INSERT INTO Default_Details VALUES (nextval('Default_ID'),
 									1,3,1000,current_date,current_date,
 									TO_DATE('11-04-22','DD-MM-YY'),TO_DATE('18-04-22','DD-MM-YY'))                                                                  
+
 
 commit;
 

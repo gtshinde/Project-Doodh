@@ -42,28 +42,30 @@ def create(user_id, display_date):
     if (signin):
         if (request.method == "POST"):
             form_data=request.form 
-            if (display_date=='True'):
+        #   if (display_date=='True'):
                  #request.form gets all the form data and returns it as a dictionary of key value pairs
                 # past_date = request.form.get("past_date_input")
                 # past_date=form_data['past_date_input']
                 # print('past_date_input from form:',past_date)
-                print("create pg form data :",form_data)
-                past_date = form_data['past_date_input']
-                print('form_data[past_date_input]:',form_data['past_date_input'])
-            else:
-                past_date = "current_date+1"
+            print("create pg form data :",form_data)
+            from_date = form_data['fromDate']
+            print('form_data[fromDate]',form_data['fromDate'])
+            to_date = form_data['toDate']
+            print('form_data[toDate]',form_data['toDate'])            
+    #   --  else:
+            # past_date = "current_date+1"
             item_id = 1
             item_qty = request.form.get("cm")
             cm=form_data['cm']
             if (item_qty != '0.0'):
-                connection.insert_into_change(item_id, item_qty,email_id,past_date)  
+                connection.insert_into_change(item_id, item_qty,email_id,from_date,to_date)  
             item_id = 2
             item_qty = request.form.get("bm")
             bm=form_data['bm']
             if (item_qty != '0.0'):
-                connection.insert_into_change(item_id, item_qty,email_id,past_date)  
+                connection.insert_into_change(item_id, item_qty,email_id,from_date,to_date) 
             submitted = "Yes"
-            return render_template("create.html", submitted=submitted, is_admin=admin,user_email=user_email,user_id=user_id, display_date=display_date,cm=cm,bm=bm,past_date=past_date)
+            return render_template("create.html", submitted=submitted, is_admin=admin,user_email=user_email,user_id=user_id, display_date=display_date,cm=cm,bm=bm,form_data=form_data)
         submitted = "No"
         return render_template("create.html",submitted=submitted,is_admin=admin,user_email=user_email,user_id=user_id, display_date=display_date)
     else:
