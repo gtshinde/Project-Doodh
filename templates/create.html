@@ -1,4 +1,18 @@
 {% extends "base.html" %}
+{% block head %}
+<style>
+  #fromDate,#toDate {
+    text-align: center;
+    font-size: 20px;
+    border: white;
+    height: 5%;
+    width: 20%;
+    position: absolute;
+    margin-left: -1%;
+    border-radius: 6px;
+}
+</style>
+{% endblock %}
 {% block content %}
 {% if submitted=="Yes" %}
 <div  id="myModal" class="modal">
@@ -8,16 +22,23 @@
   <br>
   <br>
   <script>
-    var cm = '{{ cm }}'
-    var bm= '{{ bm }}'
+    // var cm = '{{ cm }}'
+    var cm = "{{ form_data['cm'] }}"
+    var bm = "{{ form_data['bm'] }}"
+    // var bm= '{{ bm }}'
+    var form_data='{{ form_data }}'
 
-  document.write("Cow Milk:"+cm+"lts &nbsp;&nbsp;&nbsp;") 
-  document.write("Buffalow Milk:"+bm+"lts &nbsp;&nbsp;&nbsp;")
-  if ('{{ display_date }}'=="True")
-  {
-    past_date='{{ past_date }}'
-    document.write("Date:"+past_date)
-  }
+    from_date= "{{ form_data['fromDate'] }}"
+    to_date= "{{ form_data['toDate'] }}"
+    document.write("From Date:"+from_date+"&nbsp;&nbsp;&nbsp;")
+    document.write("To Date:"+to_date+"<br>")
+    document.write("Cow Milk:"+cm+"L &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;") 
+    document.write("Buffalow Milk:"+bm+"L &nbsp;&nbsp;&nbsp;<br>")
+  // if ('{{ display_date }}'=="True")
+  // {
+    // past_date='{{ past_date }}'
+
+  // }
   </script>
   </div>
 </div>
@@ -36,16 +57,24 @@
 <form action="/create/{{user_id}}-{{display_date}}" method="POST">
 
   <table class="Tbl">
-  <tr>
+  <!-- <tr>
     {% if display_date=='True' %}
     <div  id="past_date_row" style="display: block;">
          <label class="DateAlign"><strong>Date</strong></label>
         <input id="past_date_input" name="past_date_input" type="date" onclick="minmaxdate()">
      </div>
     {% endif %}
+  </tr> -->
+  <tr>
+    <label style=" position: absolute; color:white; font-size: 29px;
+    margin-left: -19%;"><strong>From Date:</strong></label>
+    <input type="date" name="fromDate" id="fromDate" required="required"> <br><br>
+    <label style=" position: absolute; color:white; font-size: 29px;
+    margin-left: -19%;"><strong>To Date:</strong></label>
+    <input type="date" name="toDate" id="toDate" required="required">
   </tr>
     <tr>
-      <th class="alignh">Cow Milk</th>
+      <th class="alignh" style=" height: 5%;">Cow Milk</th>
       <th>
        <select id="cm" name="cm">
         <option value="0">0</option>
@@ -61,7 +90,7 @@
       </tr>
       <br>
       <tr>
-      <th class="alignh">Buffalow Milk</th>
+      <th class="alignh" style=" height: 5%;">Buffalow Milk</th>
       <th>
        <select id="bm" name="bm">
         <option value="0">0</option>
@@ -98,6 +127,14 @@
     if (event.target == modal) {
       modal.style.display = "none";
     }
+  }
+ function setdefaultdates() {
+    
+      let d = new Date()
+      // d will have value like - "Wed Apr 20 2022 12:58:53 GMT+0530 (India Standard Time)"
+      let today = d.toISOString().substr(0, 10);
+      document.getElementById("fromDate").value = today;
+      document.getElementById("toDate").value = today;
   }
 
 document.getElementById("past_date_input").addEventListener("change",minmaxdate)

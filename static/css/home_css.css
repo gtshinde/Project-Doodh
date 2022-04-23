@@ -10,6 +10,9 @@ h1{
     text-align: center;
     font-family: Garamond;
     font-size: 55px;
+    /* position: absolute;
+    top: -10%;
+    left:36%; */
 
 }
 form{
@@ -24,7 +27,7 @@ label{
 }
 select {
   width: 100%;
-  padding: 12px 65px;
+  padding: 5px 65px;
   margin: 7px 0;
   display: inline-block;
   border: 1px solid #ccc;

@@ -181,19 +181,21 @@ def insert_into_items(item_type, item_price):
     finally:
         conn.close()
 
-def insert_into_change(item_id, item_qty, email_id,past_date):
+def insert_into_change(item_id, item_qty, email_id,from_date,to_date):
     conn = connect()
     cur = conn.cursor()
-    print('printing past_date in connection:',past_date)
-    if (past_date=="current_date+1"):
-        past_date='current_date+1'
-    else:
-        past_date="""to_date('"""+str(past_date)+"""','YYYY-MM-DD')"""
+    print('printing from_date in connection:',from_date)
+    print('printing to_date in connection:',to_date)
+    # if (past_date=="current_date+1"):
+    #     past_date='current_date+1'
+    # else:
+    #     past_date="""to_date('"""+str(past_date)+"""','YYYY-MM-DD')"""
 
     get_records="""SELECT COUNT(1) 
                     FROM Change_Details 
                     WHERE ITEM_ID="""+str(item_id)+"""
-                    AND Change_DATE="""+str(past_date)+"""
+                            AND Effective_From=TO_DATE('"""+str(from_date)+"""','YYYY-MM-DD')
+                            AND Effective_To=TO_DATE('"""+str(to_date)+"""','YYYY-MM-DD')   
                     AND user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(email_id)+"""');"""
     cur.execute(get_records)
     count = cur.fetchone()[0]
@@ -202,12 +204,13 @@ def insert_into_change(item_id, item_qty, email_id,past_date):
     if  count > 0 :
         sql_txt_update="""UPDATE Change_Details SET QTY = """+str(item_qty)+""" 
                             WHERE ITEM_ID="""+str(item_id)+""" 
-                            AND Change_DATE="""+str(past_date)+"""
+                            AND Effective_From=TO_DATE('"""+str(from_date)+"""','YYYY-MM-DD')
+                            AND Effective_To=TO_DATE('"""+str(to_date)+"""','YYYY-MM-DD')                          
                             AND user_id = (SELECT user_id FROM users WHERE social_media_email = '"""+str(email_id)+"""');"""
         cur.execute(sql_txt_update)
     else:
-        sql_txt_insert="""INSERT INTO Change_Details (Change_ID,Item_ID,Change_DATE,qty, user_id) 
-                            VALUES (nextval('Change_ID'),'"""+str(item_id)+"""',"""+str(past_date)+""",'"""+str(item_qty)+"""', (SELECT user_id FROM users WHERE social_media_email = '"""+str(email_id)+"""'));"""
+        sql_txt_insert="""INSERT INTO Change_Details (Change_ID,Item_ID,qty, user_id,Effective_From,Effective_To) 
+                            VALUES (nextval('Change_ID'),'"""+str(item_id)+"""','"""+str(item_qty)+"""', (SELECT user_id FROM users WHERE social_media_email = '"""+str(email_id)+"""'),TO_DATE('"""+str(from_date)+"""','YYYY-MM-DD'),TO_DATE('"""+str(to_date)+"""','YYYY-MM-DD'));"""
         cur.execute(sql_txt_insert)
     conn.commit()
     cur.close()
