@@ -196,14 +196,22 @@ def default(user_id):
             if(cm_item_qty != '0.0'):
                 connection.insert_into_default(item_id, cm_item_qty, user_id,eff_date_from)
                 print('connection.insert_into_default(1, '+str(cm_item_qty)+', '+str(posted_info)+', '+str(eff_date_from))
+            else:
+                # if cm_item_qty is 0.0 (no change)
+                cm_item_qty = connection.get_default_details(item_id, user_id, eff_date_from)
+                print('connection.get_default_details('+str(item_id)+', '+str(user_id)+', '+str(eff_date_from)+')') # for debugging
             item_id = 2
             bm_item_qty = posted_info["bm"]
             if (bm_item_qty != '0.0'):
                 connection.insert_into_default(item_id, bm_item_qty, user_id,eff_date_from)
                 print('connection.insert_into_default(2, '+str(bm_item_qty)+', '+str(posted_info)+', '+str(eff_date_from))
+            else:
+                # if bm_item_qty is 0.0 (no change)
+                bm_item_qty = connection.get_default_details(item_id, user_id, eff_date_from)
+                print('connection.get_default_details('+str(item_id)+', '+str(user_id)+', '+str(eff_date_from)+')') # for debugging
             submitted="Yes"
             print("Submitted", submitted)
-            return render_template("default.html",submitted=submitted,is_admin=admin,user_email=user_email,user_id=user_id, posted_info=posted_info)
+            return render_template("default.html",submitted=submitted,is_admin=admin,user_email=user_email,user_id=user_id, eff_date_from=eff_date_from, cm_item_qty=cm_item_qty, bm_item_qty=bm_item_qty)
         submitted="No"
         print("Submitted is ", submitted)
         return render_template("default.html",is_admin=admin,user_email=user_email,user_id=user_id,submitted=submitted)

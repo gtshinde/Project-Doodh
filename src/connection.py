@@ -245,6 +245,26 @@ def insert_into_default(item_id, item_qty, user_id, eff_date_from):
     cur.close()
     conn.close()
 
+def get_default_details(item_id, user_id, effective_date_from):
+    default_qty = None
+    try:
+        with connect() as conn:
+            with conn.cursor() as cur:
+                sql_text = """SELECT qty
+                                FROM default_details
+                                WHERE   item_id ='"""+str(item_id)+"""' 
+                                    AND user_id = '"""+str(user_id)+"""' 
+                                    AND TO_DATE('"""+str(effective_date_from)+"""', 'YYYY-MM-DD') BETWEEN effective_from AND COALESCE(effective_to, TO_DATE('5874897-01-01','YYYY-MM-DD'))"""
+                cur.execute(sql_text)
+                default_qty = cur.fetchone()[0]
+    except Exception as e:
+        print(e)
+        raise(e)
+    finally:
+        conn.close()
+        return default_qty
+        # this value will be the value of the default_quantity or else if any error, it will be None
+
 def get_user_pwd_from_db(user_email):
     conn = connect()
     cur = conn.cursor()   

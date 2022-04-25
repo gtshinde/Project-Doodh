@@ -14,12 +14,12 @@
     <br>
     <br>
     <script>
-      var cm = "{{ posted_info['cm'] }}"
-      var bm = "{{ posted_info['bm'] }}"
-      var dateValue = "{{ posted_info['effectiveFrom'] }}"
+      var cm = "{{ cm_item_qty }}"
+      var bm = "{{ bm_item_qty }}"
+      var dateValue = "{{ eff_date_from }}"
       document.write("Effective From: "+dateValue+" &nbsp;")
-      document.write("Cow Milk: "+cm+"L &nbsp;") 
-      document.write("Buffalow Milk: "+bm+"L &nbsp;")
+      document.write("Cow Milk: "+cm+" L &nbsp;") 
+      document.write("Buffalow Milk: "+bm+" L &nbsp;")
     </script>
     <br>
     <br>
@@ -63,7 +63,7 @@
       <tr>
         <th class="alignh">Effective From</th>
         <th>
-          <input type="date" name="effectiveFrom" id="effectiveFrom">
+          <input type="date" name="effectiveFrom" id="effectiveFrom" onclick="setMinDate()">
           <!-- here have to put a calendar -->
         </th>
       </tr>
@@ -118,5 +118,18 @@ window.onclick = function(event) {
 //     }
 // })
 // };
+
+  function setMinDate(){
+    console.log("Going inside here")
+    let d = new Date()
+    // d will have value like - "Wed Apr 20 2022 12:58:53 GMT+0530 (India Standard Time)"
+    d.setFullYear(d.getFullYear(), d.getMonth(), d.getDate()+1)
+    console.log(d)
+    let tomorrow = d.toISOString().substr(0, 10)
+    // toISOString() will return the date as "2022-04-20T07:35:36.917Z". Since we need only till index 10, we are taking the substring
+    // today will have string 'YYYY-MM-DD' of the current day
+    var input = document.getElementById("effectiveFrom");
+    input.setAttribute("min", tomorrow);
+  }
 </script>
 {% endblock %}
