@@ -68,10 +68,11 @@
   <tr>
     <label style=" position: absolute; color:white; font-size: 29px;
     margin-left: -19%;"><strong>From Date:</strong></label>
-    <input type="date" name="fromDate" id="fromDate" required="required"> <br><br>
+    <input type="date" name="fromDate" id="fromDate" required="required" onchange="changedateval()"> <br><br>
     <label style=" position: absolute; color:white; font-size: 29px;
     margin-left: -19%;"><strong>To Date:</strong></label>
     <input type="date" name="toDate" id="toDate" required="required">
+
   </tr>
     <tr>
       <th class="alignh" style=" height: 5%;">Cow Milk</th>
@@ -155,5 +156,18 @@ function minmaxdate() {
     input.setAttribute("min", past_date);
     input.setAttribute("max", today);
 }
+
+      function changedateval(){
+        // alert('hey: '+fromDate);
+        var toDate=document.getElementById("toDate").value;
+        
+        var fromDate=document.getElementById("fromDate").value;
+        
+        document.getElementById("toDate").value = fromDate;
+        // toDate.setAttribute("value",fromDate);  --this should hv worked, but it did not
+      
+        
+      }
+  
   </script>
 {% endblock %}

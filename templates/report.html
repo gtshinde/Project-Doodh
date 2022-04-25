@@ -14,14 +14,30 @@
   <br/>
   {% endfor %}
 </div>
+
+
 <label style=" position: absolute; color:white; font-size: 20px;
 margin-left: 17%;"><strong>From Date:</strong></label>
-<input type="date" name="fromDate" id="fromDate" style=" position: absolute; margin-left: 25%;" required="required"> 
+<input type="date" name="fromDate" id="fromDate" style=" position: absolute; 
+margin-left: 25%;" required="required" onchange="changedateval()"> 
+
 <label style="position: absolute; color: white; font-size: 20px; margin-left: 50%;"><strong>To Date:</strong></label>
 <input type="date" name="toDate" id="toDate" style="position: absolute; margin-left: 60%;" required="required">
- <input style="position: absolute; margin-left: 80%;" type="button" value="Go" onclick="get_reports_for_dates()" id="Go">
-<br><br>
 
+
+<input style="position: absolute; margin-left: 80%;" type="button" value="Go" onclick="get_reports_for_dates()" id="Go">
+<br><br>
+<!-- The below code was added to set the from and to dates to the values which user had selected before clicking on GO -->
+{% if submitted=="Yes" %}
+{{ from_date }}
+  <script>
+    document.getElementById("fromDate").value='{{ from_date }}';
+    document.getElementById("toDate").value='{{ to_date }}';
+    // Added below line so that even when user selects any from date after first GO, still the toDate should populate same as that of fromDate by default;
+    //without this line, it would always by default take todate of past GO 
+    document.getElementById("fromDate").addEventListener("onchange", changedateval);
+  </script>
+{% endif %}
 <table id="customers">
   <tr>
     <th>Date</th>
@@ -101,6 +117,19 @@ margin-left: 17%;"><strong>From Date:</strong></label>
     // (B) URL + REDIRECT
     location.replace("/report"+'/{{user_id}}/' + fromDate + ':' + toDate);
   }
+// Below function will by default set the todate value same as that of the fromdate initially, 
+//then user can change if required
+  function changedateval(){
+        // alert('hey: '+fromDate);
+        var toDate=document.getElementById("toDate").value;
+        
+        var fromDate=document.getElementById("fromDate").value;
+        
+        document.getElementById("toDate").value = fromDate;
+        // toDate.setAttribute("value",fromDate);  --this should hv worked, but it did not
+      
+        
+      }
   </script>
 {% endblock %}
 

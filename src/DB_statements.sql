@@ -89,6 +89,8 @@ ALTER TABLE Change_Details
     ADD COLUMN Effective_From DATE,
     ADD COLUMN Effective_To DATE;
 
+ALTER TABLE CHANGE_DETAILS
+drop column change_date;
 
 CREATE SEQUENCE Default_ID START WITH 1000;
 

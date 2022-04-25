@@ -283,8 +283,13 @@ def default_report_logic(from_date, to_date, user_id):
     # list should have same number of items as number of days of the month
     from_date = to_datetime(from_date, format='%Y-%m-%d')
     to_date = to_datetime(to_date, format='%Y-%m-%d')
-    num_days_between_fromDate_toDate = (to_date - from_date).days
+    #The below +1 is added to handle the case when from date=to date, the for loop will then hv range as 0-1 and it will run atleast once. Without this condition the for loop wont even run once
+    #The +1 was also added in order to display today's date, else it would only go until yesterday's date
+    num_days_between_fromDate_toDate = ((to_date - from_date).days)+1
     # num_days_in_month = num_days_in_month[1] #The abv line returns a tuple e.g(4,30) which means APR month 30 days, we want 30 days so FromDate[1]
+   
+    # if num_days_between_fromDate_toDate==0:
+    #     num_days_between_fromDate_toDate+=1
     report_list = report_list * (num_days_between_fromDate_toDate)
     for day in range(0, num_days_between_fromDate_toDate):
         try:
@@ -294,7 +299,7 @@ def default_report_logic(from_date, to_date, user_id):
                     sql_txt="""SELECT 
                                     (SELECT i.item_type FROM items i WHERE i.item_id = dd.item_id),  
                                     dd.qty, 
-                                    (SELECT i.price 
+                                    (SELECT i.price*dd.qty 
                                         FROM items i 
                                         WHERE TO_DATE('"""+str((from_date+datetime.timedelta(days=day)))+"""','YYYY-MM-DD') 
                                             BETWEEN i.Effective_From AND COALESCE(i.Effective_To, TO_DATE('5874897-01-01','YYYY-MM-DD'))
@@ -304,19 +309,24 @@ def default_report_logic(from_date, to_date, user_id):
                                     AND dd.user_id = '"""+str(user_id)+"""';"""
                     cur.execute(sql_txt)
                     for record in cur.fetchall():
+                        item_type = record[0]
+                        item_qty = record[1]
+                        price = record[2]                        
                         print("Date = "+str((from_date+datetime.timedelta(days=day))).split(" ")[0])
                         # Eg: split function will give ['2022-04-15', '00:00:00'] - so we only need [0]
                         print("Type = "+str(record[0]))
                         print("Qty = "+str(record[1]))
                         print("Price = "+str(record[2]))
+                        if item_qty==0:
+                            price=0
                         if(report_list[day-1] is None):
                             # for the report_list[day-1] - for this day if there is value None, it means we have to add the value from the database 
                             # first iteration it will be None, so if we get Cow Milk, it will get added here
                             # next iteration, if buffalo milk is there for the same day, if None condition will not be satisfied
                             #  therefore for buffalo milk it will go to the else condition wherein we will append insteaad of '='
-                            report_list[day-1] = [{"date": str((from_date+datetime.timedelta(days=day))).split(" ")[0], "type": record[0], "qty": record[1], "price": record[2]}]
+                            report_list[day-1] = [{"date": str((from_date+datetime.timedelta(days=day))).split(" ")[0], "type": item_type, "qty": item_qty, "price": price}]
                         else:
-                            report_list[day-1].append({"date": str((from_date+datetime.timedelta(days=day))).split(" ")[0], "type": record[0], "qty": record[1], "price": record[2]})
+                            report_list[day-1].append({"date": str((from_date+datetime.timedelta(days=day))).split(" ")[0], "type": item_type, "qty": item_qty, "price": price})
         except Exception as e:
             print(e)
             raise e
@@ -328,7 +338,7 @@ def change_report_logic(from_date, to_date, user_id, report_list):
     conn = connect()
     from_date = to_datetime(from_date, format='%Y-%m-%d')
     to_date = to_datetime(to_date, format='%Y-%m-%d')
-    num_days_between_fromDate_toDate = (to_date - from_date).days
+    num_days_between_fromDate_toDate = ((to_date - from_date).days)+1
     for day in range(0, num_days_between_fromDate_toDate):
         with conn:
             with conn.cursor() as cur:
@@ -337,26 +347,30 @@ def change_report_logic(from_date, to_date, user_id, report_list):
                                     FROM items i 
                                     WHERE i.item_id = cd.item_id) item_type, 
                                 cd.qty, 
-                                cd.change_date,
-                                (SELECT i.price 
+                                TO_DATE('"""+str((from_date+datetime.timedelta(days=day)))+"""','YYYY-MM-DD'),
+                                (SELECT i.price * cd.qty
                                         FROM items i 
                                         WHERE TO_DATE('"""+str((from_date+datetime.timedelta(days=day)))+"""','YYYY-MM-DD') 
                                             BETWEEN i.Effective_From AND COALESCE(i.Effective_To, TO_DATE('5874897-01-01','YYYY-MM-DD'))
                                             AND i.item_id = cd.item_id)
                             FROM change_details cd
                             WHERE cd.user_id = '"""+str(user_id)+"""'
-                                AND cd.change_date =  TO_DATE('"""+str((from_date+datetime.timedelta(days=day)))+"""','YYYY-MM-DD')"""
+                                AND TO_DATE('"""+str((from_date+datetime.timedelta(days=day)))+"""','YYYY-MM-DD')
+                                    BETWEEN cd.Effective_From AND COALESCE(cd.Effective_To, TO_DATE('5874897-01-01','YYYY-MM-DD'))"""
                 cur.execute(sql_txt)
                 for record in cur.fetchall():
                     item_type = record[0]
                     item_qty = record[1]
                     change_date = record[2]
                     price = record[3]
+                    if item_qty==0:
+                        price=0
                     # below for looop is for the items in default report list
                     change_present_in_default = False
                     for i in range (0, len(report_list[day])):
                         if (report_list[day][i]['type'] == item_type):
                             report_list[day][i]['qty'] = item_qty
+                            report_list[day][i]['price'] = price
                             change_present_in_default = True
                             break 
                             #once it matches and upadtes we don't need to check other items in default report list for that day
