@@ -158,13 +158,47 @@ def is_admin(user_email):
     conn.close() 
     return v_is_admin
 
-def insert_into_items(item_type, item_price):
+def insert_into_items(item_type, item_price, effective_date_from):
     try:
         conn = connect()
         with conn:
             with conn.cursor() as cur:
-                sql_txt="""INSERT INTO ITEMS (Item_ID,Item_Type,Price, created_date, last_updated_date) 
-                    VALUES (nextval('item_id_seq'),'"""+str(item_type)+"""','"""+str(item_price)+"""', current_date, current_date);"""
+                check_item_exists = """SELECT count(*)
+                                FROM ITEMS
+                                WHERE  item_type='"""+str(item_type)+"""'"""
+               #Distinct because there could be more than 1 entries for same item
+                item_type_txt = """SELECT DISTINCT item_type_id
+                                FROM ITEMS
+                                WHERE  item_type='"""+str(item_type)+"""'"""                                
+                cur.execute(check_item_exists)
+                item_exists_count = str(cur.fetchone()[0])
+                print('Val of item_exists_count:',item_exists_count)
+                if int(item_exists_count)==0:  #item doesn't exists so increment item_type_seq and add new item type
+                    item_type_id="nextval('item_type_id_seq')"
+                    insert_or_update=0
+                else:                           #else take the exisitng item_type_seq and use the same either  for insertion or updation
+                    cur.execute(item_type_txt)
+                    item_type_id = str(cur.fetchone()[0])
+                    #Insert when fresh record is there and update when for same item and same date price needs to be updated
+                    insert_or_update = """SELECT count(*)
+                                FROM ITEMS
+                                WHERE  item_type='"""+str(item_type)+"""'
+                                AND effective_from=TO_DATE('"""+str(effective_date_from)+"""','YYYY-MM-DD')"""
+                    cur.execute(insert_or_update)
+                    insert_or_update=cur.fetchone()[0]
+                print('Val of item_type_id:',item_type_id)
+                print('Val of insert_or_update:',insert_or_update)
+                if insert_or_update==0: 
+                    sql_txt_prev_update = """UPDATE ITEMS SET effective_to = TO_DATE('+"""+str(effective_date_from)+"""', 'YYYY-MM-DD') - 1
+                                                WHERE item_type='"""+str(item_type)+"""'   
+                                                    AND effective_to IS NULL;"""
+                    cur.execute(sql_txt_prev_update)                    
+                    sql_txt="""INSERT INTO ITEMS (Item_ID,item_type_id,Item_Type,Price, created_date, last_updated_date,effective_from) 
+                               VALUES (nextval('item_id_seq'),"""+item_type_id+""",'"""+str(item_type)+"""','"""+str(item_price)+"""', current_date, current_date,TO_DATE('"""+str(effective_date_from)+"""','YYYY-MM-DD'));"""
+                else:
+                    sql_txt="""UPDATE ITEMS SET Price="""+str(item_price)+"""
+                                WHERE  item_type='"""+str(item_type)+"""'
+                                AND effective_from=TO_DATE('"""+str(effective_date_from)+"""','YYYY-MM-DD')"""
                 cur.execute(sql_txt)
     except psycopg2.OperationalError as e:
         print("Operational Error occured, Eror Code: "+str(e.pgcode))
@@ -293,10 +327,10 @@ def report_logic(from_date, to_date, user_id):
     print("report_logic("+str(from_date)+", "+str(to_date)+", "+str(user_id)+")") #for debugging 
     report_list = default_report_logic(from_date, to_date, user_id)
     # next need to check where all there was a change
-    report_list = change_report_logic(from_date, to_date, user_id, report_list)
+    report_list,total_price = change_report_logic(from_date, to_date, user_id, report_list)
     # next need to get the total bill for the month
     #  = bill_report_logic(report_list)
-    return (report_list)
+    return (report_list,total_price)
 
 def default_report_logic(from_date, to_date, user_id):
     report_list = [None]
@@ -337,16 +371,16 @@ def default_report_logic(from_date, to_date, user_id):
                         print("Type = "+str(record[0]))
                         print("Qty = "+str(record[1]))
                         print("Price = "+str(record[2]))
-                        if item_qty==0:
+                        if (item_qty==0):
                             price=0
-                        if(report_list[day-1] is None):
+                        if(report_list[day] is None):
                             # for the report_list[day-1] - for this day if there is value None, it means we have to add the value from the database 
                             # first iteration it will be None, so if we get Cow Milk, it will get added here
                             # next iteration, if buffalo milk is there for the same day, if None condition will not be satisfied
                             #  therefore for buffalo milk it will go to the else condition wherein we will append insteaad of '='
-                            report_list[day-1] = [{"date": str((from_date+datetime.timedelta(days=day))).split(" ")[0], "type": item_type, "qty": item_qty, "price": price}]
+                            report_list[day] = [{"date": str((from_date+datetime.timedelta(days=day))).split(" ")[0], "type": item_type, "qty": item_qty, "price": price}]
                         else:
-                            report_list[day-1].append({"date": str((from_date+datetime.timedelta(days=day))).split(" ")[0], "type": item_type, "qty": item_qty, "price": price})
+                            report_list[day].append({"date": str((from_date+datetime.timedelta(days=day))).split(" ")[0], "type": item_type, "qty": item_qty, "price": price})
         except Exception as e:
             print(e)
             raise e
@@ -359,9 +393,11 @@ def change_report_logic(from_date, to_date, user_id, report_list):
     from_date = to_datetime(from_date, format='%Y-%m-%d')
     to_date = to_datetime(to_date, format='%Y-%m-%d')
     num_days_between_fromDate_toDate = ((to_date - from_date).days)+1
+    total_price=0
     for day in range(0, num_days_between_fromDate_toDate):
         with conn:
             with conn.cursor() as cur:
+                #this select is going to get us the records where change had happened for a particular day
                 sql_txt = """SELECT 
                                 (SELECT i.item_type 
                                     FROM items i 
@@ -378,6 +414,7 @@ def change_report_logic(from_date, to_date, user_id, report_list):
                                 AND TO_DATE('"""+str((from_date+datetime.timedelta(days=day)))+"""','YYYY-MM-DD')
                                     BETWEEN cd.Effective_From AND COALESCE(cd.Effective_To, TO_DATE('5874897-01-01','YYYY-MM-DD'))"""
                 cur.execute(sql_txt)
+                #fetchall will get all the columns for each row
                 for record in cur.fetchall():
                     item_type = record[0]
                     item_qty = record[1]
@@ -385,18 +422,28 @@ def change_report_logic(from_date, to_date, user_id, report_list):
                     price = record[3]
                     if item_qty==0:
                         price=0
-                    # below for looop is for the items in default report list
+                    # below for loop is for the items in default report list
                     change_present_in_default = False
                     for i in range (0, len(report_list[day])):
+
                         if (report_list[day][i]['type'] == item_type):
                             report_list[day][i]['qty'] = item_qty
                             report_list[day][i]['price'] = price
                             change_present_in_default = True
+                            
                             break 
                             #once it matches and upadtes we don't need to check other items in default report list for that day
                     if(not change_present_in_default):
                         report_list[day].append({"date": change_date, "type": item_type, "qty": item_qty, "price": price})
-    return report_list
+                        
+    
+    for day_list in report_list:
+        if (day_list is not None):
+            for item_dict in day_list:
+                total_price+=item_dict['price']
+            print('The total bill for the day is:',total_price)
+    print('The total bill is:',total_price)
+    return report_list,total_price
 
 def check_default_details(user_id): #function to check if user has entered any default details when they login 1st time, if not then  re-direct them to the default pg again
     conn = connect()

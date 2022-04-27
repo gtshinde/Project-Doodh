@@ -43,18 +43,13 @@
   </div>
 </div>
 {% endif %}
-{{ display_date }}
-{% if display_date=='True' %}
+
   <div id="box" class="box">
-    <strong>Change Milk Quantity for Past Date</strong>
+    <strong>Change Milk Quantity for Past/Future date</strong>
   </div>
-{% else %}
-  <div id="box" class="box">
-    <strong>Change Milk Quantity for Tomorrow!</strong>
-  </div>
-{% endif%}
-<p id="try"></p> 
-<form action="/create/{{user_id}}-{{display_date}}" method="POST">
+<br>
+ 
+<form action="/create/{{user_id}}" method="POST">
 
   <table class="Tbl">
   <!-- <tr>

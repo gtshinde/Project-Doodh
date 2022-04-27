@@ -15,15 +15,22 @@
     <tr>
       <th style="font-size:70%;">Item Name</th>
       <th>
-        <input type="text" name="ItemName" id="itemname" onkeypress='return validate_txt(event)' required>
+        <input type="text" name="ItemName" id="itemname" onkeypress='validate_txt(event)' required>
       </th>
       </tr>
       <br>
       <tr>
       <th style="font-size:70%;">Item Price</th>
       <th>
-         <input type="text" name="ItemPrice" id="itemprice" onkeypress='return validate(event)'  required>
+         <input type="text" name="ItemPrice" id="itemprice" onkeypress='validate(event)'  required>
       </th>
+      </tr>
+      <tr>
+        <th class="alignh" style="font-size: 70%;">Effective From</th>
+        <th>
+          <input type="date" name="effectiveFrom" id="effectiveFrom">
+          <!-- here have to put a calendar -->
+        </th>
       </tr>
   </table>
   <!--br>
@@ -31,7 +38,7 @@
   
   <br><br>
   
-  <input type="submit" value="Submit" class="submitbutton" >
+  <input type="submit" value="Submit" class="submitbutton" id="submitbutton">
 </form>
 <script>
   // Get the modal
@@ -52,7 +59,7 @@
     }
   }
 
-  function validate(e){
+  var r1=function validate(e){
 
     var x = e.which || e.keycode;
              if ((x >= 48 && x <= 57 ))
@@ -62,6 +69,7 @@
                 alert('plz enter a number in item price field');
                  return false;
               }
+            return 0;
   }
 function validate_txt(e){
 
@@ -79,5 +87,21 @@ var x = e.which || e.keycode;
             return false;
             }
 }
+
+if (r1==false && r2==false)
+{
+  alert('Incorrect Inputs!')
+  document.getElementById("submitbutton").disabled =  true;
+}
+
+function setdefaultdates() {
+    
+    let d = new Date()
+    // d will have value like - "Wed Apr 20 2022 12:58:53 GMT+0530 (India Standard Time)"
+    let today = d.toISOString().substr(0, 10);
+    document.getElementById("effectiveFrom").value = today;
+   
+}
+
   </script>
 {% endblock %}

@@ -61,9 +61,9 @@
       </th>
       </tr>
       <tr>
-        <th class="alignh">Effective From</th>
+        <th class="alignh" >Effective From</th>
         <th>
-          <input type="date" name="effectiveFrom" id="effectiveFrom" onclick="setMinDate()">
+          <input type="date" name="effectiveFrom" id="effectiveFrom">
           <!-- here have to put a calendar -->
         </th>
       </tr>
@@ -131,5 +131,13 @@ window.onclick = function(event) {
     var input = document.getElementById("effectiveFrom");
     input.setAttribute("min", tomorrow);
   }
+  function setdefaultdates() {
+    
+    let d = new Date()
+    // d will have value like - "Wed Apr 20 2022 12:58:53 GMT+0530 (India Standard Time)"
+    let today = d.toISOString().substr(0, 10);
+    document.getElementById("effectiveFrom").value = today;
+   
+}
 </script>
 {% endblock %}

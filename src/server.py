@@ -28,15 +28,15 @@ def signout(user_email):
       connection.update_user_signin_status(user_email,'N')                                         
       return redirect(url_for("signin"))
 
-@app.route("/create/<user_id>-<display_date>",methods = ["GET", "POST"])
-def create(user_id, display_date):
+@app.route("/create/<user_id>",methods = ["GET", "POST"])
+def create(user_id):
     user_details=connection.validate_user_signin(user_id)
     print('in the server user details:',user_details)
     signin=user_details[0]
     admin=user_details[1]
     user_email=user_details[2]
     email_id=connection.get_user_email(user_id)
-    print('display_date', display_date)
+    # print('display_date', display_date)
     print('user sign in status',signin)
     print('user admin status',admin)
     if (signin):
@@ -65,9 +65,9 @@ def create(user_id, display_date):
             if (item_qty != '0.0'):
                 connection.insert_into_change(item_id, item_qty,email_id,from_date,to_date) 
             submitted = "Yes"
-            return render_template("create.html", submitted=submitted, is_admin=admin,user_email=user_email,user_id=user_id, display_date=display_date,cm=cm,bm=bm,form_data=form_data)
+            return render_template("create.html", submitted=submitted, is_admin=admin,user_email=user_email,user_id=user_id,cm=cm,bm=bm,form_data=form_data)
         submitted = "No"
-        return render_template("create.html",submitted=submitted,is_admin=admin,user_email=user_email,user_id=user_id, display_date=display_date)
+        return render_template("create.html",submitted=submitted,is_admin=admin,user_email=user_email,user_id=user_id)
     else:
         return render_template("url_not_found.html") 
 
@@ -88,7 +88,7 @@ def report(user_id):
         month = int(todays_date.month)
         year = int(todays_date.year)
         month_string = calendar.month_name[month]
-        report_list = connection.report_logic(str(year)+"-"+str(month)+"-01", str(todays_date), user_id)
+        report_list,total_price = connection.report_logic(str(year)+"-"+str(month)+"-01", str(todays_date), user_id)
         past_months_list = []
         for i in range(1, 6):
             offset_date = todays_date - DateOffset(months=i)
@@ -96,6 +96,7 @@ def report(user_id):
         # past_month_list = [ [3, 2022, March], [2, 2022, February], [1, 2022, January], ... ] considering current_date is in APRIL 2022
         pprint(report_list)
         print (len(report_list))
+        print('REPORT TOTAL: ',total_price)
         # if FromDate=='null':
         #     FromDate= calendar.monthrange(int(year), int(month)) #get no. of days in that month, will be used to display data for all days in that month when page loads
         #     FromDate=str(FromDate[1])  #The abv line returns a tuple e.g(4,30) which means APR month 30 days, we want 30 days so FromDate[1]
@@ -105,7 +106,7 @@ def report(user_id):
         # if FromDate!='null':
         #     FromDate=str(int(FromDate))+' '+month_string+' '+str(year)
         # print('FRomDate after modifcation is:',FromDate)
-        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id)
+        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id,total_price=total_price)
     else:
         return render_template('url_not_found.html')
         
@@ -124,9 +125,9 @@ def report_month_year(user_id,month, year):
     if (signin):
         num_days_in_month = calendar.monthrange(int(year), int(month))[1]   
         if (int(month)==todays_month and int(year)==todays_year): # if it is current month, report_list should diplay only till current date and not till end of month
-            report_list = connection.report_logic(str(year)+"-"+str(month)+"-01", str(todays_date) , user_id)
+            report_list,total_price = connection.report_logic(str(year)+"-"+str(month)+"-01", str(todays_date) , user_id)
         else:     
-            report_list = connection.report_logic(str(year)+"-"+str(month)+"-01", str(year)+"-"+str(month)+"-"+str(num_days_in_month), user_id)
+            report_list,total_price = connection.report_logic(str(year)+"-"+str(month)+"-01", str(year)+"-"+str(month)+"-"+str(num_days_in_month), user_id)
         month_string = calendar.month_name[int(month)]
         past_months_list = []
         todays_date = date.today()
@@ -135,8 +136,9 @@ def report_month_year(user_id,month, year):
             past_months_list.append([str(offset_date.month), str(offset_date.year), calendar.month_name[offset_date.month]])
         # past_month_list = [ [3, 2022, March], [2, 2022, February], [1, 2022, January], ... ] considering current_date is in APRIL 2022
         pprint (report_list)
-        print (len(report_list))        
-        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id) 
+        print (len(report_list))
+        print('REPORT TOTAL: ',total_price)        
+        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id,total_price=total_price)
     else:
         return render_template('url_not_found.html') 
 
@@ -153,7 +155,7 @@ def report_for_date_range(user_id, from_date, to_date):
     if (signin):
         p_from_date = from_date  #storing the parameter values in string only before converting to timestamp format- this is reqd by the report.html pg (lenght function used there for from and todate won't work for timestamp values))
         p_to_date = to_date
-        report_list = connection.report_logic(from_date, to_date, user_id)
+        report_list,total_price = connection.report_logic(from_date, to_date, user_id)
         from_date = to_datetime(from_date, format='%Y-%m-%d')
         to_date = to_datetime(to_date, format='%Y-%m-%d')
         month_string = ""
@@ -165,8 +167,9 @@ def report_for_date_range(user_id, from_date, to_date):
         # past_month_list = [ [3, 2022, March], [2, 2022, February], [1, 2022, January], ... ] considering current_date is in APRIL 2022
         pprint (report_list)
         print (len(report_list)) 
+        print('REPORT TOTAL: ',total_price)
         submitted="Yes"
-        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id,from_date=p_from_date,to_date=p_to_date,submitted=submitted) 
+        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id,from_date=p_from_date,to_date=p_to_date,submitted=submitted,total_price=total_price) 
     else:
         return render_template('url_not_found.html')
 
@@ -231,14 +234,15 @@ def items(user_id):
         if(request.method == "POST"):
             item_name = request.form.get("ItemName")
             item_price = request.form.get("ItemPrice")
+            effective_from = request.form.get("effectiveFrom")
             try:
-                connection.insert_into_items(item_name, item_price)
+                connection.insert_into_items(item_name, item_price,effective_from)
             except Exception as e:
                 submitted = "No"
                 display_error_message = """We were unable to enter the item to the database. 
                                         Error details:
                                         """+str(e)
-                return render_template("admin.html", submitted=submitted, display_error_message=display_error_message,user_email=user_email,user_id=user_id)
+                return render_template("admin.html", submitted=submitted,is_admin=admin, display_error_message=display_error_message,user_email=user_email,user_id=user_id)
             submitted = "Yes"
             return render_template("admin.html", submitted=submitted, is_admin=admin,user_email=user_email,user_id=user_id)
 
@@ -246,7 +250,7 @@ def items(user_id):
             submitted = "No"
             return render_template("admin.html", submitted=submitted, is_admin=admin,user_email=user_email,user_id=user_id)
         else:
-            return redirect(url_for("create", user_id=user_id, display_date=False))
+            return redirect(url_for("create", user_id=user_id))
     else:
         return render_template("url_not_found.html")
 
@@ -288,7 +292,7 @@ def signin():
                 first_usersigin[user_id]=False
                 return redirect(url_for("default",user_id=user_id))
             else:
-                return redirect(url_for("create",user_id=user_id, display_date=False))
+                return redirect(url_for("create",user_id=user_id))
             
         else:
             print('Invalid credentials!')
@@ -331,7 +335,7 @@ def signin_success(social_media_platform, user_email, user_name):
             first_usersigin[user_id]=False
             return redirect(url_for("default",user_id=user_id))
         else:
-            return redirect(url_for("create",user_id=user_id, display_date=False))
+            return redirect(url_for("create",user_id=user_id))
     else:
         return render_template("url_not_found.html")
 @app.route("/signup",methods = ["GET", "POST"])

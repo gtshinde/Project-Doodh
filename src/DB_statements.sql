@@ -49,6 +49,9 @@ SELECT * FROM ITEMS;
 
 CREATE SEQUENCE item_id_seq START WITH 1;
 ALTER SEQUENCE item_id_seq RESTART WITH 2;  --to restart the seq
+CREATE SEQUENCE item_type_id_seq START WITH 1;
+
+ALTER TABLE ITEMS ADD Item_Type_ID INTEGER;
 
 INSERT INTO 
 ITEMS (Item_ID,Item_Type,Price, created_date, last_updated_date) 

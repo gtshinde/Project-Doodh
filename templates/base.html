@@ -59,8 +59,8 @@
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
             <a href="{{url_for('report',user_id=user_id,FromDate='null')}}">Report</a>
             <a href="{{url_for('default',user_id=user_id)}}">Default Milk</a>
-            <a href="{{url_for('create',user_id=user_id, display_date=False)}}">Change Milk Quantity for Tomorrow</a>
-            <a href="{{url_for('create',user_id=user_id, display_date=True)}}">Change Milk Quantity for Past Date</a>
+            <a href="{{url_for('create',user_id=user_id)}}">Change Milk Quantity</a>
+            <!-- <a href="{{url_for('create',user_id=user_id, display_date=True)}}">Change Milk Quantity for Past Date</a> -->
             {% if is_admin == true %}
               <a href="{{url_for('items',user_id=user_id)}}">Items</a>
             {% endif %}            
@@ -109,7 +109,19 @@ window.onclick = function(event) {
   if (event.target == modal) {
     modal.style.display = "none";
   }
-}          
+} 
+//Below function will set today's date for eff from date on default and admin page on page load 
+//not working in base.html i.e when this func is placed in base it will either work for default and admin pg or create pg but not for both
+//function setdefaultdates() {
+    
+//     let d = new Date()
+//     // d will have value like - "Wed Apr 20 2022 12:58:53 GMT+0530 (India Standard Time)"
+//     let today = d.toISOString().substr(0, 10);
+//     document.getElementById("effectiveFrom").value = today;
+//     document.getElementById("fromDate").value = today;
+//     document.getElementById("toDate").value = today;
+// }
+
           // $.get( "signin.html", function( data ) {
           // $( '#admin').html( data );
           // alert( "Load was performed." );

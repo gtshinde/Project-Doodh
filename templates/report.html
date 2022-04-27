@@ -1,6 +1,19 @@
 {% extends "base.html" %}
 {% block head %}
 <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/report_css.css')}}">	
+<link rel="stylesheet" type="text/css" href="http://cdn.webrupee.com/font">
+<style>
+  #report_total_box
+  {padding-right: 20px;
+    padding-left: 20px;
+    border-color: white;
+    border-block-color: white;
+    background: #fffdf4;
+    /* border: double; */
+    color: black;
+    /* padding-block: 5px 5px; */
+  }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -21,11 +34,14 @@ margin-left: 17%;"><strong>From Date:</strong></label>
 <input type="date" name="fromDate" id="fromDate" style=" position: absolute; 
 margin-left: 25%;" required="required" onchange="changedateval()"> 
 
-<label style="position: absolute; color: white; font-size: 20px; margin-left: 50%;"><strong>To Date:</strong></label>
-<input type="date" name="toDate" id="toDate" style="position: absolute; margin-left: 60%;" required="required">
+<label style="position: absolute; color: white; font-size: 20px; margin-left: 41%;"><strong>To Date:</strong></label>
+<input type="date" name="toDate" id="toDate" style="position: absolute; margin-left: 47%;" required="required">
 
 
-<input style="position: absolute; margin-left: 80%;" type="button" value="Go" onclick="get_reports_for_dates()" id="Go">
+<input style="position: absolute; margin-left: 57%; height:4%; width: 5%;" type="button" value="Go" onclick="get_reports_for_dates()" id="Go">
+
+<label style="position: absolute; color: white; font-size: 24px; margin-left: 70%;"><strong>Total Bill: <strong id="report_total_box">&#8377; {{ total_price }}0</strong></strong></label>
+<!-- <p type="text" name="total" id="total" style="position: absolute; margin-left: 73%;" ><strong>{{ total_price }}</strong></p> -->
 <br><br>
 <!-- The below code was added to set the from and to dates to the values which user had selected before clicking on GO -->
 {% if submitted=="Yes" %}
@@ -55,8 +71,13 @@ margin-left: 25%;" required="required" onchange="changedateval()">
           <td> {{ item['price'] }} </td>
         </tr>
       {% endfor %}
-    {% endif %}
+    {% endif %}  
   {% endfor %}
+  <tr>
+  
+    <td colspan="3" style="text-align: center; font-size: 25px;"> <strong>TOTAL BILL AMOUNT</strong> </td>
+    <td style="font-size: 25px;"><strong>&#8377; {{ total_price }} </strong>  </td>
+  </tr>  
 </table>
  <!-- <table id="customers">
   <tr>
