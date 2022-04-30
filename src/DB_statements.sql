@@ -138,3 +138,16 @@ INSERT INTO Default_Details VALUES (nextval('Default_ID'),
 
 commit;
 
+CREATE TABLE MILKMAN(
+    milkman_id INTEGER PRIMARY KEY,
+    milkman_shop VARCHAR(100),
+    area VARCHAR(100),
+    city VARCHAR(100),
+    state VARCHAR(100),
+    country VARCHAR(100),
+    Created_Date DATE,
+    Last_Updated_Date DATE
+);
+
+ALTER TABLE users
+    ADD COLUMN milkman_id INTEGER REFERENCES milkman(milkman_id);
