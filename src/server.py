@@ -25,7 +25,7 @@ def redirect_to_create():
 
 @app.route("/signout/<user_email>")
 def signout(user_email):
-      connection.update_user_signin_status(user_email,'N')                                         
+      connection.update_user_signin_status(user_email,False)                                         
       return redirect(url_for("signin"))
 
 @app.route("/create/<user_id>",methods = ["GET", "POST"])
@@ -285,12 +285,10 @@ def signin():
         elif(sha256_crypt.verify(user_pwd, db_pwd)):
             connection.update_user_signin_status(user_email,'Y')
             print(first_usersigin[user_id])
-            #function to check if user has entered any default details when they login 1st time, if not then  re-direct them to the default pg again            
-            default_details_count=connection.check_default_details(user_id) 
-            print('user has entered default details? default_details_count:',default_details_count)
-            if(first_usersigin[user_id] or default_details_count==0):
+            if(first_usersigin[user_id] ):
                 first_usersigin[user_id]=False
-                return redirect(url_for("default",user_id=user_id))
+                # return redirect(url_for("default",user_id=user_id))
+                return redirect(url_for("milkman_selection",user_id=user_id))
             else:
                 return redirect(url_for("create",user_id=user_id))
             
@@ -328,12 +326,13 @@ def signin_success(social_media_platform, user_email, user_name):
         print("count after insert is:",count)
         if count==0:  #first signin shd be set to True only when NEW google user signs in, without this condition it would always set firstsign in to True when google user logs in
             first_usersigin[user_id]=True
-        #function to check if user has entered any default details when they login 1st time, if not then  re-direct them to the default pg again            
-        default_details_count=connection.check_default_details(user_id) 
-        print('user has entered default details? default_details_count:',default_details_count)
-        if(first_usersigin[user_id] or default_details_count==0):            
+        # #function to check if user has entered any default details when they login 1st time, if not then  re-direct them to the default pg again            
+        # default_details_count=connection.check_default_details(user_id) 
+        # print('user has entered default details? default_details_count:',default_details_count)
+        if(first_usersigin[user_id]):            
             first_usersigin[user_id]=False
-            return redirect(url_for("default",user_id=user_id))
+            # return redirect(url_for("default",user_id=user_id))
+            return redirect(url_for("milkman_selection",user_id=user_id))
         else:
             return redirect(url_for("create",user_id=user_id))
     else:
@@ -369,6 +368,142 @@ def signup():
         return render_template("signup.html",submitted=submitted)
     submitted="No"
     return render_template("signup.html",submitted=submitted)
+
+@app.route('/milkman_selection/<user_id>',methods=["GET","POST"])
+def milkman_selection(user_id):
+    user_details=connection.validate_user_signin(user_id)
+    print('milkman_selection:in the server user details:',user_details)
+    signin=user_details[0]
+    admin=user_details[1]
+    user_email=user_details[2]    
+    print('user sign in status',signin)
+    print('user admin status',admin)
+    if (signin):
+        area=None
+        city=None  
+        # form_data = request.get_json()
+        # print('form_data',form_data)   
+        # city=form_data
+        # print('city',city)
+        city=connection.get_milkman_area_city(area,city)
+        print('area after connection call:',area)           
+        if(request.method == "POST"):  
+            print('inside POST user_id:',user_id)
+            form_data=request.form 
+            # form_data = request.get_json()
+            # print('form_data',form_data)
+            # area=form_data['area']
+            # print('area before connection call:',area)
+            city=form_data['city']
+            print('city',city)
+            area=form_data['area']
+            print('area :',area)
+            milkman_stores=form_data['milkman_stores']
+            print('milkman_stores:',milkman_stores)
+            connection.update_users_with_milkman(milkman_stores,user_id)
+            return redirect(url_for("redirect_milkman",user_id=user_id))
+            # #function to check if user has entered any default details when they login 1st time, if not then  re-direct them to the default pg again            
+            # default_details_count=connection.check_default_details(user_id) 
+            # print('user has entered default details? default_details_count:',default_details_count)
+            # if (default_details_count==0):
+            #  return redirect(url_for("default",user_id=user_id))
+            # else:
+            #  return redirect(url_for("create",user_id=user_id))  
+
+   
+        return  render_template("milkman_selection.html",user_id=user_id,city_list=city,area_list=area)
+        # return city_list
+    else:
+        return render_template('url_not_found.html')
+
+@app.route('/skip_milkman/<user_id>')
+def redirect_milkman(user_id):
+    #function to check if user has entered any default details when they login 1st time, if not then  re-direct them to the default pg again            
+    default_details_count=connection.check_default_details(user_id) 
+    print('user has entered default details? default_details_count:',default_details_count)
+    if (default_details_count==0):
+        return redirect(url_for("default",user_id=user_id))
+    else:
+        return redirect(url_for("create",user_id=user_id))  
+
+@app.route('/milkman_selection/<user_id>/<city>')
+def milkman_selection_area(user_id,city):
+    user_details=connection.validate_user_signin(user_id)
+    print('milkman_selection:in the server user details:',user_details)
+    signin=user_details[0]
+    admin=user_details[1]
+    user_email=user_details[2]    
+    print('user sign in status',signin)
+    print('user admin status',admin)
+    if (signin):    
+        milkman_area_list=connection.get_milkman_area_city(None,city)
+        print(' Area list:')
+        pprint(milkman_area_list)
+        print('  user_id:',user_id)
+    # return render_template("milkman_selection.html",milkman_stores_list=milkman_stores_list,area=area,city=city,user_id=user_id)
+        return {'milkman_area_list':milkman_area_list}
+    else:
+       return render_template('url_not_found.html')       
+
+@app.route('/milkman_selection/<user_id>/<city>/<area>')
+def milkman_selection_stores(user_id,city,area):
+    user_details=connection.validate_user_signin(user_id)
+    print('StoresList: milkman_selection:in the server user details:',user_details)
+    signin=user_details[0]
+    admin=user_details[1]
+    user_email=user_details[2]    
+    print('user sign in status',signin)
+    print('user admin status',admin)
+    if (signin):    
+        milkman_stores_list=connection.get_milkman_area_city(area,city)
+        print(' milkman_stores_list :')
+        pprint(milkman_stores_list)
+        print('  user_id:',user_id)
+    # return render_template("milkman_selection.html",milkman_stores_list=milkman_stores_list,area=area,city=city,user_id=user_id)
+        return {'milkman_stores_list':milkman_stores_list}
+    else:
+       return render_template('url_not_found.html')    
+
+@app.route('/view_milkman/<user_id>/<rating>',methods=["GET","POST"])
+def view_milkman(user_id,rating):
+    user_details=connection.validate_user_signin(user_id)
+    print('milkman_selection:in the server user details:',user_details)
+    signin=user_details[0]
+    admin=user_details[1]
+    user_email=user_details[2]    
+    print('user sign in status',signin)
+    print('user admin status',admin)
+    if (signin):
+        city,area,milkman_store=connection.view_user_milkman_details(user_id)
+        milkman_list=[milkman_store,area,city]
+        overall_rate=''
+        if rating != ' ':
+            milkman_id=connection.milkman_id_store(None,milkman_store)
+            connection.milkman_rating(milkman_id,rating,user_id)
+        overall_rate=connection.get_overall_rating(milkman_store)
+        print('overall_rate in server is :',overall_rate) 
+        
+        return render_template('view_milkman.html',user_email=user_email,milkman_list=milkman_list,user_id=user_id,overall_rate=overall_rate)
+        # city=city,area=area,milkman_store=milkman_store)
+    else:
+         return render_template('url_not_found.html')
+
+# @app.route('/milkman_rating/<user_id>/<rating>',methods=["GET","POST"])
+# def view_milkman(user_id,rating):
+#     user_details=connection.validate_user_signin(user_id)
+#     print('milkman_rating:in the server user details:',user_details)
+#     signin=user_details[0]
+#     admin=user_details[1]
+#     user_email=user_details[2]    
+#     print('user sign in status',signin)
+#     print('user admin status',admin)
+#     if (signin):
+#         connection.milkman_rating(user_id,rating)
+       
+#         return render_template('view_milkman.html',user_email=user_email,user_id=user_id)
+#         # city=city,area=area,milkman_store=milkman_store)
+#     else:
+#          return render_template('url_not_found.html')    
 
 if __name__ == "__main__":
     app.run(debug=True)

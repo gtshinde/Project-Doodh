@@ -2,6 +2,8 @@
 {% block head %}
 <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/report_css.css')}}">	
 <link rel="stylesheet" type="text/css" href="http://cdn.webrupee.com/font">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
   #report_total_box
   {padding-right: 20px;
@@ -13,12 +15,27 @@
     color: black;
     /* padding-block: 5px 5px; */
   }
+  .fa-calendar, .fa-arrow-left {
+  background: #f9f5f4;
+    border-radius: 27px;
+  }
+  .fa-inverse {
+    color: #262626;
+}
+.fa-stack :hover{
+  color: #FFD700
+}
 </style>
 {% endblock %}
 
 {% block content %}
 <h1 style="font-size: 30px;"><strong> {{month_string}} Milk Report  </strong></h1>
-<div id="mySidenav" class="sidenav_months" style="display: block;">
+<span class="fa-stack fa-lg"  onclick="months()" style="position: fixed;">
+  <i class="fa fa-circle fa-stack-2x"></i>
+  <i class="fa fa-calendar fa-stack-1x fa-inverse"></i>
+  <i class="fa fa-arrow-left fa-stack-1x fa-inverse" style="display: none;"></i>
+</span>
+<div id="mySidenav" class="sidenav_months" style="width: 0px; margin-left: 4%; border-radius:44px;">
   <marquee style="font-size: 16px;" behavior="scroll" direction="left"><strong>Please note that the data only can be viewed for past six months...</strong> </marquee>
   <br>
   <br>
@@ -151,6 +168,28 @@ margin-left: 25%;" required="required" onchange="changedateval()">
       
         
       }
+  function months(){
+    console.log('inside months')
+    var arrow=document.getElementsByClassName("fa-arrow-left")[0];
+    var calendar=document.getElementsByClassName("fa-calendar")[0];
+    console.log('arrow:',arrow);
+    console.log('calendar:',calendar);
+    if (arrow.style.display=="none")
+    {
+      document.getElementsByClassName("sidenav_months")[0].style.width="196px";
+      arrow.style.display="block";
+      calendar.style.display="none";
+    }
+    else if (calendar.style.display=="none")
+    {
+      document.getElementsByClassName("sidenav_months")[0].style.width="0px";
+      arrow.style.display="none";
+      calendar.style.display="block";     
+    }
+    else{
+
+    }
+  }
   </script>
 {% endblock %}
 

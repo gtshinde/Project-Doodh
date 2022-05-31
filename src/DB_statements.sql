@@ -26,7 +26,7 @@ POSTGRES DB
 create table items (
 Item_ID integer PRIMARY KEY,
 Item_Type VARCHAR(100),
--- Item_UOM VARCHAR(20),
+Item_Type_ID INTEGER,
 Price   integer, 
 Effective_From  DATE,
 Effective_To DATE,
@@ -61,18 +61,20 @@ COMMIT;
 
 SELECT * FROM ITEMS;
 
-CREATE SEQUENCE User_ID START WITH 1000;
+CREATE SEQUENCE User_ID START WITH 1;
 
 create table users (
 User_ID integer PRIMARY KEY,
 Social_Media_Name VARCHAR(100),
 Social_Media_Email VARCHAR(100),
 Social_Media_Type  VARCHAR(100),
-Is_Admin Boolean
+Is_Admin Boolean,
+signed_in VARCHAR(1),
+Password text
 );
 ALTER TABLE users ADD signed_in VARCHAR(1);
 
-ALTER TABLE USERS ADD column Password_o text;
+ALTER TABLE USERS ADD column Password text;
 
 SELECT * FROM USERS
 
@@ -80,10 +82,11 @@ CREATE SEQUENCE Change_ID START WITH 1000;
 
 create table Change_Details (
 Change_ID INTEGER PRIMARY KEY,
-Change_DATE DATE,
 Item_ID INTEGER,
 QTY FLOAT,
-User_ID INTEGER
+User_ID INTEGER,
+Effective_From DATE,
+Effective_To DATE
 );
 
 SELECT * FROM Change_Details
@@ -103,16 +106,15 @@ Item_ID INTEGER,
 Qty  FLOAT,
 User_ID INTEGER,
 Created_Date DATE,
-Last_Updated_Date DATE
+Last_Updated_Date DATE,
+qty FLOAT,
+Effective_From DATE,
+Effective_To DATE
 );
 
 SELECT * FROM Default_Details
 
-ALTER TABLE Change_Details
-ALTER COLUMN QTY TYPE FLOAT;
 
-ALTER TABLE default_details
-ALTER COLUMN qty TYPE FLOAT;
 
 ALTER TABLE default_details
     ADD COLUMN Effective_From DATE,

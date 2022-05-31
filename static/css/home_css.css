@@ -1,3 +1,4 @@
+
 body {
     background-image:url("bg5.jpg");
     background-size: 1600px 1500px;
@@ -242,6 +243,74 @@ table.Tbl{
     left: 30%;
     font-size: 30px;
 }
+
+
+.rate {
+  float: left;
+  height: 46px;
+  /* padding: 0 10px; */
+  padding-right: 30%;
+}
+.rate:not(:checked) > input {
+  position:absolute;
+  top:-9999px;
+}
+.rate:not(:checked) > label
+ {
+  float:right;
+  width:1em;
+  overflow:hidden;
+  white-space:nowrap;
+  cursor:pointer;
+  font-size:30px;
+  color:#ccc;
+}
+.rate:not(:checked) > label:before {
+ content:' ★ ';
+}
+.rate > input:checked ~ label {
+  color: #ffc700;    
+}
+.rate:not(:checked) > label:hover,
+.rate:not(:checked) > label:hover ~ label
+{
+  color: #deb217;  
+}
+
+
+.stars-outer {
+  display: inline-block;
+  position: relative;
+  font-family: FontAwesome;
+}
+ 
+.stars-outer::before {
+  content: "\f006 \f006 \f006 \f006 \f006";
+}
+ 
+.stars-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 0;
+}
+ 
+.stars-inner::before {
+  content: "\f005 \f005 \f005 \f005 \f005";
+  color: #f8ce0b;
+}
+
+/* .rate > input:checked + label:hover,
+.rate > input:checked + label:hover ~ label,
+.rate > input:checked ~ label:hover,
+.rate > input:checked ~ label:hover ~ label,
+.rate > label:hover ~ input:checked ~ label {
+  color: blue;
+} */
+
+/* Modified from: https://github.com/mukulkant/Star-rating-using-pure-css */
 
 @media screen and (max-width: 500px){
   select, input[type=text] {

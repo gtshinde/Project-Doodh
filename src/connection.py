@@ -1,3 +1,5 @@
+from logging import exception
+from tkinter import E
 import psycopg2
 import calendar
 from pandas import to_datetime
@@ -134,8 +136,8 @@ def insert_users(user_email, user_name, social_media_platform,user_pwd):
     count = cur.fetchone()[0]
     print('count is ', count)
     if  count == 0 :
-        sql_txt_insert="""INSERT INTO users
-                        VALUES (nextval('User_ID'), '"""+str(user_name)+"""', '"""+str(user_email)+"""', '"""+str(social_media_platform)+"""', 'N','"""+str(user_pwd)+"""');"""
+        sql_txt_insert="""INSERT INTO users (user_id,social_media_name,social_media_email,social_media_type,is_admin,password)
+                        VALUES (nextval('User_ID'), '"""+str(user_name)+"""', '"""+str(user_email)+"""', '"""+str(social_media_platform)+"""', False,'"""+str(user_pwd)+"""');"""
         cur.execute(sql_txt_insert)
         first_sigin=True                        
     else:
@@ -457,3 +459,168 @@ def check_default_details(user_id): #function to check if user has entered any d
                 print(e)
                 raise e
     return count
+
+def get_milkman_area_city(area,city):
+    milkman_list=[]
+    conn=connect()
+    with conn:
+         with conn.cursor() as cur:
+             if (area is None and city is None):
+                sql_txt="""select distinct city from locations;"""
+             elif (city is not None and area is None):
+                sql_txt="""select distinct area from locations where upper(city)='"""+str(city).upper()+"""';"""
+             else:
+                sql_txt="""select milkman_shop from milkman where location_id=
+                          (SELECT location_id from locations where upper(area)='"""+str(area).upper()+"""' and upper(city)='"""+str(city).upper()+"""');"""
+             try:
+                 print('sqltxt',sql_txt)
+                 cur.execute(sql_txt)
+                 for record in cur.fetchall():
+                    milkman_list.append(record[0])
+             except Exception as e:
+                 print(e)
+                 raise e
+    return milkman_list
+
+def update_users_with_milkman(milkman_shop,user_id):
+        print('COnn milkman_shop:',milkman_shop) 
+        print('COnn user_id:',user_id) 
+        conn=connect()
+        with conn: 
+           with conn.cursor() as cur:
+                sql_txt="""UPDATE USERS SET MILKMAN_ID=(SELECT MILKMAN_ID FROM MILKMAN WHERE MILKMAN_SHOP='"""+str(milkman_shop)+"""')
+                            ,USER_RATING=NULL
+                            WHERE USER_ID='"""+str(user_id)+"""';"""
+                try:
+                    cur.execute(sql_txt)
+                except Exception as e:
+                    print(e)
+                    raise e
+
+def view_user_milkman_details(user_id):
+     conn=connect()
+     with conn:
+         with conn.cursor() as cur:
+             sqltxt="""SELECT city,area,(select milkman_shop from milkman where milkman_id=
+                        (select milkman_id from users where user_id='"""+str(user_id)+"""'))
+              from locations where location_id=
+                        (SELECT location_id from milkman where milkman_id=
+                        (select milkman_id from users where user_id='"""+str(user_id)+"""'));"""
+             try:
+                cur.execute(sqltxt)
+                milkman_details=cur.fetchall()
+                print(milkman_details)
+                 #incase when milkman is not available in the list
+                if milkman_details==[]: 
+                    city=None
+                    area=None
+                    milkman_store=None
+                else:
+                    city=milkman_details[0][0]
+                    area=milkman_details[0][1]
+                    milkman_store=milkman_details[0][2]
+                print('Area in view_user_milkman_details:',area)
+                print('City in view_user_milkman_details:',city)
+                print('milkman in view_user_milkman_details:',milkman_store)
+             except Exception as e:
+                 print(e)
+                 raise e
+     return city,area,milkman_store
+
+def milkman_rating(milkman_id,rating,user_id):
+        print('COnn milkman_shop:',milkman_id_store(milkman_id,None)) 
+        print('COnn rating:',rating) 
+        conn=connect()
+        with conn: 
+           with conn.cursor() as cur:
+                sql_update_user_rating="""UPDATE USERS SET USER_RATING='"""+str(rating)+"""' WHERE USER_ID='"""+str(user_id)+"""'"""
+                sql_cnt="""SELECT count(1) FROM MILKMAN_RATING WHERE MILKMAN_ID='"""+str(milkman_id)+"""';"""
+                sql_insert="""INSERT INTO milkman_rating VALUES (NEXTVAL('rating_id'),'"""+str(milkman_id)+"""','"""+str(rating)+"""',1); """
+                sql_user_rating="""SELECT coalesce(user_rating,0) FROM USERS WHERE USER_ID='"""+str(user_id)+"""' and MILKMAN_ID='"""+str(milkman_id)+"""';"""
+                try:
+                    cur.execute(sql_user_rating)
+                    prev_user_rating=cur.fetchone()[0]
+                    cur.execute(sql_update_user_rating)
+                    cur.execute(sql_cnt)
+                    count= cur.fetchone()[0]
+                    # print('cur.execute(sql_cnt):',cur.execute(sql_cnt))
+                    print('rating count for the milkman:',count)
+                    # user_rating=cur.execute(sql_user_rating)
+                    if count==0:
+                        cur.execute(sql_insert)
+                    else:
+                        #check if the user_id has entered rating
+                        print('user_id:',user_id)
+                        print('initial user rating is:',prev_user_rating)
+                        #overall_rating for that milkman was 10 (including 4)
+                        #overall_rating=10-4+2
+                        if prev_user_rating>0:
+                            OVERALL_RATING="""OVERALL_RATING-'"""+str(prev_user_rating)+"""'+'"""+str(rating)+"""'"""
+                            NO_OF_USERS="NO_OF_USERS"
+                            print('OVERALL_RATING: ',OVERALL_RATING)
+                            print('NO_OF_USERS: ',NO_OF_USERS)
+                        else:
+                            OVERALL_RATING="""OVERALL_RATING+'"""+str(rating)+"""'"""
+                            NO_OF_USERS="""NO_OF_USERS+1"""
+                            print('OVERALL_RATING: ',OVERALL_RATING)
+                            print('NO_OF_USERS: ',NO_OF_USERS)
+                        sql_update="""UPDATE MILKMAN_RATING SET OVERALL_RATING="""+str(OVERALL_RATING)+""", 
+                                        NO_OF_USERS="""+str(NO_OF_USERS)+"""
+                                        WHERE MILKMAN_ID='"""+str(milkman_id)+"""';"""
+                        cur.execute(sql_update)
+
+                except Exception as e:
+                    print(e)
+                    raise e
+
+def milkman_id_store(milkman_id,milkman_store):
+    print('milkman_id_store-milkman_id',milkman_id)
+    print('milkman_id_store-milkman_store',milkman_store)
+    conn=connect()
+    with conn:
+        with conn.cursor() as cur:
+            try:
+                sql_milkman_id="""SELECT MILKMAN_ID FROM MILKMAN WHERE  MILKMAN_SHOP='"""+str(milkman_store)+"""';"""
+                sql_milkman_store="""SELECT MILKMAN_SHOP FROM MILKMAN WHERE  MILKMAN_ID='"""+str(milkman_id)+"""';"""
+           
+                if milkman_id is None:
+                    cur.execute(sql_milkman_id)
+                    milkman_id=cur.fetchone()[0]
+                    print('milkman_id:',milkman_id)
+                    return milkman_id
+                elif (milkman_store is None):
+                    cur.execute(sql_milkman_store)
+                    milkman_store=cur.fetchone()[0]
+                    print('Milkman store:',milkman_store)
+                    return milkman_store
+            except Exception as e: 
+                print(e)
+                raise(e)
+  
+def get_overall_rating(milkman_stores):
+    print('milkman_store: ',milkman_stores)
+    milkman_id=milkman_id_store(None,milkman_stores)
+    print('conn milkman id : ',milkman_id)
+    sql_count="""SELECT count(overall_rating) FROM MILKMAN_RATING WHERE MILKMAN_ID='"""+str(milkman_id)+"""';"""
+    sql_select="""SELECT COALESCE(OVERALL_RATING,0) FROM MILKMAN_RATING WHERE MILKMAN_ID='"""+str(milkman_id)+"""';"""
+    sql_users="""SELECT COALESCE(NO_OF_USERS,0) FROM MILKMAN_RATING WHERE MILKMAN_ID='"""+str(milkman_id)+"""';"""
+    conn=connect()
+    with conn:
+        with conn.cursor() as cur:
+            try:
+                cur.execute(sql_count)
+                count=cur.fetchone()[0]
+                print('Count of overall rating is:',count)
+                #when no rating has been given to the milkman
+                rating=0     
+                if count>0:
+                    cur.execute(sql_select)
+                    overall_rate=cur.fetchone()[0]
+                    cur.execute(sql_users)
+                    no_of_users=cur.fetchone()[0]
+                    rating=overall_rate/no_of_users
+                    print('rating in conn is:',rating)
+            except Exception as e:
+                print(e)
+                raise(e)
+    return rating
