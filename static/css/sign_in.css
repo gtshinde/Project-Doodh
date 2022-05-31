@@ -1,0 +1,180 @@
+h1{
+    color: white;
+    margin-block-start: 4rem;
+    text-align: center;
+    font-family: Garamond;
+    /* font-size: 55px; */
+    font-size: clamp(4rem, 7vw, 10rem);
+    font-weight: bold;
+  }
+.googlebtn{
+    position: relative;
+    border: none;
+    background-color: white;
+}
+#lowerbox{
+    font-size:20px; 
+    border-top: 1px solid white;
+    height: 115px;
+}
+body {
+    background-image:url("../css/bg5.jpg");
+    background-size: 1600px 1500px;
+    background-repeat: no-repeat;
+}
+.form-control, .form-control:focus, .input-group-addon {
+    border-color: #e1e1e1;
+}
+.form-control, .btn {        
+    border-radius: 3px;
+}
+.signup-form {
+    width: 90%;
+    margin: 0 auto;
+    padding: 3rem 0;
+}
+.signup-form form {
+    color: #999;
+    border-radius: 3px;
+    margin-bottom: 15px;
+    background: #fff;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    padding: 30px;
+}
+.signup-form h2 {
+    color: #333;
+    font-weight: bold;
+    margin-top: 0;
+    font-size: clamp(2rem, 7vw, 5rem);
+}
+.signup-form hr {
+    margin: 0 -30px 20px;
+}
+.signup-form .form-group {
+    margin-bottom: 20px;
+}
+.signup-form label {
+    font-weight: normal;
+    font-size: 13px;
+}
+.signup-form .form-control {
+    min-height: 38px;
+    box-shadow: none !important;
+}	
+.signup-form .input-group-addon {
+    max-width: 42px;
+    text-align: center;
+}
+.signup-form input[type="checkbox"] {
+    margin-top: 2px;
+}   
+.signup-form .btn{
+    font-size: 16px;
+    font-weight: bold;
+    background: #FFD700;
+    border: none;
+    min-width: 140px;
+    position: relative;
+}
+.signup-form .btn:hover, .signup-form .btn:focus {
+    background: #DAA520;
+    outline: none;
+}
+.signup-form a {
+    color: #fff;	
+    text-decoration: underline;
+}
+.signup-form a:hover {
+    text-decoration: none;
+}
+.signup-form form a {
+    color: #19aa8d;
+    text-decoration: none;
+}	
+.signup-form form a:hover {
+    text-decoration: underline;
+}
+.signup-form .fa {
+    font-size: 21px;
+}
+.signup-form .fa-paper-plane {
+    font-size: 18px;
+}
+.signup-form .fa-check {
+    color: #fff;
+    left: 17px;
+    top: 18px;
+    font-size: 7px;
+    position: absolute;
+}
+.signup-form .form-group .input-group{
+  text-align: center;
+  width: 100%;
+}
+.or-seperator{
+  margin: 50px 0 15px;
+  text-align: center;
+  border-top: 1px solid #e0e0e0;
+}
+.or-seperator b{
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  background: #fff;
+  display: inline-block;
+  border: 1px solid #e0e0e0;
+  border-radius: 50%;
+  position: relative;
+  top: -22px;
+}
+
+/* The Modal (background) */
+.modal {
+    position: fixed; /* Stay in place */
+    z-index: 100; /* Sit on top */
+    padding-top: 250px; /* Location of the box */
+    left: 0;
+    top: 0;
+    display: block;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #FFD700;
+    margin: auto;
+    color:white;
+    padding: 30px;
+    border: 1px solid #888;
+    width: 40%;
+    height: 40%;
+    font-size: 22px;
+    padding-top: 35px;
+}
+
+/* The Close Button */
+.close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: relative;
+    bottom:35px;
+    left:10px;
+}
+.close:hover, .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+@media screen and (min-width: 500px){
+    .signup-form{
+        width: 500px;
+    }
+}

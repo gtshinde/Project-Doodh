@@ -1,4 +1,25 @@
 {% extends "base.html" %}
+
+{% block head %}
+<meta name="viewport" content= "width=device-width, initial-scale=1.0">
+<style>
+  #effectiveFrom {
+    text-align: center;
+    font-size: clamp(1rem, 3vw, 2rem);
+    border: white;
+    height: clamp(1rem, 5vw, 2rem);
+    position: relative;
+    border-radius: 6px;
+    width: 98%;
+    height: 1.75rem;
+    margin: 3% 1% 0% 0%;
+  }
+  .alignh{
+    height: 5%;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
 
 {% if submitted == "Yes" %}
@@ -9,32 +30,33 @@
   </div>
 </div>
 {% endif %}
-
+<div id="box" class="box">
+  <strong>Admin Page to Add or Update Items Into The Database</strong>
+</div>
 <form action="/items/{{user_id}}" method="POST">
   <table class="Tbl">
     <tr>
-      <th style="font-size:70%;">Item Name</th>
+      <th class="alignh">From Date</th>
+      <th>
+        <input type="date" name="effectiveFrom" id="effectiveFrom">
+      </th>
+    </tr>
+    <tr>
+      <!-- <th style="font-size:70%;">Item Name</th> -->
+      <th class="alignh">Item Name</th>
       <th>
         <input type="text" name="ItemName" id="itemname" onkeypress='validate_txt(event)' required>
       </th>
-      </tr>
-      <br>
-      <tr>
-      <th style="font-size:70%;">Item Price</th>
+    </tr>
+    <br>
+    <tr>
+      <!-- <th style="font-size:70%;">Item Price</th> -->
+      <th class="alignh">Item Price</th>
       <th>
          <input type="text" name="ItemPrice" id="itemprice" onkeypress='validate(event)'  required>
       </th>
-      </tr>
-      <tr>
-        <th class="alignh" style="font-size: 70%;">Effective From</th>
-        <th>
-          <input type="date" name="effectiveFrom" id="effectiveFrom">
-          <!-- here have to put a calendar -->
-        </th>
-      </tr>
+    </tr>
   </table>
-  <!--br>
-  <br-->
   
   <br><br>
   

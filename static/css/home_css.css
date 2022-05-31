@@ -2,18 +2,16 @@ body {
     background-image:url("bg5.jpg");
     background-size: 1600px 1500px;
     background-repeat: no-repeat;
-
 }
 h1{
     color: white;
-    margin-block-start: 70px;
+    /* margin-block-start: 70px; */
     text-align: center;
     font-family: Garamond;
-    font-size: 55px;
-    /* position: absolute;
-    top: -10%;
-    left:36%; */
-
+    /* font-size: 55px; */
+    position: relative;
+    /* top: -145%; */
+    font-size: clamp(2rem, 10vw, 5rem);
 }
 form{
     color: white;
@@ -22,10 +20,14 @@ form{
     font-family: verdana;
     font-size: 30px;
 }
-label{
-    text-align: left;
+label, th{
+    position: relative;
+    color: white;
+    font-size: clamp(1rem, 5vw, 2rem);
+    text-align: center;
+    margin-right: 10%;
 }
-select {
+select, input[type=text] {
   width: 100%;
   padding: 5px 65px;
   margin: 7px 0;
@@ -33,18 +35,19 @@ select {
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
-  font-size: 20px;
 }
-select, option {
+select, option, input[type=text] {
     background-color: white ;
-    
+    text-align: center;
+    font-size: clamp(1rem, 3vw, 2rem);
 }
+
 input[type=submit] {
   width: 20%;
   background-color: #FFD700;
   color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
+  padding: 0.75rem;
+  /* margin: 8px 0; */
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -95,12 +98,12 @@ table.Tbl{
   font-size: 36px;
   margin-left: 50px;
 }
-input[type=text]{
+/* input[type=text]{
     width: 60%;
     padding: 6px;
     height: 10%;
     font-size: 20px;
-}
+} */
 
 .bg-text {
   background-color: rgb(0,0,0); /* Fallback color */
@@ -120,7 +123,7 @@ input[type=text]{
 }
 .bg-image {
   /* The image used */
-  background-image: url("bg5.jpg");
+  /* background-image: url("bg5.jpg"); */
   
   /* Add the blur effect */
   filter: blur(8px);
@@ -154,10 +157,31 @@ input[type=text]{
   width: 40%;
   position: relative;
   margin: auto;
-   color: white;
-   font-size: 25px;
-   text-align: center;
+  color: white;
+  font-size: clamp(1rem, 5vw, 3rem);
+  text-align: center;
 }
+
+/* The user details when the user clicks on the profile icon */
+#userDetails{
+  position: absolute;
+  z-index: 2;
+  background-color: white;
+  margin-left: 60%;
+  border: 5px solid white;
+  border-radius: 6px;
+}
+/* the below is for the tooltip which is not aligned correctly */
+/* #userDetails::after{
+  content: "";
+  position: "absolute";
+  bottom: 100%;
+  left: 50%;
+  margin-left: -0.5rem;
+  border-width: 0.5rem;
+  border-style: solid;
+  border-color: transparent transparent white transparent;
+} */
 
 /* The Modal (background) */
 .modal {
@@ -217,4 +241,25 @@ input[type=text]{
     position: absolute;
     left: 30%;
     font-size: 30px;
+}
+
+@media screen and (max-width: 500px){
+  select, input[type=text] {
+    width: 100%;
+    font-size: clamp(1rem, 3vw, 2rem);
+    margin: 3% 0% 0% 0%;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    /* box-sizing: border-box; */
+    text-align: center;
+    height: 1.75rem;
+  }
+  input[type=text]{
+    width: 97%;
+  }
+  input[type=submit]{
+    width: 90%;
+    font-size: clamp(1rem, 6vw, 10rem);
+  }
 }

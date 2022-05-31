@@ -1,6 +1,23 @@
 {% extends "base.html" %}
 {% block head %}
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<meta name="viewport" content= "width=device-width, initial-scale=1.0">
+<style>
+  #effectiveFrom {
+    text-align: center;
+    font-size: clamp(1rem, 3vw, 2rem);
+    border: white;
+    height: clamp(1rem, 5vw, 2rem);
+    position: relative;
+    border-radius: 6px;
+    width: 98%;
+    height: 1.75rem;
+    margin: 3% 1% 0% 0%;
+  }
+  .alignh{
+    height: 5%;
+  }
+</style>
 {% endblock %}
 {% block content %}
 <div  id="box" class="box">
@@ -29,6 +46,10 @@
 
 <form action="/default/{{user_id}}" method="POST">
   <table class="Tbl">
+    <tr>
+      <th class="alignh" >From Date</th>
+      <th><input type="date" name="effectiveFrom" id="effectiveFrom"></th>
+    </tr>
     <tr>
       <th class="alignh">Cow Milk</th>
       <th>
@@ -59,13 +80,6 @@
         <option value="0.0">No Change</option>
        </select>
       </th>
-      </tr>
-      <tr>
-        <th class="alignh" >Effective From</th>
-        <th>
-          <input type="date" name="effectiveFrom" id="effectiveFrom">
-          <!-- here have to put a calendar -->
-        </th>
       </tr>
   </table>
   <br><br>

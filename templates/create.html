@@ -1,16 +1,21 @@
 {% extends "base.html" %}
 {% block head %}
+<meta name="viewport" content= "width=device-width, initial-scale=1.0">
 <style>
   #fromDate,#toDate {
     text-align: center;
-    font-size: 20px;
+    font-size: clamp(1rem, 3vw, 2rem);
     border: white;
-    height: 5%;
-    width: 20%;
-    position: absolute;
-    margin-left: -1%;
+    height: clamp(1rem, 5vw, 2rem);
+    position: relative;
     border-radius: 6px;
-}
+    width: 98%;
+    height: 1.75rem;
+    margin: 3% 1% 0% 0%;
+  }
+  .alignh{
+    height: 5%;
+  }
 </style>
 {% endblock %}
 {% block content %}
@@ -37,7 +42,6 @@
   // if ('{{ display_date }}'=="True")
   // {
     // past_date='{{ past_date }}'
-
   // }
   </script>
   </div>
@@ -48,9 +52,8 @@
     <strong>Change Milk Quantity for Past/Future date</strong>
   </div>
 <br>
- 
+<br>
 <form action="/create/{{user_id}}" method="POST">
-
   <table class="Tbl">
   <!-- <tr>
     {% if display_date=='True' %}
@@ -61,16 +64,15 @@
     {% endif %}
   </tr> -->
   <tr>
-    <label style=" position: absolute; color:white; font-size: 29px;
-    margin-left: -19%;"><strong>From Date:</strong></label>
-    <input type="date" name="fromDate" id="fromDate" required="required" onchange="changedateval()"> <br><br>
-    <label style=" position: absolute; color:white; font-size: 29px;
-    margin-left: -19%;"><strong>To Date:</strong></label>
-    <input type="date" name="toDate" id="toDate" required="required">
-
+    <th class="alignh">From Date</th>
+    <th><input type="date" name="fromDate" id="fromDate" required="required" onchange="changedateval()"></th>
+  </tr>
+  <tr>
+    <th class="alignh">To Date</th>
+    <th><input type="date" name="toDate" id="toDate" required="required"></th>
   </tr>
     <tr>
-      <th class="alignh" style=" height: 5%;">Cow Milk</th>
+      <th class="alignh">Cow Milk</th>
       <th>
        <select id="cm" name="cm">
         <option value="0">0</option>
@@ -84,9 +86,8 @@
        </select>
       </th>
       </tr>
-      <br>
       <tr>
-      <th class="alignh" style=" height: 5%;">Buffalow Milk</th>
+      <th class="alignh">Buffalow Milk</th>
       <th>
        <select id="bm" name="bm">
         <option value="0">0</option>
@@ -101,9 +102,7 @@
       </th>
       </tr>
   </table>
- 
-  <br><br>
-  
+  <br>
   <input type="submit" value="Submit">
 </form>
 <script>
@@ -155,14 +154,9 @@ function minmaxdate() {
       function changedateval(){
         // alert('hey: '+fromDate);
         var toDate=document.getElementById("toDate").value;
-        
         var fromDate=document.getElementById("fromDate").value;
-        
         document.getElementById("toDate").value = fromDate;
         // toDate.setAttribute("value",fromDate);  --this should hv worked, but it did not
-      
-        
       }
-  
   </script>
 {% endblock %}

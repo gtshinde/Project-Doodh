@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <title>Doodh</title>
+  
   <link rel="icon" type="image/x-icon" href="../static/images/milk_1.png">
   <!-- <link rel="stylesheet" type="text/css" href="../static/css/home_css.css"> -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="google-signin-client_id"
     content="619500584057-gk7d4vh5v052kek376h4o64s7hbcafoe.apps.googleusercontent.com">
   <script src="https://apis.google.com/js/platform.js" async defer></script>
@@ -13,183 +14,8 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
-  <style>
-    h1{
-      color: white;
-      margin-block-start: 70px;
-      text-align: center;
-      font-family: Garamond;
-      font-size: 55px;
-      font-weight: bold;
-    }
-    .googlebtn{
-      position: relative;
-      bottom: 25%;
-      left: 33%;
-      top: 80%;
-    }
-    #lowerbox{
-      font-size:20px; 
-      border-top: 1px solid white;
-      height: 115px;
-    }
-    body {
-    background-image:url("../static/css/bg5.jpg");
-    background-size: 1600px 1500px;
-    background-repeat: no-repeat;
-    }
-    .form-control, .form-control:focus, .input-group-addon {
-		border-color: #e1e1e1;
-	}
-    .form-control, .btn {        
-        border-radius: 3px;
-    }
-	.signup-form {
-		width: 390px;
-		margin: 0 auto;
-		padding: 30px 0;
-	}
-    .signup-form form {
-		color: #999;
-		border-radius: 3px;
-    	margin-bottom: 15px;
-        background: #fff;
-        box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-        padding: 30px;
-    }
-	.signup-form h2 {
-		color: #333;
-		font-weight: bold;
-        margin-top: 0;
-    }
-    .signup-form hr {
-        margin: 0 -30px 20px;
-    }
-	.signup-form .form-group {
-		margin-bottom: 20px;
-	}
-	.signup-form label {
-		font-weight: normal;
-		font-size: 13px;
-	}
-	.signup-form .form-control {
-		min-height: 38px;
-		box-shadow: none !important;
-	}	
-	.signup-form .input-group-addon {
-		max-width: 42px;
-		text-align: center;
-	}
-	.signup-form input[type="checkbox"] {
-		margin-top: 2px;
-	}   
-    .signup-form .btn{
-      font-size: 16px;
-      font-weight: bold;
-		  background: #FFD700;
-		  border: none;
-		  min-width: 140px;
-      position: relative;
-      left: 30%;
-    }
-	.signup-form .btn:hover, .signup-form .btn:focus {
-		background: #DAA520;
-        outline: none;
-	}
-	.signup-form a {
-		color: #fff;	
-		text-decoration: underline;
-	}
-	.signup-form a:hover {
-		text-decoration: none;
-	}
-	.signup-form form a {
-		color: #19aa8d;
-		text-decoration: none;
-	}	
-	.signup-form form a:hover {
-		text-decoration: underline;
-	}
-	.signup-form .fa {
-		font-size: 21px;
-	}
-	.signup-form .fa-paper-plane {
-		font-size: 18px;
-	}
-	.signup-form .fa-check {
-		color: #fff;
-		left: 17px;
-		top: 18px;
-		font-size: 7px;
-		position: absolute;
-	}
-  .or-seperator{
-    margin: 50px 0 15px;
-    text-align: center;
-    border-top: 1px solid #e0e0e0;
-  }
-  .or-seperator b{
-    width: 40px;
-    height: 40px;
-    text-align: center;
-    line-height: 40px;
-    background: #fff;
-    display: inline-block;
-    border: 1px solid #e0e0e0;
-    border-radius: 50%;
-    position: relative;
-    top: -22px;
-  }
-  	/* The Modal (background) */
-.modal {
-  
-  position: fixed; /* Stay in place */
-  z-index: 100; /* Sit on top */
-  padding-top: 250px; /* Location of the box */
-  left: 0;
-  top: 0;
-  display: block;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-
-/* Modal Content */
-.modal-content {
-  background-color: #FFD700;
-  margin: auto;
-  color:white;
-  padding: 30px;
-  border: 1px solid #888;
-  width: 40%;
-  height: 40%;
-  font-size: 22px;
-  padding-top: 35px;
- 
-}
-
-/* The Close Button */
-.close {
-  color: white;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-  position: relative;
-  bottom:35px;
-  left:10px;
-}
-
-.close:hover,
-.close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-}
-  </style>
+  <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/sign_in.css')}}">
 </head>
-
 <body>
 <div class="bg-image"></div>
 <h1>Project Doodh</h1> 
@@ -220,19 +46,21 @@
 			</div>
     </div>
     <div class="form-group">
-      <button type="submit" class="btn btn-primary btn-lg">Sign In</button>
+      <div class="input-group">
+        <button type="submit" class="btn btn-primary btn-lg">Sign In</button>
+      </div>
     </div>
     <!-- <input type="submit" value="Login" style="width:60%"> -->
      <!-- <p>_______OR_______</p> -->
-     <div class="or-seperator">
-       <b>or</b>
-     </div>
-     <div class="form-group">
-       <!-- add the google button stuff here -->
-       <div class="googlebtn">
-         <div style="margin-right: 30px;" class="g-signin2" data-onsuccess="onSignIn"></div>
-       </div>
-     </div>
+      <div class="or-seperator">
+        <b>or</b>
+      </div>
+      <div class="form-group">
+        <div class="input-group">
+          <button class="googlebtn">
+            <div class="g-signin2" data-onsuccess="onSignIn"></div>
+          </div>
+      </div>
   </form>
   <div class="text-center">Do not have an account? <a href="{{url_for('signup')}}"> Signup here! </a></div>
 </div>
@@ -249,7 +77,6 @@
   // document.querySelector('#usrname').innerText="Hello  "+googleUser.getBasicProfile().getGivenName()+"!";
 }
 
-
 // Get the modal
 var modal = document.getElementById("myModal");
 
@@ -257,7 +84,7 @@ var modal = document.getElementById("myModal");
 var span = document.getElementsByClassName("close")[0];
 
 // When the user clicks on <span> (x), close the modal
-span.onclick = function() {
+span.onclick = function(){
   modal.style.display = "none";
 }
 
@@ -267,8 +94,6 @@ window.onclick = function(event) {
     modal.style.display = "none";
   }
 }	
-
-
 </script>
 
 </body>
