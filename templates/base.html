@@ -60,6 +60,7 @@
             <a href="{{url_for('report',user_id=user_id,FromDate='null')}}">Report</a>
             <a href="{{url_for('default',user_id=user_id)}}">Default Milk</a>
             <a href="{{url_for('create',user_id=user_id)}}">Change Milk Quantity</a>
+            <a href="{{url_for('view_milkman',user_id=user_id,rating=' ')}}">View/Update Milkman</a>
             <!-- <a href="{{url_for('create',user_id=user_id, display_date=True)}}">Change Milk Quantity for Past Date</a> -->
             {% if is_admin == true %}
               <a href="{{url_for('items',user_id=user_id)}}">Items</a>

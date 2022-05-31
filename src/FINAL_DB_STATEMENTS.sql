@@ -23,23 +23,12 @@ Social_Media_Name VARCHAR(100),
 Social_Media_Email VARCHAR(100),
 Social_Media_Type  VARCHAR(100),
 Is_Admin Boolean,
-signed_in VARCHAR(1),
-Password text
+signed_in Boolean,
+Password text,
+user_rating FLOAT
 );
+alter table users add column user_rating float;
 CREATE SEQUENCE Change_ID START WITH 1;
-CREATE TABLE MILKMAN(
-    milkman_id INTEGER PRIMARY KEY,
-    milkman_shop VARCHAR(100),
-    area VARCHAR(100),
-    city VARCHAR(100),
-    state VARCHAR(100),
-    country VARCHAR(100),
-    Created_Date DATE,
-    Last_Updated_Date DATE
-);
-
-ALTER TABLE users
-    ADD COLUMN milkman_id INTEGER REFERENCES milkman(milkman_id);
 
 create table Change_Details (
 Change_ID INTEGER PRIMARY KEY,
@@ -60,3 +49,62 @@ Last_Updated_Date DATE,
 Effective_From DATE,
 Effective_To DATE
 );
+
+CREATE SEQUENCE milkman_id START WITH 1;
+CREATE TABLE MILKMAN(
+    milkman_id INTEGER PRIMARY KEY,
+    milkman_shop VARCHAR(100),
+    Created_Date DATE,
+    Last_Updated_Date DATE
+);
+
+ALTER TABLE users
+    ADD COLUMN milkman_id INTEGER REFERENCES milkman(milkman_id);
+
+INSERT INTO MILKMAN VALUES 
+(NEXTVAL('milkman_id'),'UTTAM STORE',
+ CURRENT_DATE,CURRENT_DATE,2);
+
+ INSERT INTO MILKMAN VALUES 
+(NEXTVAL('milkman_id'),'KAILASH MARKET',
+ CURRENT_DATE,CURRENT_DATE,1);
+
+ INSERT INTO MILKMAN VALUES 
+(NEXTVAL('milkman_id'),'SUYASH MARKET',
+ CURRENT_DATE,CURRENT_DATE,1);
+
+ CREATE SEQUENCE location_id START WITH 1;
+CREATE TABLE Locations(
+    location_id INTEGER PRIMARY KEY,
+    area VARCHAR(100),
+    city VARCHAR(100),
+    state VARCHAR(100),
+    country VARCHAR(100),
+    Created_Date DATE,
+    Last_Updated_Date DATE
+);
+
+ALTER TABLE MILKMAN
+    ADD COLUMN location_id INTEGER REFERENCES Locations(location_id);
+
+INSERT INTO Locations VALUES 
+(NEXTVAL('location_id'),
+ 'WADGAON','PUNE','MH','IN',CURRENT_DATE,CURRENT_DATE);
+ INSERT INTO Locations VALUES 
+(NEXTVAL('location_id'),
+ 'BANER','PUNE','MH','IN',CURRENT_DATE,CURRENT_DATE);
+ INSERT INTO Locations VALUES 
+(NEXTVAL('location_id'),
+ 'BANDRA','MUMBAI','MH','IN',CURRENT_DATE,CURRENT_DATE);
+ INSERT INTO Locations VALUES 
+(NEXTVAL('location_id'),
+ 'JUHU','MUMBAI','MH','IN',CURRENT_DATE,CURRENT_DATE);
+ 
+ CREATE SEQUENCE RATING_ID START WITH 1;
+create table milkman_rating(
+    RATING_ID INTEGER PRIMARY KEY,
+	MILKMAN_ID INTEGER,
+	OVERALL_RATING FLOAT,
+	NO_OF_USERS INTEGER
+)
+ALTER SEQUENCE RATING_ID RESTART WITH 1;
