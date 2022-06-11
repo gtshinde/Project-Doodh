@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='images/milk_1.png')}}">
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/report_css.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/home_css.css')}}">	
+        <link rel="stylesheet" type="text/css" href="http://cdn.webrupee.com/font">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+<style>
+  #report_total_box
+  {padding-right: 20px;
+    padding-left: 20px;
+    border-color: white;
+    border-block-color: white;
+    background: #fffdf4;
+    /* border: double; */
+    color: black;
+    /* padding-block: 5px 5px; */
+  }
+  .fa-calendar, .fa-arrow-left {
+  background: #f9f5f4;
+    border-radius: 27px;
+  }
+  .fa-inverse {
+    color: #262626;
+}
+.fa-stack :hover{
+  color: #FFD700
+}
+#fa-arrow-left_c :hover{
+  color:#FFD700;
+ 
+}
+#mySidenav{
+width: 208px;
+    margin-left: 3.3%;
+    border-radius: 30px;
+    overflow-x: hidden;
+    z-index: 1;
+    top: 30%;
+}
+#fa-arrow-left_c{
+  display: none;
+}
+</style>
+<span class="fa-stack fa-lg" onclick="view_dahsboard(1)" style="position: fixed; top:1%">
+  <i class="fa fa-circle fa-stack-2x" onclick="view_dahsboard(1)"></i>
+ 
+  <i class="fa fa-arrow-left fa-stack-1x fa-inverse" onclick="view_dahsboard(1)" ></i>
+</span>
+<h1 style="font-size: 60px;">Project Doodh</h1>
+
+<h1 style="font-size: 30px; text-transform: capitalize;"><strong>{{user}}'s {{month_string}} Milk Report  </strong></h1>
+<!-- <span class="fa-stack fa-lg"   style="position: fixed;">
+  <i class="fa fa-circle fa-stack-2x"></i>
+ 
+  <i class="fa fa-arrow-left fa-stack-1x fa-inverse" class="leftarrow" onclick="view_dahsboard(1)" ></i>
+</span> -->
+<span class="fa-stack fa-lg"  onclick="months()" style="position: fixed;">
+  <i class="fa fa-circle fa-stack-2x"></i>
+  <i class="fa fa-calendar fa-stack-1x fa-inverse" id="fa-calendar_c"></i>
+  <i class="fa fa-arrow-left fa-stack-1x fa-inverse" id="fa-arrow-left_c" style="display: none;"></i>
+</span>
+<div id="mySidenav" class="sidenav_months" style="width: 0px;" >
+  <marquee style="font-size: 16px;" behavior="scroll" direction="left"><strong>Please note that the data only can be viewed for past six months...</strong> </marquee>
+  <br>
+  <br>
+  {% for month_year in past_months_list %}
+  <a href="{{url_for('report_month_year',user_id=user_id ,month=(month_year[0]), year=(month_year[1]))}}">{{month_year[2]}} {{month_year[1]}}</a>
+  <br/>
+  {% endfor %}
+</div>
+
+
+<label style=" position: absolute; color:white; font-size: 20px;
+margin-left: 17%;"><strong>From Date:</strong></label>
+<input type="date" name="fromDate" id="fromDate" style=" position: absolute; 
+margin-left: 25%;" required="required" onchange="changedateval()"> 
+
+<label style="position: absolute; color: white; font-size: 20px; margin-left: 41%;"><strong>To Date:</strong></label>
+<input type="date" name="toDate" id="toDate" style="position: absolute; margin-left: 47%;" required="required">
+
+
+<input style="position: absolute; margin-left: 57%; height:4%; width: 5%;" type="button" value="Go" onclick="get_reports_for_dates()" id="Go">
+
+<label style="position: absolute; color: white; font-size: 24px; margin-left: 70%;"><strong>Total Bill: <strong id="report_total_box">&#8377; {{ total_price }}0</strong></strong></label>
+<!-- <p type="text" name="total" id="total" style="position: absolute; margin-left: 73%;" ><strong>{{ total_price }}</strong></p> -->
+<br><br>
+<!-- The below code was added to set the from and to dates to the values which user had selected before clicking on GO -->
+{% if submitted=="Yes" %}
+{{ from_date }}
+  <script>
+    document.getElementById("fromDate").value='{{ from_date }}';
+    document.getElementById("toDate").value='{{ to_date }}';
+    // Added below line so that even when user selects any from date after first GO, still the toDate should populate same as that of fromDate by default;
+    //without this line, it would always by default take todate of past GO 
+    document.getElementById("fromDate").addEventListener("onchange", changedateval);
+  </script>
+{% endif %}
+<table id="customers">
+  <tr>
+    <th>Date</th>
+    <th>Item Type</th>
+    <th>Item Qty</th>
+    <th>Price</th>
+  </tr>
+  {% for day_item in report_list %}
+    {% if day_item is not none %}
+      {% for item in day_item %}
+        <tr>
+          <td> {{ item['date'] }} </td>
+          <td> {{ item['type'] }} </td>
+          <td> {{ item['qty'] }} </td>
+          <td> {{ item['price'] }} </td>
+        </tr>
+      {% endfor %}
+    {% endif %}  
+  {% endfor %}
+  <tr>
+  
+    <td colspan="3" style="text-align: center; font-size: 25px;"> <strong>TOTAL BILL AMOUNT</strong> </td>
+    <td style="font-size: 25px;"><strong>&#8377; {{ total_price }} </strong>  </td>
+  </tr>  
+</table>
+ 
+<script>
+ function view_dahsboard(milkman_id){
+      console.log('Inside view dashboard');
+      location.replace("http://localhost:5000//milkman_dashboard1/"+milkman_id);
+      // window.open('http://localhost:5000//milkman_dashboard1/', '_blank');
+      // window.history.back();
+    }
+  function get_reports_for_dates() {
+    // (A) APPEND DATA
+    var fromDate = document.getElementById("fromDate").value;
+    var toDate = document.getElementById("toDate").value;
+    // (B) URL + REDIRECT
+    location.replace("/report"+'/{{user_id}}/' + fromDate + ':' + toDate);
+  }
+// Below function will by default set the todate value same as that of the fromdate initially, 
+//then user can change if required
+  function changedateval(){
+        // alert('hey: '+fromDate);
+        var toDate=document.getElementById("toDate").value;
+        
+        var fromDate=document.getElementById("fromDate").value;
+        
+        document.getElementById("toDate").value = fromDate;
+        // toDate.setAttribute("value",fromDate);  --this should hv worked, but it did not
+      
+        
+      }
+  function months(){
+    console.log('inside months')
+    // var arrow=document.getElementsByClassName("fa-arrow-left_c")[0];
+    var arrow=document.getElementById("fa-arrow-left_c");
+    var calendar=document.getElementById("fa-calendar_c");
+    console.log('arrow:',arrow);
+    console.log('calendar:',calendar);
+    if (arrow.style.display=="none")
+    {
+      document.getElementsByClassName("sidenav_months")[0].style.width="196px";
+      arrow.style.display="block";
+      calendar.style.display="none";
+    }
+    else if (calendar.style.display=="none")
+    {
+      document.getElementsByClassName("sidenav_months")[0].style.width="0px";
+      arrow.style.display="none";
+      calendar.style.display="block";     
+    }
+    else{
+
+    }
+  }
+  </script>
+</body>
+    
+</html>
+

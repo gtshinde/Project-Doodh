@@ -88,7 +88,7 @@ def report(user_id):
         month = int(todays_date.month)
         year = int(todays_date.year)
         month_string = calendar.month_name[month]
-        report_list,total_price = connection.report_logic(str(year)+"-"+str(month)+"-01", str(todays_date), user_id)
+        report_list,total_price,tomo_type_qty = connection.report_logic(str(year)+"-"+str(month)+"-01", str(todays_date), user_id)
         past_months_list = []
         for i in range(1, 6):
             offset_date = todays_date - DateOffset(months=i)
@@ -125,9 +125,9 @@ def report_month_year(user_id,month, year):
     if (signin):
         num_days_in_month = calendar.monthrange(int(year), int(month))[1]   
         if (int(month)==todays_month and int(year)==todays_year): # if it is current month, report_list should diplay only till current date and not till end of month
-            report_list,total_price = connection.report_logic(str(year)+"-"+str(month)+"-01", str(todays_date) , user_id)
+            report_list,total_price,report_logic = connection.report_logic(str(year)+"-"+str(month)+"-01", str(todays_date) , user_id)
         else:     
-            report_list,total_price = connection.report_logic(str(year)+"-"+str(month)+"-01", str(year)+"-"+str(month)+"-"+str(num_days_in_month), user_id)
+            report_list,total_price,report_logic = connection.report_logic(str(year)+"-"+str(month)+"-01", str(year)+"-"+str(month)+"-"+str(num_days_in_month), user_id)
         month_string = calendar.month_name[int(month)]
         past_months_list = []
         todays_date = date.today()
@@ -155,7 +155,7 @@ def report_for_date_range(user_id, from_date, to_date):
     if (signin):
         p_from_date = from_date  #storing the parameter values in string only before converting to timestamp format- this is reqd by the report.html pg (lenght function used there for from and todate won't work for timestamp values))
         p_to_date = to_date
-        report_list,total_price = connection.report_logic(from_date, to_date, user_id)
+        report_list,total_price,tomo_type_qty = connection.report_logic(from_date, to_date, user_id)
         from_date = to_datetime(from_date, format='%Y-%m-%d')
         to_date = to_datetime(to_date, format='%Y-%m-%d')
         month_string = ""
@@ -488,22 +488,44 @@ def view_milkman(user_id,rating):
     else:
          return render_template('url_not_found.html')
 
-# @app.route('/milkman_rating/<user_id>/<rating>',methods=["GET","POST"])
-# def view_milkman(user_id,rating):
-#     user_details=connection.validate_user_signin(user_id)
-#     print('milkman_rating:in the server user details:',user_details)
-#     signin=user_details[0]
-#     admin=user_details[1]
-#     user_email=user_details[2]    
-#     print('user sign in status',signin)
-#     print('user admin status',admin)
-#     if (signin):
-#         connection.milkman_rating(user_id,rating)
+@app.route('/milkman_dashboard1/<milkman_id>')
+def milkman_dashboard1(milkman_id):
+    print('MIlkman id is:',milkman_id)
+    user_count,user_list=connection.milkman_dashboard_logic(milkman_id)
+    print('in server user_count:',user_count)
+    return render_template('milkman_dashboard1.html',user_email='',user_id='',user_count=user_count,user_list=user_list,milkman_id=milkman_id)
+
+
+
+@app.route('/User_Report_Milkman/<milkman_id>/<user_id>/<user>',methods=["GET","POST"])
+def User_Report_milkman(milkman_id,user_id,user):
+    # user_details=connection.validate_user_signin(user_id)
+    print('milkman_id:',milkman_id)
+    
+    print('milkman - user_id :',user_id)
+    print('milkman - user_name :',user)
+    if user_id!=0:
+        # if user has not provided the month or year
+        # find the system month and year
+        todays_date = date.today()
+        month = int(todays_date.month)
+        year = int(todays_date.year)
+        month_string = calendar.month_name[month]
+        report_list,total_price,tomo_type_qty = connection.report_logic(str(year)+"-"+str(month)+"-01", str(todays_date), user_id)
+        
+        past_months_list = []
+        for i in range(1, 6):
+            offset_date = todays_date - DateOffset(months=i)
+            past_months_list.append([str(offset_date.month), str(offset_date.year), calendar.month_name[offset_date.month]])
+        # past_month_list = [ [3, 2022, March], [2, 2022, February], [1, 2022, January], ... ] considering current_date is in APRIL 2022
+        pprint(report_list)
+        print (len(report_list))
+        print('REPORT TOTAL: ',total_price)
+
+        return render_template("User_Report_milkman.html", report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_id=user_id,total_price=total_price,user=user)
        
-#         return render_template('view_milkman.html',user_email=user_email,user_id=user_id)
-#         # city=city,area=area,milkman_store=milkman_store)
-#     else:
-#          return render_template('url_not_found.html')    
+    else:
+        return render_template('url_not_found.html')    
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -4,6 +4,10 @@ import psycopg2
 import calendar
 from pandas import to_datetime
 import datetime
+from datetime import date
+import calendar
+from pandas import DateOffset, to_datetime
+from pprint import pprint
 
 def connect():
     try:
@@ -329,10 +333,10 @@ def report_logic(from_date, to_date, user_id):
     print("report_logic("+str(from_date)+", "+str(to_date)+", "+str(user_id)+")") #for debugging 
     report_list = default_report_logic(from_date, to_date, user_id)
     # next need to check where all there was a change
-    report_list,total_price = change_report_logic(from_date, to_date, user_id, report_list)
+    report_list,total_price,tomo_type_qty = change_report_logic(from_date, to_date, user_id, report_list)
     # next need to get the total bill for the month
     #  = bill_report_logic(report_list)
-    return (report_list,total_price)
+    return (report_list,total_price,tomo_type_qty)
 
 def default_report_logic(from_date, to_date, user_id):
     report_list = [None]
@@ -392,6 +396,8 @@ def default_report_logic(from_date, to_date, user_id):
 
 def change_report_logic(from_date, to_date, user_id, report_list):
     conn = connect()
+    todays_date = date.today()
+    tomo_type_qty=[]
     from_date = to_datetime(from_date, format='%Y-%m-%d')
     to_date = to_datetime(to_date, format='%Y-%m-%d')
     num_days_between_fromDate_toDate = ((to_date - from_date).days)+1
@@ -443,9 +449,18 @@ def change_report_logic(from_date, to_date, user_id, report_list):
         if (day_list is not None):
             for item_dict in day_list:
                 total_price+=item_dict['price']
+                print('Todays date:',todays_date)
+                print('item_dict[date]:',item_dict['date'])
+                
+                if item_dict['date'] == str(todays_date):
+                    print('Todays date matches')
+                    tomo_type_qty.append(item_dict)
+                else:
+                    print('No matches')
             print('The total bill for the day is:',total_price)
     print('The total bill is:',total_price)
-    return report_list,total_price
+    print('tomo_type_qty is:',tomo_type_qty)
+    return report_list,total_price,tomo_type_qty
 
 def check_default_details(user_id): #function to check if user has entered any default details when they login 1st time, if not then  re-direct them to the default pg again
     conn = connect()
@@ -624,3 +639,46 @@ def get_overall_rating(milkman_stores):
                 print(e)
                 raise(e)
     return rating
+
+def milkman_dashboard_logic(milkman_id):
+    conn=connect()
+    users_list=[None]
+    i=0
+    with conn:
+        sql_get_user_count="""SELECT COUNT(USER_ID) FROM USERS WHERE MILKMAN_ID='"""+str(milkman_id)+"""';"""
+        sql_get_users="""SELECT Social_Media_Name,user_id FROM USERS WHERE MILKMAN_ID='"""+str(milkman_id)+"""';"""
+        with conn.cursor() as cur:
+            try:
+                cur.execute(sql_get_user_count)
+                user_count=cur.fetchone()[0]
+                # user_count=user_count
+                users_list=users_list*user_count
+                cur.execute(sql_get_users)
+                user_details=cur.fetchall()
+                print('user_details:',user_details)
+                for user in user_details:
+                    user_name=user[0]
+                    user_id=user[1]
+                    print('user_ids:',user_name)
+                    print('user_ids:',user_id)
+                      # find the system month and year
+                    todays_date = date.today()
+                    month = int(todays_date.month)
+                    year = int(todays_date.year)
+                    print('calling the report logic from milkmandashboard')
+                    report_list,total_price,tomo_type_qty =report_logic(str(year)+"-"+str(month)+"-01", str(todays_date), user_id)
+                    if(users_list[i] is None):
+                        users_list[i] = {"user": user_name,"user_id":user_id, "report": report_list, "total_price": total_price, "tomo_type_qty":tomo_type_qty}
+                        i=i+1
+
+                    print('user is:',user)
+                    print('user ID is:',user_id)
+                    print('Dict users_list for user:')
+                    print(users_list)
+                print('Printing the final list')
+                pprint(users_list)
+            except Exception as e:
+                print(e)
+                raise(e)
+    return user_count,users_list
+                    
