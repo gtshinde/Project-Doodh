@@ -4,7 +4,7 @@ h1{
     text-align: center;
     font-family: Garamond;
     /* font-size: 55px; */
-    font-size: clamp(4rem, 7vw, 10rem);
+    font-size: clamp(4rem, 10vw, 10rem);
     font-weight: bold;
   }
 .googlebtn{
@@ -45,7 +45,7 @@ body {
     color: #333;
     font-weight: bold;
     margin-top: 0;
-    font-size: clamp(2rem, 7vw, 5rem);
+    font-size: clamp(2rem, 5vw, 5rem);
 }
 .signup-form hr {
     margin: 0 -30px 20px;
@@ -151,21 +151,23 @@ body {
     color:white;
     padding: 30px;
     border: 1px solid #888;
-    width: 40%;
-    height: 40%;
-    font-size: 22px;
+    width: 50%;
+    /* height: 30%; */
+    font-size: clamp(1rem, 6vw, 5rem);
     padding-top: 35px;
+    text-align: center;
 }
 
 /* The Close Button */
 .close {
     color: white;
     float: right;
-    font-size: 28px;
+    font-size: clamp(1rem, 5vw, 5rem);
     font-weight: bold;
     position: relative;
-    bottom:35px;
     left:10px;
+    bottom:25px;
+    opacity: 1;
 }
 .close:hover, .close:focus {
     color: #000;
