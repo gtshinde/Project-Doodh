@@ -25,7 +25,7 @@ def redirect_to_create():
 
 @app.route("/signout/<user_email>")
 def signout(user_email):
-      connection.update_user_signin_status(user_email,False)                                         
+      connection.update_user_signin_status('User',user_email,False)                                         
       return redirect(url_for("signin"))
 
 @app.route("/create/<user_id>",methods = ["GET", "POST"])
@@ -275,7 +275,7 @@ def signin():
         print('signin',user_email)
         print('signin',user_pwd)    
         print('user_id',user_id)
-        db_pwd= connection.get_user_pwd_from_db(user_email)
+        db_pwd= connection.get_user_pwd_from_db(user_email,'User')  
         print('db_pwd',db_pwd) 
         if db_pwd=='':
             db_pwd='invalidgooglepwd'  #to handle invalid google login in the login pg
@@ -283,7 +283,7 @@ def signin():
             print('User with this email id has not signed up, please signup')
             display_error_message="User with this email id has not signed up,''\n'' please signup!"
         elif(sha256_crypt.verify(user_pwd, db_pwd)):
-            connection.update_user_signin_status(user_email,'Y')
+            connection.update_user_signin_status('User',user_email,True)
             print(first_usersigin[user_id])
             if(first_usersigin[user_id] ):
                 first_usersigin[user_id]=False
@@ -300,7 +300,7 @@ def signin():
 @app.route("/signin-success/<social_media_platform>/<user_email>/<user_name>")
 def signin_success(social_media_platform, user_email, user_name):
     global first_usersigin
-    connection.update_user_signin_status(user_email,'Y')
+    connection.update_user_signin_status('User',user_email,True)
     user_id=connection.get_user_id(user_email)
     user_details=connection.validate_user_signin(user_id) #if a google user signins first time, record for this user wont be inserted into db at this pt in the code, goto connection.py for more clarity on this
     print('in the server user details:',user_details)
@@ -321,7 +321,7 @@ def signin_success(social_media_platform, user_email, user_name):
         print('google user',user_email) 
         print('google user_id',user_id)
         count,first_sigin=connection.insert_users(user_email, user_name, social_media_platform,'')
-        connection.update_user_signin_status(user_email,'Y')
+        connection.update_user_signin_status('User',user_email,True)
         user_id=connection.get_user_id(user_email)
         print("count after insert is:",count)
         if count==0:  #first signin shd be set to True only when NEW google user signs in, without this condition it would always set firstsign in to True when google user logs in
@@ -400,7 +400,8 @@ def milkman_selection(user_id):
             print('area :',area)
             milkman_stores=form_data['milkman_stores']
             print('milkman_stores:',milkman_stores)
-            connection.update_users_with_milkman(milkman_stores,user_id)
+            location_id=connection.get_location_id(city,area)
+            connection.update_users_with_milkman(milkman_stores,user_id,location_id)
             return redirect(url_for("redirect_milkman",user_id=user_id))
             # #function to check if user has entered any default details when they login 1st time, if not then  re-direct them to the default pg again            
             # default_details_count=connection.check_default_details(user_id) 
@@ -475,12 +476,14 @@ def view_milkman(user_id,rating):
     print('user admin status',admin)
     if (signin):
         city,area,milkman_store=connection.view_user_milkman_details(user_id)
+        location_id=connection.get_location_id(city,area)
         milkman_list=[milkman_store,area,city]
         overall_rate=''
         if rating != ' ':
             milkman_id=connection.milkman_id_store(None,milkman_store)
-            connection.milkman_rating(milkman_id,rating,user_id)
-        overall_rate=connection.get_overall_rating(milkman_store)
+            
+            connection.milkman_rating(milkman_id,rating,user_id,location_id)
+        overall_rate=connection.get_overall_rating(milkman_store,location_id)
         print('overall_rate in server is :',overall_rate) 
         
         return render_template('view_milkman.html',user_email=user_email,milkman_list=milkman_list,user_id=user_id,overall_rate=overall_rate)
@@ -526,6 +529,75 @@ def User_Report_milkman(milkman_id,user_id,user):
        
     else:
         return render_template('url_not_found.html')    
+
+@app.route("/milkman/signin",methods = ["GET" , "POST"])
+def milkman_signin():
+                
+    display_error_message=""
+  
+    if(request.method == "POST"):
+        city = request.form.get("city")
+        area = request.form.get("area")
+        milkman  = request.form.get("milkman")
+        milkman_pwd  = request.form.get("password")
+
+        location_id=connection.get_location_id(city,area)
+        milkman_id=connection.milkman_id_store(None,milkman,location_id)
+        print('signin',milkman)
+        print('signin',milkman_pwd)    
+        print('milkman_id',milkman_id)
+        db_pwd= connection.get_user_pwd_from_db(milkman_id,'Milkman')
+        print('db_pwd',db_pwd) 
+        if db_pwd=='':
+            db_pwd='invalidgooglepwd'  #to handle invalid google login in the login pg
+        if (db_pwd==0):
+            print('Milkman  has not signed up, please signup')
+            display_error_message="Milkman has not signed up, please signup!"
+        elif(sha256_crypt.verify(milkman_pwd, db_pwd)):
+            connection.update_user_signin_status('Milkman',milkman_id,True)
+           
+            return redirect(url_for("milkman_dashboard1",milkman_id=milkman_id))   
+        else:
+            print('Invalid credentials!')
+            display_error_message="Invalid credentials!"
+    return render_template("milkman_signin.html",display_error_message=display_error_message)
+
+@app.route("/milkman/signup",methods = ["GET", "POST"])
+def milkman_signup():
+  
+    if ( request.method== "POST"):
+        city = request.form.get("city")
+        area = request.form.get("area")
+        user_name  = request.form.get("username")
+        user_pwd  = request.form.get("password")
+        
+        print('area and city entered by milkman are: ',area,city)
+        print(user_name)
+        print(user_pwd)
+        user_pwd = sha256_crypt.encrypt(user_pwd)
+        print('after hasing',user_pwd)
+        count= connection.insert_milkman( user_name, user_pwd,city,area)
+        print('the count after calling connection.insert users is:',count)
+        location_id=connection.get_location_id(city,area)
+        milkman_id=connection.milkman_id_store(None,user_name,location_id)
+        print('got the user id in sigup after insert user:',milkman_id)
+        if count > 0 :
+            submitted = "No"
+            display_error_message = """This milkman name already exists in this area! 
+                                       Please sign up with a different milkman name. 
+                                        """ 
+            return render_template("milkman_signup.html",submitted=submitted,display_error_message=display_error_message)            
+        submitted="Yes" 
+        
+        return render_template("milkman_signup.html",submitted=submitted)
+    submitted="No"
+    return render_template("milkman_signup.html",submitted=submitted)
+
+@app.route("/milkman/signout/<milkman>")
+def milkman_signout(milkman):
+      connection.update_user_signin_status('Milkman',milkman,False)                                         
+      return redirect(url_for("milkman_signin"))
+
 
 if __name__ == "__main__":
     app.run(debug=True)

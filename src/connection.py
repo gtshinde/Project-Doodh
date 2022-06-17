@@ -116,12 +116,16 @@ def validate_user_signin(user_id):
         user_details = [False,False,'','']
     return user_details        
 
-def update_user_signin_status(user_email,sigin_val):
+def update_user_signin_status(user_milkman,user_milkman_val,sigin_val):
     conn = connect()
     cur = conn.cursor()
-    print('conn user_email:',user_email)
-    sqltext="UPDATE USERS SET signed_in='"+str(sigin_val)+"'WHERE social_media_email = '"+str(user_email)+"';" 
-    cur.execute(sqltext)
+    print('conn user_email:',user_milkman_val)
+    sqltext="UPDATE USERS SET signed_in='"+str(sigin_val)+"'WHERE social_media_email = '"+str(user_milkman_val)+"';" 
+    sqlmilkman="UPDATE milkman SET signed_in='"+str(sigin_val)+"'WHERE milkman_id = '"+str(user_milkman_val)+"';" 
+    if user_milkman=='User':
+        cur.execute(sqltext)
+    elif user_milkman=='Milkman':
+        cur.execute(sqlmilkman)
     conn.commit()
     cur.close()
     conn.close()
@@ -305,18 +309,30 @@ def get_default_details(item_id, user_id, effective_date_from):
         return default_qty
         # this value will be the value of the default_quantity or else if any error, it will be None
 
-def get_user_pwd_from_db(user_email):
+def get_user_pwd_from_db(user_milkman,user_type):  #user_milkman is milkman_id which is being passed when the calling function is related to milkman
     conn = connect()
     cur = conn.cursor()   
     get_count = """SELECT count(password) FROM users 
-                        WHERE Social_Media_email= '"""+str(user_email)+"""';"""    
+                        WHERE Social_Media_email= '"""+str(user_milkman)+"""';"""    
     get_pwd = """SELECT password FROM users 
-                        WHERE Social_Media_email= '"""+str(user_email)+"""';"""
-    cur.execute(get_count)
+                        WHERE Social_Media_email= '"""+str(user_milkman)+"""';"""
+    get_milkman_count = """SELECT count(password) FROM milkman 
+                        WHERE milkman_id= '"""+str(user_milkman)+"""';"""    
+    get_milkman_pwd = """SELECT password FROM milkman 
+                        WHERE milkman_id= '"""+str(user_milkman)+"""';"""
+    if user_type=='User':
+        print('User type is user: ',user_type)
+        cur.execute(get_count)
+    elif user_type=='Milkman':
+        print('User type is milkman: ',user_type)
+        cur.execute(get_milkman_count)
     pwd_count = cur.fetchone()[0]
     print('conn pwd_count is ', pwd_count)  
-    if pwd_count==1:                      
-        cur.execute(get_pwd)
+    if pwd_count==1:  
+        if user_type=='User':                    
+            cur.execute(get_pwd)
+        elif user_type=='Milkman':
+            cur.execute(get_milkman_pwd)
         pwd = cur.fetchone()[0]
         print('conn pwd is ', pwd)  
     else:
@@ -485,9 +501,10 @@ def get_milkman_area_city(area,city):
              elif (city is not None and area is None):
                 sql_txt="""select distinct area from locations where upper(city)='"""+str(city).upper()+"""';"""
              else:
-                sql_txt="""select milkman_shop from milkman where location_id=
-                          (SELECT location_id from locations where upper(area)='"""+str(area).upper()+"""' and upper(city)='"""+str(city).upper()+"""');"""
+                sql_txt="""select milkman_shop from milkman where location_id=CAST ('"""+str(location_id)+"""' AS INTEGER);"""
+                         
              try:
+                 location_id=get_location_id(city,area)
                  print('sqltxt',sql_txt)
                  cur.execute(sql_txt)
                  for record in cur.fetchall():
@@ -497,13 +514,13 @@ def get_milkman_area_city(area,city):
                  raise e
     return milkman_list
 
-def update_users_with_milkman(milkman_shop,user_id):
+def update_users_with_milkman(milkman_shop,user_id,location_id):
         print('COnn milkman_shop:',milkman_shop) 
         print('COnn user_id:',user_id) 
         conn=connect()
         with conn: 
            with conn.cursor() as cur:
-                sql_txt="""UPDATE USERS SET MILKMAN_ID=(SELECT MILKMAN_ID FROM MILKMAN WHERE MILKMAN_SHOP='"""+str(milkman_shop)+"""')
+                sql_txt="""UPDATE USERS SET MILKMAN_ID=(SELECT MILKMAN_ID FROM MILKMAN WHERE MILKMAN_SHOP='"""+str(milkman_shop)+"""' AND location_id=CAST'"""+str(location_id)+""" AS INTEGER)
                             ,USER_RATING=NULL
                             WHERE USER_ID='"""+str(user_id)+"""';"""
                 try:
@@ -542,8 +559,8 @@ def view_user_milkman_details(user_id):
                  raise e
      return city,area,milkman_store
 
-def milkman_rating(milkman_id,rating,user_id):
-        print('COnn milkman_shop:',milkman_id_store(milkman_id,None)) 
+def milkman_rating(milkman_id,rating,user_id,location_id):
+        print('COnn milkman_shop:',milkman_id_store(milkman_id,None,location_id)) 
         print('COnn rating:',rating) 
         conn=connect()
         with conn: 
@@ -588,14 +605,15 @@ def milkman_rating(milkman_id,rating,user_id):
                     print(e)
                     raise e
 
-def milkman_id_store(milkman_id,milkman_store):
+def milkman_id_store(milkman_id,milkman_store,location_id):
     print('milkman_id_store-milkman_id',milkman_id)
     print('milkman_id_store-milkman_store',milkman_store)
+    print('milkman_id_store-location_id',location_id)
     conn=connect()
     with conn:
         with conn.cursor() as cur:
             try:
-                sql_milkman_id="""SELECT MILKMAN_ID FROM MILKMAN WHERE  MILKMAN_SHOP='"""+str(milkman_store)+"""';"""
+                sql_milkman_id="""SELECT MILKMAN_ID FROM MILKMAN WHERE  milkman_shop='"""+str(milkman_store)+"""'AND location_id=CAST ('"""+str(location_id)+"""' AS INTEGER);"""
                 sql_milkman_store="""SELECT MILKMAN_SHOP FROM MILKMAN WHERE  MILKMAN_ID='"""+str(milkman_id)+"""';"""
            
                 if milkman_id is None:
@@ -612,9 +630,9 @@ def milkman_id_store(milkman_id,milkman_store):
                 print(e)
                 raise(e)
   
-def get_overall_rating(milkman_stores):
+def get_overall_rating(milkman_stores,location_id):
     print('milkman_store: ',milkman_stores)
-    milkman_id=milkman_id_store(None,milkman_stores)
+    milkman_id=milkman_id_store(None,milkman_stores,location_id)
     print('conn milkman id : ',milkman_id)
     sql_count="""SELECT count(overall_rating) FROM MILKMAN_RATING WHERE MILKMAN_ID='"""+str(milkman_id)+"""';"""
     sql_select="""SELECT COALESCE(OVERALL_RATING,0) FROM MILKMAN_RATING WHERE MILKMAN_ID='"""+str(milkman_id)+"""';"""
@@ -681,4 +699,41 @@ def milkman_dashboard_logic(milkman_id):
                 print(e)
                 raise(e)
     return user_count,users_list
+
+def get_location_id(city,area):
+    conn = connect()
+    cur = conn.cursor()
+    print('conn city',city)
+    print('conn area',area)
+    sql_loc= "SELECT location_id FROM locations WHERE city='"+str(city)+"' AND area='"+str(area)+"';"   
+    cur.execute(sql_loc)
+    location_id = cur.fetchone()[0]
+    return location_id
+
+def insert_milkman( milkman_store, milkman_pwd,city,area):
+    conn = connect()
+    cur = conn.cursor()
+                    
+    print('conn milkman_store',milkman_store)
+    print('conn milkman_pwd',milkman_pwd)
+    print('conn city',city)
+    print('conn area',area)
+    
+    location_id=get_location_id(city,area)
+    sql_txt = """SELECT COUNT(*) FROM milkman WHERE milkman_shop = '"""+str(milkman_store)+"""' AND location_id =CAST('"""+str(location_id)+"""' AS INTEGER);""" 
+    cur.execute(sql_txt)
+    count = cur.fetchone()[0]
+    print('count is ', count)
+    if  count == 0 :
+        sql_txt_insert="""INSERT INTO milkman
+                        VALUES (nextval('milkman_id'), '"""+str(milkman_store)+"""',CURRENT_DATE,CURRENT_DATE,CAST("""+str(location_id)+""" AS INTEGER),False, '"""+str(milkman_pwd)+"""');"""
+        cur.execute(sql_txt_insert)
+                            
+    else:
+        print('This email already exists!')
+    
+    conn.commit()
+    cur.close()
+    conn.close()
+    return count
                     

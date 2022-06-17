@@ -1,5 +1,9 @@
-{% extends "base.html" %}
-{% block head %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='images/milk_1.png')}}">
+        
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/home_css.css')}}">	
     <title>Milkman Dashboard</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,6 +11,8 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+  </head>
+
   <style>
       body {
       background-image:url("../static/css/bg5.jpg");
@@ -82,10 +88,33 @@
     border-radius: 9px;
     padding-right: 15px;
   }
+  .btn{
+        width: 8%;
+        background-color: #ffd700;
+        color: white;
+        padding: 9px 3px;
+        margin: 2px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 20px;
+        right: 1%;
+    width: auto;
+    font-size: clamp(0.75rem, 3vw, 2rem);
+    position: absolute;
+    top: 1%;
+      }
+      .btn:hover{
+        background-color: #DAA520;
+        color:white;
+      }
+      #userDetails{
+        display: none;
+      }
   </style>
-  {% endblock %}
-
-{% block content %}
+ <body>
+  <div class="bg-image"></div>
+  <h1>Project Doodh</h1> 
   
   <h2 style="font-size: 40px;color: white;margin-left: 35%;">Milkman Dashboard</h2>
   {{user_count}}
@@ -142,10 +171,18 @@
 <br><br>
         
       </div>
+
+      <div style="text-align: center;">
+        <button style="width: auto; font-size: clamp(0.75rem, 3vw, 2rem);" onclick="signOut();" class="btn">Sign Out</button>
+      </div>
   
   </body>
   <script>
   
+  function signOut() {
+    milkman_id='{{milkman_id}}'
+ location.replace("http://localhost:5000/milkman/signout/"+milkman_id);
+  }
     function view_report(user_ID,user){
       milkman_id='{{milkman_id}}'
       console.log('user is:'+user)
@@ -186,5 +223,5 @@ document.getElementById("card-text3").innerHTML = text;
     }
       }
   </script>
-  {% endblock %}
+ </body>
   </html>

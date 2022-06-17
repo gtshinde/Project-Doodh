@@ -124,8 +124,15 @@ margin-left: 25%;" required="required" onchange="changedateval()">
     <td style="font-size: 25px;"><strong>&#8377; {{ total_price }} </strong>  </td>
   </tr>  
 </table>
- 
+<div style="text-align: center;">
+  <button style="width: auto; font-size: clamp(0.75rem, 3vw, 2rem);" onclick="signOut();" class="btn">Sign Out</button>
+</div>
 <script>
+   function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+              console.log('User signed out.');
+            });
  function view_dahsboard(milkman_id){
       console.log('Inside view dashboard');
       location.replace("http://localhost:5000//milkman_dashboard1/"+milkman_id);

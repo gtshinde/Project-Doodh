@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Milkman Signin</title>
+  
+  <link rel="icon" type="image/x-icon" href="../static/images/milk_1.png">
+  <!-- <link rel="stylesheet" type="text/css" href="../static/css/home_css.css"> -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-signin-client_id"
+    content="619500584057-gk7d4vh5v052kek376h4o64s7hbcafoe.apps.googleusercontent.com">
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='images/milk_1.png')}}">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
+  <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+  <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/sign_in.css')}}">
+</head>
+<body>
+<div class="bg-image"></div>
+<h1>Project Doodh</h1> 
+<!-- Need to fix this to use the h1 from home_css.css -->`
+{%  if display_error_message|length %}
+<div  id="myModal" class="modal">
+  <div class="modal-content">
+  <span class="close">&times;</span> 
+  <strong>{{ display_error_message }}</strong>
+  </div>
+</div>
+{%  endif  %}
+<div class="signup-form">
+  <form action="/milkman/signin" method="POST">
+    <h2>Milkman Sign In</h2>
+    <p>Please enter your credentials!</p>
+    <hr>
+    <div class="form-group">
+      <div class="input-group">
+          <span class="input-group-addon"> <i class="fas fa-city" style="font-size: 11px;"></i></span> 
+          <input type="text" class="form-control" name="city" id="city" placeholder="city" required="required">
+  </div>
+        </div>
+    <div class="form-group">
+        <div class="input-group">
+          <span class="input-group-addon"> <i class="fas fa-map-marker-alt" style="font-size: 11px;"></i></span> 
+          <input type="text" class="form-control" name="area" id="area" placeholder="area" required="required">
+    </div>
+        </div>
+    <div class="form-group">
+      <div class="input-group">
+        <span class="input-group-addon"> <i class="fa fa-user"></i> </span>
+        <input type="text" class="form-control" name="milkman" placeholder="Milkman Store" required="required" style="position: relative; top: 50%;">
+      </div>
+    </div>
+    <div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon"><i class="fa fa-lock"></i></span>
+				<input type="password" class="form-control" name="password" placeholder="Password" required="required">
+			</div>
+    </div>
+    <div class="form-group">
+      <div class="input-group">
+        <button type="submit" class="btn btn-primary btn-lg">Sign In</button>
+      </div>
+    </div>
+    
+  </form>
+  <div class="text-center">Do not have an account? <a href="{{url_for('milkman_signup')}}"> Signup here! </a></div>
+</div>
+<script>
+
+ 
+
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function(){
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}	
+</script>
+
+</body>
+</html>

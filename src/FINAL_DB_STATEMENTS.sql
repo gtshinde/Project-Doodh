@@ -84,8 +84,33 @@ CREATE TABLE Locations(
     Last_Updated_Date DATE
 );
 
+-- initially the location id was stored in the 'state' column
+-- hence first setting the location id from the state column
+UPDATE milkman
+SET location_id = CAST(state AS INTEGER);
+
+-- next dropping the state and country columns in the milkman table
+-- the location of the milkman is already present in the locations table
+ALTER TABLE milkman
+DROP COLUMN state;
+
+ALTER TABLE milkman
+DROP COLUMN country;
+
 ALTER TABLE MILKMAN
     ADD COLUMN location_id INTEGER REFERENCES Locations(location_id);
+
+ALTER TABLE MILKMAN
+    ADD COLUMN signed_in BOOLEAN;
+
+ALTER TABLE MILKMAN
+    ADD COLUMN Password text;
+
+ALTER TABLE MILKMAN
+    ADD COLUMN Social_Media_Email VARCHAR(100);
+
+ALTER TABLE MILKMAN
+    ADD COLUMN Social_Media_Type  VARCHAR(100);    
 
 INSERT INTO Locations VALUES 
 (NEXTVAL('location_id'),
@@ -99,6 +124,16 @@ INSERT INTO Locations VALUES
  INSERT INTO Locations VALUES 
 (NEXTVAL('location_id'),
  'JUHU','MUMBAI','MH','IN',CURRENT_DATE,CURRENT_DATE);
+ INSERT INTO Locations VALUES 
+(NEXTVAL('location_id'),
+ 'DHAYARI','PUNE','MH','IN',CURRENT_DATE,CURRENT_DATE);
+ /
+ INSERT INTO Locations VALUES 
+(NEXTVAL('location_id'),
+ 'WAKAD','PUNE','MH','IN',CURRENT_DATE,CURRENT_DATE);
+ INSERT INTO Locations VALUES 
+(NEXTVAL('location_id'),
+ 'INDIRA NAGAR','HYD','TEL','IN',CURRENT_DATE,CURRENT_DATE);
  
  CREATE SEQUENCE RATING_ID START WITH 1;
 create table milkman_rating(
