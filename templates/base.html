@@ -108,6 +108,7 @@
           }
 
           function signOut() {
+            user_id='{{user_id}}'
             var auth2 = gapi.auth2.getAuthInstance();
             auth2.signOut().then(function () {
               console.log('User signed out.');
@@ -115,7 +116,7 @@
            var string=document.querySelector('#usrname').innerText
           //  to remove Hello and '!' from the string
            var user_email=string.substring(6,string.length-1)  
-            location.replace("http://localhost:5000/signout/"+user_email)
+            location.replace("http://localhost:5000/signout/"+user_id)
           }
 
           // Get the modal

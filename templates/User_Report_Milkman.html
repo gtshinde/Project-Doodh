@@ -44,11 +44,39 @@ width: 208px;
 #fa-arrow-left_c{
   display: none;
 }
+.btn{
+        width: 8%;
+        background-color: #ffd700;
+        color: white;
+        padding: 9px 3px;
+        margin: 2px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 20px;
+        right: 1%;
+    width: auto;
+    font-size: clamp(0.75rem, 3vw, 2rem);
+    position: absolute;
+    top: 1%;
+      }
+      .btn:hover{
+        background-color: #DAA520;
+        color:white;
+      }
+      #usrname{
+        top: 13%;
+    position: absolute;
+    right: 1%;
+    font-size: 160%;
+    color: white;
+    text-transform: capitalize;
+      }
 </style>
-<span class="fa-stack fa-lg" onclick="view_dahsboard(1)" style="position: fixed; top:1%">
-  <i class="fa fa-circle fa-stack-2x" onclick="view_dahsboard(1)"></i>
+<span class="fa-stack fa-lg" onclick="view_dahsboard()" style="position: fixed; top:1%">
+  <i class="fa fa-circle fa-stack-2x" onclick="view_dahsboard()"></i>
  
-  <i class="fa fa-arrow-left fa-stack-1x fa-inverse" onclick="view_dahsboard(1)" ></i>
+  <i class="fa fa-arrow-left fa-stack-1x fa-inverse" onclick="view_dahsboard()" ></i>
 </span>
 <h1 style="font-size: 60px;">Project Doodh</h1>
 
@@ -125,15 +153,16 @@ margin-left: 25%;" required="required" onchange="changedateval()">
   </tr>  
 </table>
 <div style="text-align: center;">
+  <div id="usrname">Hello {{milkman_store}}!</div>
   <button style="width: auto; font-size: clamp(0.75rem, 3vw, 2rem);" onclick="signOut();" class="btn">Sign Out</button>
 </div>
 <script>
    function signOut() {
-            var auth2 = gapi.auth2.getAuthInstance();
-            auth2.signOut().then(function () {
-              console.log('User signed out.');
-            });
- function view_dahsboard(milkman_id){
+    milkman_id='{{milkman_id}}'
+ location.replace("http://localhost:5000/milkman/signout/"+milkman_id);
+  }
+ function view_dahsboard(){
+      milkman_id='{{milkman_id}}'
       console.log('Inside view dashboard');
       location.replace("http://localhost:5000//milkman_dashboard1/"+milkman_id);
       // window.open('http://localhost:5000//milkman_dashboard1/', '_blank');
