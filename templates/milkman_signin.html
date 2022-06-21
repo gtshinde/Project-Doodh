@@ -16,7 +16,19 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
   <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
   <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/sign_in.css')}}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
+<style>
+  select option[selected]{
+    background-color: yellow
+}
+.input-group-addon {
+    padding: 11px 21px;
+    padding-left: 11px;
+    font-size: 13px;
+}
+</style>
 <body>
 <div class="bg-image"></div>
 <h1>Project Doodh</h1> 
@@ -37,13 +49,18 @@
     <div class="form-group">
       <div class="input-group">
           <span class="input-group-addon"> <i class="fas fa-city" style="font-size: 11px;"></i></span> 
-          <input type="text" class="form-control" name="city" id="city" placeholder="city" required="required">
+          <select class="form-select form-select-lg" name="city" id="city" required="required" onchange="display_area()" required>
+            <option>Please select your city</option>
+            {% for city in city_list %}
+              <option>{{city}}</option>
+            {% endfor %}
+          </select>
   </div>
         </div>
     <div class="form-group">
         <div class="input-group">
           <span class="input-group-addon"> <i class="fas fa-map-marker-alt" style="font-size: 11px;"></i></span> 
-          <input type="text" class="form-control" name="area" id="area" placeholder="area" required="required">
+          <select class="form-select form-select-lg" name="area" id="area"  required="required"></select>
     </div>
         </div>
     <div class="form-group">
@@ -69,7 +86,29 @@
 </div>
 <script>
 
- 
+function display_area(){
+    city=document.getElementById('city').value
+    
+    $.ajax({
+    type: 'GET',
+    url: '/milkman_signup/'+city.toString(),
+    // data: JSON.stringify(emailID),
+    dataType: 'json',
+    // data: JSON.stringify(city),
+    contentType: "application/json; charset=utf-8",
+    success: function (data) {
+        console.log(data);
+        console.log('Get success');
+        console.log(data['milkman_area_list']);
+        var str = "<option>Please select your area</option>"
+        for (var area of data['milkman_area_list']) {
+          str += "<option value='"+area+"'>" + area + "</option>"
+        }
+        document.getElementById("area").innerHTML = str;
+
+    }
+})
+}
 
 // Get the modal
 var modal = document.getElementById("myModal");

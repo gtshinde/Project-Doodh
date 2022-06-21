@@ -40,6 +40,16 @@ def verify_user_exists(user_id):
     count = cur.fetchone()[0]
     print('count of user exists is ', count)
     return count
+
+def verify_milkman_exists(milkman_id):
+    conn=connect()
+    cur=conn.cursor()
+    sql_txt = "SELECT COUNT(*) FROM milkman WHERE milkman_id = '"+str(milkman_id)+"';" 
+    cur.execute(sql_txt)
+    count = cur.fetchone()[0]
+    print('count of milkman_id exists is ', count)
+    return count
+
 def verify_useremail_exists(user_email):
     conn=connect()
     cur=conn.cursor()
@@ -120,11 +130,13 @@ def update_user_signin_status(user_milkman,user_milkman_val,sigin_val):
     conn = connect()
     cur = conn.cursor()
     print('conn user_email:',user_milkman_val)
-    sqltext="UPDATE USERS SET signed_in='"+str(sigin_val)+"'WHERE social_media_email = '"+str(user_milkman_val)+"';" 
+    sqltext="UPDATE USERS SET signed_in='"+str(sigin_val)+"'WHERE user_id = '"+str(user_milkman_val)+"';" 
     sqlmilkman="UPDATE milkman SET signed_in='"+str(sigin_val)+"'WHERE milkman_id = '"+str(user_milkman_val)+"';" 
     if user_milkman=='User':
+        print('inside user sign in update')
         cur.execute(sqltext)
     elif user_milkman=='Milkman':
+        print('inside milkman sign in update')
         cur.execute(sqlmilkman)
     conn.commit()
     cur.close()
@@ -501,10 +513,11 @@ def get_milkman_area_city(area,city):
              elif (city is not None and area is None):
                 sql_txt="""select distinct area from locations where upper(city)='"""+str(city).upper()+"""';"""
              else:
+                location_id=get_location_id(city,area)
                 sql_txt="""select milkman_shop from milkman where location_id=CAST ('"""+str(location_id)+"""' AS INTEGER);"""
                          
              try:
-                 location_id=get_location_id(city,area)
+                 
                  print('sqltxt',sql_txt)
                  cur.execute(sql_txt)
                  for record in cur.fetchall():
@@ -520,7 +533,7 @@ def update_users_with_milkman(milkman_shop,user_id,location_id):
         conn=connect()
         with conn: 
            with conn.cursor() as cur:
-                sql_txt="""UPDATE USERS SET MILKMAN_ID=(SELECT MILKMAN_ID FROM MILKMAN WHERE MILKMAN_SHOP='"""+str(milkman_shop)+"""' AND location_id=CAST'"""+str(location_id)+""" AS INTEGER)
+                sql_txt="""UPDATE USERS SET MILKMAN_ID=(SELECT MILKMAN_ID FROM MILKMAN WHERE MILKMAN_SHOP='"""+str(milkman_shop)+"""' AND location_id=CAST ('"""+str(location_id)+"""' AS INTEGER))
                             ,USER_RATING=NULL
                             WHERE USER_ID='"""+str(user_id)+"""';"""
                 try:
@@ -613,8 +626,8 @@ def milkman_id_store(milkman_id,milkman_store,location_id):
     with conn:
         with conn.cursor() as cur:
             try:
-                sql_milkman_id="""SELECT MILKMAN_ID FROM MILKMAN WHERE  milkman_shop='"""+str(milkman_store)+"""'AND location_id=CAST ('"""+str(location_id)+"""' AS INTEGER);"""
-                sql_milkman_store="""SELECT MILKMAN_SHOP FROM MILKMAN WHERE  MILKMAN_ID='"""+str(milkman_id)+"""';"""
+                sql_milkman_id="""SELECT MILKMAN_ID FROM MILKMAN WHERE  upper(milkman_shop)='"""+str(milkman_store)+"""'AND location_id=CAST ('"""+str(location_id)+"""' AS INTEGER);"""
+                sql_milkman_store="""SELECT lower(MILKMAN_SHOP) FROM MILKMAN WHERE  MILKMAN_ID='"""+str(milkman_id)+"""';"""
            
                 if milkman_id is None:
                     cur.execute(sql_milkman_id)
@@ -726,7 +739,7 @@ def insert_milkman( milkman_store, milkman_pwd,city,area):
     print('count is ', count)
     if  count == 0 :
         sql_txt_insert="""INSERT INTO milkman
-                        VALUES (nextval('milkman_id'), '"""+str(milkman_store)+"""',CURRENT_DATE,CURRENT_DATE,CAST("""+str(location_id)+""" AS INTEGER),False, '"""+str(milkman_pwd)+"""');"""
+                        VALUES (nextval('milkman_id'), lower('"""+str(milkman_store)+"""'),CURRENT_DATE,CURRENT_DATE,CAST("""+str(location_id)+""" AS INTEGER),False, '"""+str(milkman_pwd)+"""');"""
         cur.execute(sql_txt_insert)
                             
     else:
@@ -737,3 +750,21 @@ def insert_milkman( milkman_store, milkman_pwd,city,area):
     conn.close()
     return count
                     
+
+def validate_milkman_signin(milkman_id):
+
+    print('conn milkman_id:',milkman_id)
+    count=verify_milkman_exists(milkman_id)
+    if count!=0:
+        conn=connect()
+        with conn:
+            with conn.cursor() as cur:
+                try:
+                    sqltext="SELECT signed_in FROM MILKMAN WHERE milkman_id='"+str(milkman_id)+"';"
+                    cur.execute(sqltext)
+                    signed_in = cur.fetchone()[0]      
+                    print('milkman sigined in check: ', signed_in)
+                except Exception as e:
+                    print(e)
+                    raise(e)
+    return signed_in     

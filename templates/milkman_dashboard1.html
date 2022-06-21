@@ -111,6 +111,14 @@
       #userDetails{
         display: none;
       }
+      #usrname{
+        top: 13%;
+    position: absolute;
+    right: 1%;
+    font-size: 160%;
+    color: white;
+    text-transform: capitalize;
+      }
   </style>
  <body>
   <div class="bg-image"></div>
@@ -173,6 +181,7 @@
       </div>
 
       <div style="text-align: center;">
+        <div id="usrname">Hello {{milkman_store}}!</div>
         <button style="width: auto; font-size: clamp(0.75rem, 3vw, 2rem);" onclick="signOut();" class="btn">Sign Out</button>
       </div>
   

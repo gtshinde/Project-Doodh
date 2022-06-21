@@ -23,9 +23,9 @@ def redirect_to_create():
     return redirect(url_for("signin"))
     # this will redirect to the signin() python url_not_foundction
 
-@app.route("/signout/<user_email>")
-def signout(user_email):
-      connection.update_user_signin_status('User',user_email,False)                                         
+@app.route("/signout/<user_id>")
+def signout(user_id):
+      connection.update_user_signin_status('User',user_id,False)                                         
       return redirect(url_for("signin"))
 
 @app.route("/create/<user_id>",methods = ["GET", "POST"])
@@ -281,9 +281,9 @@ def signin():
             db_pwd='invalidgooglepwd'  #to handle invalid google login in the login pg
         if (db_pwd==0):
             print('User with this email id has not signed up, please signup')
-            display_error_message="User with this email id has not signed up,''\n'' please signup!"
+            display_error_message="User with this email id has not signed up, please signup!"
         elif(sha256_crypt.verify(user_pwd, db_pwd)):
-            connection.update_user_signin_status('User',user_email,True)
+            connection.update_user_signin_status('User',user_id,True)
             print(first_usersigin[user_id])
             if(first_usersigin[user_id] ):
                 first_usersigin[user_id]=False
@@ -300,8 +300,9 @@ def signin():
 @app.route("/signin-success/<social_media_platform>/<user_email>/<user_name>")
 def signin_success(social_media_platform, user_email, user_name):
     global first_usersigin
-    connection.update_user_signin_status('User',user_email,True)
+    
     user_id=connection.get_user_id(user_email)
+    connection.update_user_signin_status('User',user_id,True)
     user_details=connection.validate_user_signin(user_id) #if a google user signins first time, record for this user wont be inserted into db at this pt in the code, goto connection.py for more clarity on this
     print('in the server user details:',user_details)
     signin=user_details[0]
@@ -321,8 +322,9 @@ def signin_success(social_media_platform, user_email, user_name):
         print('google user',user_email) 
         print('google user_id',user_id)
         count,first_sigin=connection.insert_users(user_email, user_name, social_media_platform,'')
-        connection.update_user_signin_status('User',user_email,True)
+        
         user_id=connection.get_user_id(user_email)
+        connection.update_user_signin_status('User',user_id,True)
         print("count after insert is:",count)
         if count==0:  #first signin shd be set to True only when NEW google user signs in, without this condition it would always set firstsign in to True when google user logs in
             first_usersigin[user_id]=True
@@ -427,6 +429,7 @@ def redirect_milkman(user_id):
     else:
         return redirect(url_for("create",user_id=user_id))  
 
+
 @app.route('/milkman_selection/<user_id>/<city>')
 def milkman_selection_area(user_id,city):
     user_details=connection.validate_user_signin(user_id)
@@ -445,6 +448,18 @@ def milkman_selection_area(user_id,city):
         return {'milkman_area_list':milkman_area_list}
     else:
        return render_template('url_not_found.html')       
+
+#same function as above but this will be called in milkman signup page, where milkman_id wont exists so written a separate fucntion excluding milkmanid/userid part from abv function
+@app.route('/milkman_signup/<city>')
+def milkman_signup_area(city):
+  
+        milkman_area_list=connection.get_milkman_area_city(None,city)
+        print(' Area list:')
+        pprint(milkman_area_list)
+      
+    # return render_template("milkman_selection.html",milkman_stores_list=milkman_stores_list,area=area,city=city,user_id=user_id)
+        return {'milkman_area_list':milkman_area_list}
+    
 
 @app.route('/milkman_selection/<user_id>/<city>/<area>')
 def milkman_selection_stores(user_id,city,area):
@@ -476,14 +491,17 @@ def view_milkman(user_id,rating):
     print('user admin status',admin)
     if (signin):
         city,area,milkman_store=connection.view_user_milkman_details(user_id)
-        location_id=connection.get_location_id(city,area)
+        
         milkman_list=[milkman_store,area,city]
+      
+        location_id=connection.get_location_id(city,area)
         overall_rate=''
         if rating != ' ':
             milkman_id=connection.milkman_id_store(None,milkman_store)
             
             connection.milkman_rating(milkman_id,rating,user_id,location_id)
-        overall_rate=connection.get_overall_rating(milkman_store,location_id)
+        if milkman_list is not None:
+            overall_rate=connection.get_overall_rating(milkman_store,location_id)
         print('overall_rate in server is :',overall_rate) 
         
         return render_template('view_milkman.html',user_email=user_email,milkman_list=milkman_list,user_id=user_id,overall_rate=overall_rate)
@@ -494,38 +512,46 @@ def view_milkman(user_id,rating):
 @app.route('/milkman_dashboard1/<milkman_id>')
 def milkman_dashboard1(milkman_id):
     print('MIlkman id is:',milkman_id)
-    user_count,user_list=connection.milkman_dashboard_logic(milkman_id)
-    print('in server user_count:',user_count)
-    return render_template('milkman_dashboard1.html',user_email='',user_id='',user_count=user_count,user_list=user_list,milkman_id=milkman_id)
-
+    signed_in=connection.validate_milkman_signin(milkman_id)
+    #location id is pased as empty coz if we hv milkman_id without location id we can identify the store uniquely so noeed of loc id
+    milkman_store=connection.milkman_id_store(milkman_id,None,'')
+    if (signed_in):
+        user_count,user_list=connection.milkman_dashboard_logic(milkman_id)
+        print('in server user_count:',user_count)
+        return render_template('milkman_dashboard1.html',user_email='',user_id='',user_count=user_count,user_list=user_list,milkman_id=milkman_id,milkman_store=milkman_store)
+    else:
+        return render_template('url_not_found.html')
 
 
 @app.route('/User_Report_Milkman/<milkman_id>/<user_id>/<user>',methods=["GET","POST"])
 def User_Report_milkman(milkman_id,user_id,user):
     # user_details=connection.validate_user_signin(user_id)
     print('milkman_id:',milkman_id)
-    
+    #location id is pased as empty coz if we hv milkman_id without location id we can identify the store uniquely so noeed of loc id
+    milkman_store=connection.milkman_id_store(milkman_id,None,'')
     print('milkman - user_id :',user_id)
     print('milkman - user_name :',user)
-    if user_id!=0:
-        # if user has not provided the month or year
-        # find the system month and year
-        todays_date = date.today()
-        month = int(todays_date.month)
-        year = int(todays_date.year)
-        month_string = calendar.month_name[month]
-        report_list,total_price,tomo_type_qty = connection.report_logic(str(year)+"-"+str(month)+"-01", str(todays_date), user_id)
-        
-        past_months_list = []
-        for i in range(1, 6):
-            offset_date = todays_date - DateOffset(months=i)
-            past_months_list.append([str(offset_date.month), str(offset_date.year), calendar.month_name[offset_date.month]])
-        # past_month_list = [ [3, 2022, March], [2, 2022, February], [1, 2022, January], ... ] considering current_date is in APRIL 2022
-        pprint(report_list)
-        print (len(report_list))
-        print('REPORT TOTAL: ',total_price)
+    signed_in=connection.validate_milkman_signin(milkman_id)
+    if (signed_in):
+        if user_id!=0:
+            # if user has not provided the month or year
+            # find the system month and year
+            todays_date = date.today()
+            month = int(todays_date.month)
+            year = int(todays_date.year)
+            month_string = calendar.month_name[month]
+            report_list,total_price,tomo_type_qty = connection.report_logic(str(year)+"-"+str(month)+"-01", str(todays_date), user_id)
+            
+            past_months_list = []
+            for i in range(1, 6):
+                offset_date = todays_date - DateOffset(months=i)
+                past_months_list.append([str(offset_date.month), str(offset_date.year), calendar.month_name[offset_date.month]])
+            # past_month_list = [ [3, 2022, March], [2, 2022, February], [1, 2022, January], ... ] considering current_date is in APRIL 2022
+            pprint(report_list)
+            print (len(report_list))
+            print('REPORT TOTAL: ',total_price)
 
-        return render_template("User_Report_milkman.html", report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_id=user_id,total_price=total_price,user=user)
+            return render_template("User_Report_milkman.html", report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_id=user_id,total_price=total_price,user=user,milkman_id=milkman_id,milkman_store=milkman_store)
        
     else:
         return render_template('url_not_found.html')    
@@ -534,7 +560,9 @@ def User_Report_milkman(milkman_id,user_id,user):
 def milkman_signin():
                 
     display_error_message=""
-  
+    area=None
+    city=None 
+    city=connection.get_milkman_area_city(area,city) 
     if(request.method == "POST"):
         city = request.form.get("city")
         area = request.form.get("area")
@@ -543,6 +571,8 @@ def milkman_signin():
 
         location_id=connection.get_location_id(city,area)
         milkman_id=connection.milkman_id_store(None,milkman,location_id)
+        print('locatio id while milkman signin is:',location_id)
+        print('milkman id while milkman signin is:',milkman_id)
         print('signin',milkman)
         print('signin',milkman_pwd)    
         print('milkman_id',milkman_id)
@@ -560,11 +590,14 @@ def milkman_signin():
         else:
             print('Invalid credentials!')
             display_error_message="Invalid credentials!"
-    return render_template("milkman_signin.html",display_error_message=display_error_message)
+    return render_template("milkman_signin.html",display_error_message=display_error_message,city_list=city,area_list=area)
 
 @app.route("/milkman/signup",methods = ["GET", "POST"])
 def milkman_signup():
-  
+    area=None
+    city=None  
+    city=connection.get_milkman_area_city(area,city)
+    print('area after connection call:',area)      
     if ( request.method== "POST"):
         city = request.form.get("city")
         area = request.form.get("area")
@@ -589,9 +622,9 @@ def milkman_signup():
             return render_template("milkman_signup.html",submitted=submitted,display_error_message=display_error_message)            
         submitted="Yes" 
         
-        return render_template("milkman_signup.html",submitted=submitted)
+        return render_template("milkman_signup.html",submitted=submitted,city_list=city,area_list=area)
     submitted="No"
-    return render_template("milkman_signup.html",submitted=submitted)
+    return render_template("milkman_signup.html",submitted=submitted,city_list=city,area_list=area)
 
 @app.route("/milkman/signout/<milkman>")
 def milkman_signout(milkman):
