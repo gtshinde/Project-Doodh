@@ -236,7 +236,7 @@ def items(user_id):
             item_price = request.form.get("ItemPrice")
             effective_from = request.form.get("effectiveFrom")
             try:
-                connection.insert_into_items(item_name, item_price,effective_from)
+                connection.insert_into_items(item_name.title(), item_price,effective_from)
             except Exception as e:
                 submitted = "No"
                 display_error_message = """We were unable to enter the item to the database. 
