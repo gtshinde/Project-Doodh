@@ -4,10 +4,11 @@
 <link rel="stylesheet" type="text/css" href="http://cdn.webrupee.com/font">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<meta name="viewport" content= "width=device-width, initial-scale=1.0">
 <style>
-  #report_total_box
-  {padding-right: 20px;
-    padding-left: 20px;
+  #report_total_box{
+    /* padding-right: 20px;
+    padding-left: 20px; */
     border-color: white;
     border-block-color: white;
     background: #fffdf4;
@@ -29,13 +30,15 @@
 {% endblock %}
 
 {% block content %}
-<h1 style="font-size: 30px;"><strong> {{month_string}} Milk Report  </strong></h1>
-<span class="fa-stack fa-lg"  onclick="months()" style="position: fixed;">
+<div style="width: 100%; text-align: center; font-size: clamp(1.5rem, 5vw, 4rem); color: white;">
+  <strong> {{month_string}} Milk Report  </strong>
+</div>
+<span class="fa-stack fa-lg"  onclick="months()" style="position: fixed; z-index: 5;">
   <i class="fa fa-circle fa-stack-2x"></i>
   <i class="fa fa-calendar fa-stack-1x fa-inverse"></i>
   <i class="fa fa-arrow-left fa-stack-1x fa-inverse" style="display: none;"></i>
 </span>
-<div id="mySidenav" class="sidenav_months" style="width: 0px; margin-left: 4%; border-radius:44px;">
+<div id="mySidenav" class="sidenav_months" style="width: 0px; margin-left: 4%; border-radius:44px; z-index: 5;">
   <marquee style="font-size: 16px;" behavior="scroll" direction="left"><strong>Please note that the data only can be viewed for past six months...</strong> </marquee>
   <br>
   <br>
@@ -45,19 +48,35 @@
   {% endfor %}
 </div>
 
+<div class="row">
+  <div class="col-1" style="display: inline-block;"></div>
+  <div class="col-3" style="display: inline-block;">
+    <!-- from date and input here -->
+    <!-- have to make this float right -->
+    <label class="parameter_label">
+      <strong>From Date:</strong>
+    </label>
+    <input type="date" name="fromDate" id="fromDate" style=" position: relative;" required="required" onchange="changedateval()"> 
+  </div>
+  <div class="col-3" style="display: inline-block;">
+    <!-- to date label and input here -->
+    <label class="parameter_label"><strong>To Date:</strong></label>
+    <input type="date" name="toDate" id="toDate" style="position: relative;" required="required">
+  </div>
+  <div class="col-1" style="display: inline-block;">
+    <input style="position: relative; width: 60%; padding: 0.5%;" type="button" value="Go" onclick="get_reports_for_dates()" id="Go">
+  </div>
+  <div class="col-3" style="display: inline-block;">
+    <!-- Total Bill -->
+    <label id="totalBillAtAGlance">
+      <strong>Total Bill: </strong>
+    </label>
+    <label>
+      <strong id="report_total_box">&#8377;{{ total_price }}</strong>
+    </label>
+  </div>
+</div>
 
-<label style=" position: absolute; color:white; font-size: 20px;
-margin-left: 17%;"><strong>From Date:</strong></label>
-<input type="date" name="fromDate" id="fromDate" style=" position: absolute; 
-margin-left: 25%;" required="required" onchange="changedateval()"> 
-
-<label style="position: absolute; color: white; font-size: 20px; margin-left: 41%;"><strong>To Date:</strong></label>
-<input type="date" name="toDate" id="toDate" style="position: absolute; margin-left: 47%;" required="required">
-
-
-<input style="position: absolute; margin-left: 57%; height:4%; width: 5%;" type="button" value="Go" onclick="get_reports_for_dates()" id="Go">
-
-<label style="position: absolute; color: white; font-size: 24px; margin-left: 70%;"><strong>Total Bill: <strong id="report_total_box">&#8377; {{ total_price }}0</strong></strong></label>
 <!-- <p type="text" name="total" id="total" style="position: absolute; margin-left: 73%;" ><strong>{{ total_price }}</strong></p> -->
 <br><br>
 <!-- The below code was added to set the from and to dates to the values which user had selected before clicking on GO -->
@@ -71,7 +90,7 @@ margin-left: 25%;" required="required" onchange="changedateval()">
     document.getElementById("fromDate").addEventListener("onchange", changedateval);
   </script>
 {% endif %}
-<table id="customers">
+<table id="report_table">
   <tr>
     <th>Date</th>
     <th>Item Type</th>
@@ -91,61 +110,10 @@ margin-left: 25%;" required="required" onchange="changedateval()">
     {% endif %}  
   {% endfor %}
   <tr>
-  
-    <td colspan="3" style="text-align: center; font-size: 25px;"> <strong>TOTAL BILL AMOUNT</strong> </td>
-    <td style="font-size: 25px;"><strong>&#8377; {{ total_price }} </strong>  </td>
+    <td colspan="3" style="text-align: center; font-size: clamp(0.75rem, 3.75vw, 2.25rem);"> <strong>TOTAL BILL AMOUNT</strong> </td>
+    <td style="font-size: clamp(0.75rem, 3.75vw, 2.25rem);"><strong>&#8377;{{ total_price }} </strong>  </td>
   </tr>  
 </table>
- <!-- <table id="customers">
-  <tr>
-    <th>Date</th>
-    <th>Cow</th>
-    <th>Buffalow</th>
-    <th>Price</th>
-  </tr>
-  <tr>
-    <td>Alfreds</td>
-    <td>Maria Anders</td>
-    <td>Germany</td>
-    <td>Germany</td>
-  </tr>
-  <tr>
-    <td>Berglunds snabbköp</td>
-    <td>Christina Berglund</td>
-    <td>Sweden</td>
-    <td>Germany</td>
-  </tr>
-  <tr>
-    <td>Centro </td>
-    <td>Francisco Chang</td>
-    <td>Mexico</td>
-    <td>Austria</td>
-  </tr>
-  <tr>
-    <td>Ernst Handel</td>
-    <td>Roland Mendel</td>
-    <td>Austria</td>
-    <td>Austria</td>
-  </tr>
-  <tr>
-    <td>Island Trading</td>
-    <td>Helen Bennett</td>
-    <td>UK</td>
-    <td>UK</td>
-  </tr>
-  <tr>
-    <td>Königlich Essen</td>
-    <td>Philip Cramer</td>
-    <td>Germany</td>
-    <td>Germany</td>
-  </tr>
-  <tr>
-    <td>Laughing</td>
-    <td>Yoshi Tannamuri</td>
-    <td>Canada</td>
-    <td>Canada</td>
-  </tr>
-</table> -->
 <script>
 
   function get_reports_for_dates() {

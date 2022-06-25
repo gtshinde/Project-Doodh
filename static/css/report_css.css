@@ -9,9 +9,9 @@ h1{
     margin-block-start: 50px;
     text-align: center;
     font-family: Garamond;
-    font-size: 65px;
-
+    font-size: clamp(2rem, 10vw, 5rem);
 }
+
 form{
     color: white;
     text-align: center;
@@ -20,13 +20,12 @@ form{
     font-size: 30px;
 }
 
-
 .sidenav {
  
   height: 100%;
   width: 0;
   position: fixed;
-  z-index: 1;
+  z-index: 10;
   top: 0;
   left: 0;
   background-color: white;
@@ -39,17 +38,16 @@ form{
 }
 
 .sidenav_months{
-height: 60%;
-width: 177px;
-position: fixed;
-
-top: 35%;
-left: 0;
-background-color: white;
-overflow-x: hidden;
-transition: 0.5s;
-padding-top: 10px;
-padding-left: 0px;
+  height: 60%;
+  width: 177px;
+  position: fixed;
+  top: 35%;
+  left: 0;
+  background-color: white;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 10px;
+  padding-left: 0px;
 }
 
 .sidenav a {
@@ -82,7 +80,7 @@ padding-left: 0px;
   font-size: 36px;
   margin-left: 50px;
 }
-#customers {
+#report_table {
   font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
   width: 70%;
@@ -91,22 +89,82 @@ padding-left: 0px;
   margin-right: auto;
 }
 
-#customers td, #customers th {
+#report_table td {
   border: 1px solid #ddd;
   padding: 5px;
- width: 15px;
+  width: 15px;
+  font-size: clamp(0.5rem, 3.5vw, 2rem);
 }
 
-#customers tr:nth-child(even){background-color: white;}
-#customers tr:nth-child(odd){background-color: #dcdcdc  ;}
+#report_table tr:nth-child(even)  {background-color: white;}
+#report_table tr:nth-child(odd)   {background-color: #dcdcdc;}
 
-#customers tr:hover {background-color: #fffacd;}
+#report_table tr:hover {background-color: #fffacd;}
 
-#customers th {
+#report_table th {
+  border: 1px solid #ddd;
+  padding: 5px;
+  width: 15px;
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
   background-color: #ffd700;
   color: white;
+  font-size: clamp(0.75rem, 3.75vw, 2.25rem);
 }
 
+#box{
+  background: rgb(251, 215, 35);
+  border: 5px solid white;
+  border-radius: 20px;
+  padding: 18px;
+  width: 40%;
+  position: relative;
+  margin: auto;
+  color: white;
+  font-size: clamp(1rem, 5vw, 3rem);
+  text-align: center;
+}
+
+.parameter_label{
+  position: relative; 
+  color:white; 
+  font-size: clamp(1rem, 4vw, 3rem);
+}
+
+#totalBillAtAGlance{
+  position: relative; 
+  color: white; 
+  font-size: clamp(1rem, 4vw, 3rem); 
+  /* margin-left: 70%; */
+}
+
+/* For desktop: */
+.col-1  {width: 8.33%;}
+.col-2  {width: 16.66%;}
+.col-3  {width: 25%;}
+.col-4  {width: 33.33%;}
+.col-5  {width: 41.66%;}
+.col-6  {width: 50%;}
+.col-7  {width: 58.33%;}
+.col-8  {width: 66.66%;}
+.col-9  {width: 75%;}
+.col-10 {width: 83.33%;}
+.col-11 {width: 91.66%;}
+.col-12 {width: 100%;}
+
+@media screen and (max-width: 600px) {
+  th {
+    font-size: clamp(1rem, 4vw, 2rem);
+  }
+  #totalBillAtAGlance{
+    position: initial;
+    color: white; 
+    font-size: clamp(1rem, 4vw, 3rem);
+  }
+  [class*="col-"] {
+    width: 100%;
+    text-align: center;
+    margin-top: 2%;
+  }
+}
