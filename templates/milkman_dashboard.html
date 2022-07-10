@@ -198,7 +198,8 @@
     display: inline-block;
 }
 
-@media screen and (max-width:768px){
+
+ @media screen and (max-width:768px){
   .btn-primary{
     width: 90%;
   }
@@ -206,8 +207,29 @@
     width: 90%;
   }
 }
+  </style>
+ <body>
+<!-- when only user card is displayed in the dashboard take full width of the pg -->
+{% if user_count == 1 %}   
+<style>
+ .card{
+    width: 100%;
+    display: inline-block;
+  }
+</style>
+<!-- when 2 user cards are displayed in the dashboard take 50-50% width of the pg -->
+{% elif user_count == 2 %}
+<style>
+   .card{
+    width: 50%;
+    display: inline-block;
+  }
+</style>
+{% else %}
+<style>
 
-@media screen and (max-width:376px){
+
+@media screen and (max-width:376px)  {
   .card{
     width: 45%;
     display: inline-block;
@@ -219,16 +241,9 @@
     display: inline-block;
   }
 }
-    /* @media screen and (max-width:768px){
-      
-      .card bg-primary{
-        width: 50%;
-      }
-
-    } */
-  
-  </style>
- <body>
+</style>
+{% endif %}
+<!-- end of if- when only user card is displayed in the dashboard take full width of the pg -->
   <div class="bg-image"></div>
   <h1>Project Doodh</h1> 
   
@@ -260,7 +275,7 @@
   <br>
   <div class="container" style="background-color: black; opacity: 70%; border-radius: 13px; border: 2px solid white; padding: 5%;">
    
-{% set count = 0 %}
+
   {% if single_user_list == '' %}
         {% for user in user_list %} 
        
