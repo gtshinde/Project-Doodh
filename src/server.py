@@ -122,6 +122,8 @@ def report_month_year(user_id,month, year):
     user_email=user_details[2]    
     print('user sign in status',signin)
     print('user admin status',admin)  
+    user=connection.get_user_id(user_email)
+    print('user name is:',user)
     if (signin):
         num_days_in_month = calendar.monthrange(int(year), int(month))[1]   
         if (int(month)==todays_month and int(year)==todays_year): # if it is current month, report_list should diplay only till current date and not till end of month
@@ -152,6 +154,8 @@ def report_for_date_range(user_id, from_date, to_date):
     user_email=user_details[2]    
     print('Report page (fromDate-toDate): user sign in status',signin)
     print('Report page (fromDate-toDate): user admin status',admin)  
+    user=connection.get_user_name(user_email)
+    print('user name is:',user)
     if (signin):
         p_from_date = from_date  #storing the parameter values in string only before converting to timestamp format- this is reqd by the report.html pg (lenght function used there for from and todate won't work for timestamp values))
         p_to_date = to_date
@@ -169,7 +173,7 @@ def report_for_date_range(user_id, from_date, to_date):
         print (len(report_list)) 
         print('REPORT TOTAL: ',total_price)
         submitted="Yes"
-        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id,from_date=p_from_date,to_date=p_to_date,submitted=submitted,total_price=total_price) 
+        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id,from_date=p_from_date,to_date=p_to_date,submitted=submitted,total_price=total_price,user=user) 
     else:
         return render_template('url_not_found.html')
 
@@ -400,10 +404,15 @@ def milkman_selection(user_id):
             print('city',city)
             area=form_data['area']
             print('area :',area)
+            flat_no=form_data['home']
+            print('flat_no :',flat_no)
+            building=form_data['building']
+            print('flat_no :',building)
+            address='FL'+str(flat_no)+'/'+str(building)
             milkman_stores=form_data['milkman_stores']
             print('milkman_stores:',milkman_stores)
             location_id=connection.get_location_id(city,area)
-            connection.update_users_with_milkman(milkman_stores,user_id,location_id)
+            connection.update_users_with_milkman(milkman_stores,user_id,location_id,address)
             return redirect(url_for("redirect_milkman",user_id=user_id))
             # #function to check if user has entered any default details when they login 1st time, if not then  re-direct them to the default pg again            
             # default_details_count=connection.check_default_details(user_id) 
@@ -509,8 +518,8 @@ def view_milkman(user_id,rating):
     else:
          return render_template('url_not_found.html')
 
-@app.route('/milkman_dashboard1/<milkman_id>')
-def milkman_dashboard1(milkman_id):
+@app.route('/milkman_dashboard/<milkman_id>')
+def milkman_dashboard(milkman_id):
     print('MIlkman id is:',milkman_id)
     signed_in=connection.validate_milkman_signin(milkman_id)
     #location id is pased as empty coz if we hv milkman_id without location id we can identify the store uniquely so noeed of loc id
@@ -518,7 +527,27 @@ def milkman_dashboard1(milkman_id):
     if (signed_in):
         user_count,user_list=connection.milkman_dashboard_logic(milkman_id)
         print('in server user_count:',user_count)
-        return render_template('milkman_dashboard1.html',user_email='',user_id='',user_count=user_count,user_list=user_list,milkman_id=milkman_id,milkman_store=milkman_store)
+        return render_template('milkman_dashboard.html',user_email='',user_id='',user_count=user_count,user_list=user_list,milkman_id=milkman_id,milkman_store=milkman_store,single_user_list='',address='')
+    else:
+        return render_template('url_not_found.html')
+
+@app.route('/milkman_dashboard/<milkman_id>/<Social_Media_Name>/<address>')
+def milkman_dashboard_single_user(milkman_id,Social_Media_Name,address):
+    print('------------milkman_dashboard_single_user-------')
+    print('MIlkman id is:',milkman_id)
+    print(' Username is:',Social_Media_Name)
+    print(' address is:',address)
+    signed_in=connection.validate_milkman_signin(milkman_id)
+    #location id is pased as empty coz if we hv milkman_id without location id we can identify the store uniquely so no need of loc id
+    milkman_store=connection.milkman_id_store(milkman_id,None,'')
+    if (signed_in):
+        #we need the entire user list to display it in the search customer drop down
+        user_count,user_list=connection.milkman_dashboard_logic(milkman_id)
+        #we need the single_user_list to display the customer searched by milkman
+        user_count,single_user_list=connection.milkman_dashboard_single_user_logic(milkman_id,Social_Media_Name,address)
+        print('in server user_count:',user_count)
+        print('server: printing the single user list-',single_user_list)
+        return render_template('milkman_dashboard.html',user_email='',user_id='',user_count=user_count,user_list=user_list,milkman_id=milkman_id,milkman_store=milkman_store,single_user_list=single_user_list)
     else:
         return render_template('url_not_found.html')
 

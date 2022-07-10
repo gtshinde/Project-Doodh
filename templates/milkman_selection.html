@@ -202,6 +202,18 @@ select option[selected]{
     padding-left: 11px;
     font-size: 13px;
 }
+input{
+  border-color: #cfd2d2;
+  padding: 11px 21px;
+    padding-left: 11px;
+    font-size: 13px;
+    width: 87%;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 1rem;
+    font-size: 1.25rem;
+    border-radius: 0.3rem;
+}
   </style>
 </head>
 
@@ -215,6 +227,7 @@ select option[selected]{
     <h2>Milkman Details</h2>
     <p>Please enter your milkman details!</p>
     <hr>
+    
     <!-- <div class="form-group">
 			<div class="input-group">
 				<span class="input-group-addon"><i class="fas fa-city" style="font-size: 11px;"></i></span>
@@ -244,10 +257,26 @@ select option[selected]{
       <div class="input-group">
       <span class="input-group-addon"> <i class="fas fa-map-marker-alt" style="font-size: 11px;"></i></span> 
     <select class="form-select form-select-lg" name="area" id="area" onchange="display_milkman()" required>
-    
+      <option>Please select your area</option>
     </select>
     </div>
    </div>
+   <div class="container mt-3">
+    <div class="input-group">
+    <span class="input-group-addon"> <i class="fa fa-home" style="font-size: 11px;"></i></span> 
+  <input  name="home" id="home" required="required" placeholder="Please enter your Flat No.">
+    
+  
+  </div>
+  </div>
+ <div class="container mt-3">
+  <div class="input-group">
+  <span class="input-group-addon"> <i class="fa fa-building" style="font-size: 11px;"></i></span> 
+<input  name="building" id="building" required="required" placeholder="Please enter your building name">
+  
+
+</div>
+</div>
     <!-- <script>
       var area='{{area}}'
       var city='{{city}}'
@@ -272,7 +301,7 @@ select option[selected]{
         <div class="input-group">
         <span class="input-group-addon"> <i class="fas fa-male"></i></span> 
       <select class="form-select form-select-lg" name="milkman_stores" id="milkman_stores">
-    
+        <option>Please select your milkman</option>
       </select>
     </div>
     </div>

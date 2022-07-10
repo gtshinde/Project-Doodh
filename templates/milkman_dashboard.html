@@ -1,4 +1,9 @@
-<html lang="en"><head>
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='images/milk_1.png')}}">
+        
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/home_css.css')}}">	
     <title>Milkman Dashboard</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -6,21 +11,35 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- below script is for user icon -->
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script> 
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  </head>
+
   <style>
-      body {
+      /* body {
       background-image:url("../static/css/bg5.jpg");
       background-size: 1600px 1500px;
       background-repeat: no-repeat;
-  
-  }
-  h1{
+      } */
+  /* h1{
       color: white;
       margin-block-start: 70px;
       text-align: center;
       font-family: Garamond;
       font-size: 80px;
   
-  }
+  } */
+  h1{
+    color: white;
+    /* margin-block-start: 70px; */
+    text-align: center;
+    font-family: Garamond;
+    /* font-size: 55px; */
+    position: relative;
+    /* top: -145%; */
+    font-size: clamp(2rem, 10vw, 5rem);
+}
   .bg-primary {
       background-color: #020201!important;
   }
@@ -71,114 +90,284 @@
     text-decoration: none;
     cursor: pointer;
   }
-  </style></head>
+  .card-text{
+    font-size: 18px;
+  }
+  #View_Report{
+    padding: 5px;
+    padding-left: 15px;
+    border: 0.5px;
+    border-radius: 9px;
+    padding-right: 15px;
+  }
+  .btn{
+        width: 8%;
+        background-color: #ffd700;
+        color: white;
+        padding: 9px 3px;
+        margin: 2px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 20px;
+        right: 1%;
+    width: auto;
+    font-size: clamp(0.75rem, 3vw, 2rem);
+    position: absolute;
+    top: 1%;
+      }
+      .btn:hover{
+        background-color: #DAA520;
+        color:white;
+      }
+      #userDetails{
+        display: none;
+      }
+      /* #usrname{
+        top: 13%;
+    position: absolute;
+    right: 1%;
+    font-size: 160%;
+    color: white;
+    text-transform: capitalize;
+      } */
+      #usrname{
+        display: inline-block;
+        /* height: 40px; */
+        height: 3rem;
+        color:white;
+        /* font-size: 35px; */
+        position: relative;
+        
+        font-size: clamp(1rem, 5vw, 2rem);
+        text-align: center;
+        vertical-align: middle;
+        color: #818181;
+        }
+        #userDetails{
+        display: none;
+      }
+      /* The user details when the user clicks on the profile icon */
+#userDetails{
+  position: absolute;
+  z-index: 2;
+  background-color: white;
+  margin-left: 60%;
+  border: 5px solid white;
+  border-radius: 6px;
+}
+
+.dropdown{
+  /* top: clamp(7rem,8rem,4rem); */
+    /* top:25%; */
+    /* position: absolute; */
+    /* left: clamp(1em,8rem,4rem); */
+    /* left: -37%; */
+    /* width: 147%; */
+    text-align: center;
+}
+.dropdown-menu li:nth-child(even)  {background-color: white;}
+.dropdown-menu li:nth-child(odd)   {background-color: #dcdcdc;}
+.dropdown-menu li:hover {background-color: #fffacd;}
+.dropdown-menu{
+  width:50%;
+  left:29%;
+}
+.btn-primary
+{
+    z-index: 1;
+    top: 14%;
+    /* position: absolute; */
+    /* left: 44%; */
+    width: 50%;
+    background-color: #ffc107;
+    border-color:  #ffc107;
+}
+.btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
+    color: #fff;
+    background-color: #ffc107;
+    border-color:  #ffc107;
+}
+.btn1:hover{
+  background-color: #DAA520;
+        color:white;
+        border-color: #DAA520;
+}
+.card{
+    width: 30%;
+    display: inline-block;
+}
+
+@media screen and (max-width:768px){
+  .btn-primary{
+    width: 90%;
+  }
+  .dropdown-menu{
+    width: 90%;
+  }
+}
+
+@media screen and (max-width:376px){
+  .card{
+    width: 45%;
+    display: inline-block;
+  }
+}
+@media screen and (max-width:320px){
+  .card{
+    width: 90%;
+    display: inline-block;
+  }
+}
+    /* @media screen and (max-width:768px){
+      
+      .card bg-primary{
+        width: 50%;
+      }
+
+    } */
   
-  <body> 
-      <h1><strong>Project Doodh</strong></h1><br>
-  <h2 style="font-size: 40px;color: white;margin-left: 35%;">Milkman Dashboard</h2>
+  </style>
+ <body>
+  <div class="bg-image"></div>
+  <h1>Project Doodh</h1> 
   
-<div class="container" style="background-color: black; opacity: 70%; border-radius: 13px; border: 2px solid white; padding: 5%;">
-{{count=0}}
-{% for i<=(n/3+1) %}    --for the deck
-    <div class="card-deck">
-    j=0
-    {% for j<=3 %} 
-     {{count+1}}   --count+1 th user
-      <div class="card bg-primary" style="width: 30%;" onclick="myfunc()">
-        <div class="card-body text-center" style="background: #ffc107;border: whitesmoke;border-radius: 30px;height: 42%;">
-          <p class="card-text" style="color: white;">Some text inside the first card</p>
+  <!-- <h2 style="font-size: 40px;color: white;margin-left: 35%;"> -->
+    <h2 style="width: 100%; text-align: center; font-size: clamp(1.5rem, 5vw, 4rem); color: white;"> Milkman Dashboard</h2>
+  {{user_count}}
+
+  <div class="dropdown">
+    <button class="btn1 btn-primary dropdown-toggle" type="button" data-toggle="dropdown" >Select Customer
+    <span class="caret"></span></button>
+    <ul class="dropdown-menu">
+      <li style="text-transform:capitalize ; text-align:center;"><a href="{{url_for('milkman_dashboard',milkman_id=milkman_id)}}">All customers</a></li>
+      {% for users in user_list %}
+      {% set username=users['user'] %}
+      {% set address=users['address'] %}
+     
+      <li style="text-transform:capitalize ;">
+     
+        <a href="{{url_for('milkman_dashboard_single_user',milkman_id=milkman_id,Social_Media_Name=username,address=address)}}"><p style="text-align:left ;">{{username}}<span style="float:right; ">{{address}}</span></p></a> </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+  <div style="display: inline; width: 15%;">
+    <i class='fas fa-user-circle' style='font-size:clamp(1rem, 8vw, 4rem); cursor:pointer; color:#ffd700; top:clamp(1rem,8vw,6rem);
+    right:clamp(1rem,8vw,6rem); position: absolute;' onclick="toggleUserDetails()"></i>
+  </div>
+  <br>
+  <br>
+  <div class="container" style="background-color: black; opacity: 70%; border-radius: 13px; border: 2px solid white; padding: 5%;">
+   
+{% set count = 0 %}
+  {% if single_user_list == '' %}
+        {% for user in user_list %} 
+       
+      
+        {% set user_li=user['user'] %}
+        {% set user_ID=user['user_id'] %}
+        {% set user_total=user['total_price'] %}
+        {% set tomo_type_qty=user['tomo_type_qty'] %}
+    
+          <div class="card bg-primary">
+            <div class="card-body text-center" style="background: #ffc107;border: whitesmoke;border-radius: 30px;height: 42%; padding: 1%;">
+              <p class="card-text" style="color: white; font-size: 29px; text-transform: uppercase">{{user['user']}}</p>
+              <p class="card-text" id="card-text1" style="color: white;">Report Total: {{user_total}}</p>
+              {% if tomo_type_qty != [] %}
+              {% for items in tomo_type_qty  %}
+              <p class="card-text" id="card-text3" style="color: white; text-transform: capitalize;">{{items['type']}} : {{items['qty']}}L <br></p>
+              {% endfor %}
+              {% else %}
+              <p class="card-text" id="card-text3" style="color: white;">No data entered by customer <br></p>
+              {% endif %}
+              <button id="View_Report" onclick="view_report('{{user_ID}}','{{user_li}}')">View Report</button>
+            </div> 
+            <p></p>
+          </div>
+         
+          
+        
+        {% endfor %}  
+  <!-- when milkman wants to view specific customer details -->
+ {% else %}
+    
+        {% set user_li=single_user_list[0]['user'] %}
+        {% set user_ID=single_user_list[0]['user_id'] %}
+        {% set user_total=single_user_list[0]['total_price'] %}
+        {% set tomo_type_qty=single_user_list[0]['tomo_type_qty'] %}
+    
+          <div class="card bg-primary"  >
+            <div class="card-body text-center" style="background: #ffc107;border: whitesmoke;border-radius: 30px;height: 42%; padding: 1%;">
+              <p class="card-text" style="color: white; font-size: 29px; text-transform: uppercase">{{user_li}}</p>
+              <p class="card-text" id="card-text1" style="color: white;">Report Total: {{user_total}}</p>
+              {% if tomo_type_qty != [] %}
+              {% for items in tomo_type_qty  %}
+              <p class="card-text" id="card-text3" style="color: white; text-transform: capitalize;">{{items['type']}} : {{items['qty']}}L <br></p>
+              {% endfor %}
+              {% else %}
+              <p class="card-text" id="card-text3" style="color: white;">No data entered by customer <br></p>
+              {% endif %}
+              <button id="View_Report" onclick="view_report('{{user_ID}}','{{user_li}}')">View Report</button>
+            </div> 
+            <p></p>
+          </div>
+          
+      
+
         </div>
-      </div>
-      j++
-    {% endfor %}  
-    </div>
-    i++
-{% endfor %}
+ {% endif %}  
     <div  id="myModal" class="modal" style="display: none;">
       <div class="modal-content">
       <span class="close">&times;</span> 
-      <p class="card-text" style="color: white;">Some text inside the first card</p>
-      <p class="card-text" style="color: white;">Some text inside the first card</p>
-      <p class="card-text" style="color: white;">Some text inside the first card</p>
+      <p class="card-text" id="card-text1" style="color: white;"></p>
+      <p class="card-text" id="card-text2"  style="color: white;"></p>
+      <p class="card-text" id="card-text3" style="color: white; font-size: 25px;"></p>
       </div>
     </div>
-    <br>
-  <br>
-  <div class="card-deck" >
-      <div class="card bg-primary" style="width: 30%;">
-        <div class="card-body text-center" style="background: #ffc107;border: whitesmoke;border-radius: 30px;height: 42%;">
-          <p class="card-text" style="color: white;">Some text inside the first card</p>
-          
-          
-          
-        </div>
-      </div>
-      <div class="card bg-primary">
-        <div class="card-body text-center" style="background: #ffc107;border: whitesmoke;border-radius: 30px;height: 20px;">
-          <p class="card-text">Some text inside the first card</p>
-          
-          
-          
-        </div>
-      </div><div class="card bg-primary">
-        <div class="card-body text-center" style="background: whitesmoke;border: whitesmoke;border-radius: 30px;height: 20px;">
-          <p class="card-text">Some text inside the first card</p>
-          
-          
-          
-        </div>
-      </div><br>
+        <br>
       <br>
-      <div class="card bg-primary">
-        <div class="card-body text-center" style="background: whitesmoke;border: whitesmoke;border-radius: 30px;height: 20px;">
-          <p class="card-text">Some text inside the first card</p>
-          
-          
-          
-        </div>
-      </div>
-      <div class="card bg-primary">
-        <div class="card-body text-center" style="background: whitesmoke;border: whitesmoke;border-radius: 30px;height: 20px;">
-          <p class="card-text">Some text inside the first card</p>
-          
-          
-          
-        </div>
-      </div>
-      <div class="card bg-primary">
-        <div class="card-body text-center" style="background: whitesmoke;border: whitesmoke;border-radius: 30px;height: 20px;">
-          <p class="card-text">Some text inside the first card</p>
-          
-          
-          
-        </div>
-      </div>
-      <div class="card bg-primary">
-        <div class="card-body text-center" style="background: whitesmoke;border: whitesmoke;border-radius: 30px;height: 20px;">
-          <p class="card-text">Some text inside the first card</p>
-          
-          
-          
-        </div>
-      </div>
-      
-      
-      
-      
-      
-        
-    </div><br><br>
     
-  </div>
-  
+<br><br>
+        
+      </div>
+
+      <div id="userDetails">
+        <div id="usrname">Hello {{milkman_store}}!</div>
+        <button style="width: auto; font-size: clamp(0.75rem, 3vw, 2rem);" onclick="signOut();" class="btn">Sign Out</button>
+      </div>
   
   </body>
   <script>
   
-      function myfunc(){
+  function signOut() {
+    milkman_id='{{milkman_id}}'
+ location.replace("http://localhost:5000/milkman/signout/"+milkman_id);
+  }
+    function view_report(user_ID,user){
+      milkman_id='{{milkman_id}}'
+      console.log('user is:'+user)
+      // location.replace("http://localhost:5000/User_Report_Milkman/"+milkman_id+"/"+user_ID);
+      window.open("http://localhost:5000/User_Report_Milkman/"+milkman_id+"/"+user_ID+"/"+user, '_blank');
+    }
+
+    function myfunc(user,total,tomo_type_qty){
    // Get the modal
    var modal = document.getElementById("myModal");
     modal.style.display="block";
+    uname='User Name: ';
+    rtotal='Report Total: '
+    cardtext=uname.concat(user);
+    document.getElementById("card-text1").innerHTML=cardtext; 
+    cardtext=rtotal.concat(total);
+    document.getElementById("card-text2").innerHTML=cardtext; 
+    let text = "";
+    console.log('tomo_type_qty: '+tomo_type_qty)
+    for (let i = 0; i < tomo_type_qty.length; i++) {
+      text += tomo_type_qty[i]['type'] + ": "+tomo_type_qty[i]['qty']+"L<br>";
+    }
+    console.log('text: '+text)
+document.getElementById("card-text3").innerHTML = text;
     // Get the <span> element that closes the modal
     var span = document.getElementsByClassName("close")[0];
     
@@ -194,5 +383,20 @@
       }
     }
       }
+
+function toggleUserDetails() {
+  // console.log("Inside the toggleUserDetails() ");
+  // console.log(document.getElementById("userDetails").style.display);
+
+  // in the beginning "userDetails" has style display as an empty string ("")
+  // so we have added one more or conditio to check if it is an empty string
+  if (document.getElementById("userDetails").style.display == "none" || document.getElementById("userDetails").style.display == ""){
+    document.getElementById("userDetails").style.display = "block";
+  }
+  else if (document.getElementById("userDetails").style.display == "block"){
+    document.getElementById("userDetails").style.display = "none";
+  }
+}
   </script>
+ </body>
   </html>

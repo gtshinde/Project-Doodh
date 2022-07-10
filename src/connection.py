@@ -93,6 +93,23 @@ def get_user_id(user_email):
         return userid
     return 0
 
+def get_user_name(user_email):
+ 
+    print('conn user_id:',user_email)
+    count=verify_useremail_exists(user_email)
+    if count!=0:
+        conn = connect()
+        cur = conn.cursor()
+        sql_txt = "SELECT Social_Media_name FROM users WHERE social_media_email = '"+str(user_email)+"';" 
+        cur.execute(sql_txt)
+        user = cur.fetchone()[0]
+        print('user is ', user)
+        conn.commit()
+        cur.close()
+        conn.close()
+        return user
+    return 0
+
 def validate_user_signin(user_id):
 
     print('conn user_id:',user_id)
@@ -527,13 +544,17 @@ def get_milkman_area_city(area,city):
                  raise e
     return milkman_list
 
-def update_users_with_milkman(milkman_shop,user_id,location_id):
+def update_users_with_milkman(milkman_shop,user_id,location_id,address):
         print('COnn milkman_shop:',milkman_shop) 
         print('COnn user_id:',user_id) 
+        print('COnn address is:',address) 
         conn=connect()
         with conn: 
            with conn.cursor() as cur:
-                sql_txt="""UPDATE USERS SET MILKMAN_ID=(SELECT MILKMAN_ID FROM MILKMAN WHERE MILKMAN_SHOP='"""+str(milkman_shop)+"""' AND location_id=CAST ('"""+str(location_id)+"""' AS INTEGER))
+                sql_txt="""UPDATE USERS SET ADDRESS=lower('"""+str(address)+"""')
+                            ,MILKMAN_ID=(SELECT MILKMAN_ID 
+                            FROM MILKMAN
+                            WHERE MILKMAN_SHOP='"""+str(milkman_shop)+"""' AND location_id=CAST ('"""+str(location_id)+"""' AS INTEGER))
                             ,USER_RATING=NULL
                             WHERE USER_ID='"""+str(user_id)+"""';"""
                 try:
@@ -677,7 +698,7 @@ def milkman_dashboard_logic(milkman_id):
     i=0
     with conn:
         sql_get_user_count="""SELECT COUNT(USER_ID) FROM USERS WHERE MILKMAN_ID='"""+str(milkman_id)+"""';"""
-        sql_get_users="""SELECT Social_Media_Name,user_id FROM USERS WHERE MILKMAN_ID='"""+str(milkman_id)+"""';"""
+        sql_get_users="""SELECT Social_Media_Name,user_id,address FROM USERS WHERE MILKMAN_ID='"""+str(milkman_id)+"""';"""
         with conn.cursor() as cur:
             try:
                 cur.execute(sql_get_user_count)
@@ -690,7 +711,54 @@ def milkman_dashboard_logic(milkman_id):
                 for user in user_details:
                     user_name=user[0]
                     user_id=user[1]
-                    print('user_ids:',user_name)
+                    address=user[2]
+                    print('user_name:',user_name)
+                    print('user_ids:',user_id)
+                    print('address :',address)
+                      # find the system month and year
+                    todays_date = date.today()
+                    month = int(todays_date.month)
+                    year = int(todays_date.year)
+                    print('calling the report logic from milkmandashboard')
+                    report_list,total_price,tomo_type_qty =report_logic(str(year)+"-"+str(month)+"-01", str(todays_date), user_id)
+                    if(users_list[i] is None):
+                        users_list[i] = {"user": user_name,"user_id":user_id, "report": report_list, "total_price": total_price, "tomo_type_qty":tomo_type_qty,'address':address}
+                        i=i+1
+
+                    print('user is:',user)
+                    print('user ID is:',user_id)
+                    print('Dict users_list for user:')
+                    print(users_list)
+                print('Printing the final list')
+                pprint(users_list)
+            except Exception as e:
+                print(e)
+                raise(e)
+    return user_count,users_list
+
+#function to find single user details when milkman selects specific user from dropdown
+def milkman_dashboard_single_user_logic(milkman_id,Social_Media_Name,address):
+    conn=connect()
+    users_list=[None]
+    i=0
+    with conn:
+        sql_get_user_count="""SELECT COUNT(USER_ID) FROM USERS WHERE MILKMAN_ID='"""+str(milkman_id)+"""' AND address='"""+str(address)+"""' AND Social_Media_Name='"""+str(Social_Media_Name)+"""';"""
+        #here in the select query Social_Media_Name is not reqd but still hv kept it so that the exisitng logic flow doest break..no harm in keeping it :-)
+        sql_get_users="""SELECT Social_Media_Name,user_id FROM USERS WHERE MILKMAN_ID='"""+str(milkman_id)+"""'AND address='"""+str(address)+"""' AND Social_Media_Name='"""+str(Social_Media_Name)+"""';"""
+        with conn.cursor() as cur:
+            try:
+                print('Inside milkman dashboard single user function')
+                cur.execute(sql_get_user_count)
+                user_count=cur.fetchone()[0]   #this count shd always be 1
+                print('user_count: ',user_count)
+                users_list=users_list*user_count
+                cur.execute(sql_get_users)
+                user_details=cur.fetchall()
+                print('user_details:',user_details)
+                for user in user_details:
+                    user_name=user[0]
+                    user_id=user[1]
+                    print('user_name:',user_name)
                     print('user_ids:',user_id)
                       # find the system month and year
                     todays_date = date.today()

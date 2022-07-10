@@ -28,6 +28,20 @@
     padding-left: 11px;
     font-size: 13px;
 }
+h1{
+    color: white;
+    /* margin-block-start: 70px; */
+    text-align: center;
+    font-family: Garamond;
+	font-weight: bold;
+    /* font-size: 55px; */
+    position: relative;
+    /* top: -145%; */
+    font-size: clamp(6rem, 10vw, 5rem);
+}
+h2{
+  font-size: clamp(2rem, 5vw, 5rem);
+}
 </style>
 <body>
 <div class="bg-image"></div>
@@ -60,7 +74,9 @@
     <div class="form-group">
         <div class="input-group">
           <span class="input-group-addon"> <i class="fas fa-map-marker-alt" style="font-size: 11px;"></i></span> 
-          <select class="form-select form-select-lg" name="area" id="area"  required="required"></select>
+          <select class="form-select form-select-lg" name="area" id="area"  required="required">
+            <option>Please select your area</option>
+          </select>
     </div>
         </div>
     <div class="form-group">
