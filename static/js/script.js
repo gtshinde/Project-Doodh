@@ -13,9 +13,9 @@ function toggleUserDetails() {
   // in the beginning "userDetails" has style display as an empty string ("")
   // so we have added one more or conditio to check if it is an empty string
   if (document.getElementById("userDetails").style.display == "none" || document.getElementById("userDetails").style.display == ""){
-    document.getElementById("userDetails").style.display = "block";
+    document.getElementById("userDetails").style.display = "inline-block";
   }
-  else if (document.getElementById("userDetails").style.display == "block"){
+  else if (document.getElementById("userDetails").style.display == "inline-block"){
     document.getElementById("userDetails").style.display = "none";
   }
 }
