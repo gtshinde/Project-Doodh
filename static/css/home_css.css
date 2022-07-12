@@ -168,9 +168,11 @@ table.Tbl{
   position: absolute;
   z-index: 2;
   background-color: white;
-  margin-left: 60%;
+  /* margin-left: 60%; */
   border: 5px solid white;
   border-radius: 6px;
+  top: clamp(3.5rem, 18vw, 9rem); 
+  right: 5%;
 }
 /* the below is for the tooltip which is not aligned correctly */
 /* #userDetails::after{
@@ -311,6 +313,15 @@ table.Tbl{
 } */
 
 /* Modified from: https://github.com/mukulkant/Star-rating-using-pure-css */
+
+/* Media Queries */
+/* Always use media queries at the end, since CSS will override the styling based on the correct conditions. */
+
+/* While using min-width - enter the pixels in ascending order */
+/* While using max-width - enter the pixels in descending order */
+
+/* Here since we are using max-width we are ordering it in descending order - 500, 426, 376, 320 */
+/* We do this so that the correct media queries do not get overridden by the higher pixel media queries */
 
 @media screen and (max-width: 500px){
   select, input[type=text] {
