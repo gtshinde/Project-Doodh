@@ -94,7 +94,6 @@ def get_user_id(user_email):
     return 0
 
 def get_user_name(user_email):
- 
     print('conn user_id:',user_email)
     count=verify_useremail_exists(user_email)
     if count!=0:
@@ -647,7 +646,7 @@ def milkman_id_store(milkman_id,milkman_store,location_id):
     with conn:
         with conn.cursor() as cur:
             try:
-                sql_milkman_id="""SELECT MILKMAN_ID FROM MILKMAN WHERE  upper(milkman_shop)='"""+str(milkman_store)+"""'AND location_id=CAST ('"""+str(location_id)+"""' AS INTEGER);"""
+                sql_milkman_id="""SELECT MILKMAN_ID FROM MILKMAN WHERE  upper(milkman_shop)=upper('"""+str(milkman_store)+"""') AND location_id=CAST ('"""+str(location_id)+"""' AS INTEGER);"""
                 sql_milkman_store="""SELECT lower(MILKMAN_SHOP) FROM MILKMAN WHERE  MILKMAN_ID='"""+str(milkman_id)+"""';"""
            
                 if milkman_id is None:
