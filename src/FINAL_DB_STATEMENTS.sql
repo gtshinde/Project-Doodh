@@ -104,13 +104,7 @@ ALTER TABLE MILKMAN
     ADD COLUMN signed_in BOOLEAN;
 
 ALTER TABLE MILKMAN
-    ADD COLUMN Password text;
-
-ALTER TABLE MILKMAN
-    ADD COLUMN Social_Media_Email VARCHAR(100);
-
-ALTER TABLE MILKMAN
-    ADD COLUMN Social_Media_Type  VARCHAR(100);    
+    ADD COLUMN Password text;  
 
 INSERT INTO Locations VALUES 
 (NEXTVAL('location_id'),
