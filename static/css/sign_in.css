@@ -175,6 +175,14 @@ body {
     cursor: pointer;
 }
 
+.text-center{
+    text-align:center;
+}
+
+.text-center a:hover{
+    font-weight: bold;
+}
+
 @media screen and (min-width: 500px){
     .signup-form{
         width: 500px;
