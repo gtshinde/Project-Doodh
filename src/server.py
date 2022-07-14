@@ -81,6 +81,8 @@ def report(user_id):
     user_email=user_details[2]    
     print('Report page: user sign in status',signin)
     print('Report page:user admin status',admin)
+    user=connection.get_user_name(user_email)
+    print('Report page: Name of user: ',user)
     if (signin): 
         # if user has not provided the month or year
         # find the system month and year
@@ -106,7 +108,7 @@ def report(user_id):
         # if FromDate!='null':
         #     FromDate=str(int(FromDate))+' '+month_string+' '+str(year)
         # print('FRomDate after modifcation is:',FromDate)
-        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id,total_price=total_price)
+        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id,total_price=total_price,user=user)
     else:
         return render_template('url_not_found.html')
         
@@ -122,7 +124,7 @@ def report_month_year(user_id,month, year):
     user_email=user_details[2]    
     print('user sign in status',signin)
     print('user admin status',admin)  
-    user=connection.get_user_id(user_email)
+    user=connection.get_user_name(user_email)
     print('user name is:',user)
     if (signin):
         num_days_in_month = calendar.monthrange(int(year), int(month))[1]   
@@ -140,7 +142,7 @@ def report_month_year(user_id,month, year):
         pprint (report_list)
         print (len(report_list))
         print('REPORT TOTAL: ',total_price)        
-        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id,total_price=total_price)
+        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id,total_price=total_price,user=user)
     else:
         return render_template('url_not_found.html') 
 
@@ -615,7 +617,7 @@ def milkman_signin():
         elif(sha256_crypt.verify(milkman_pwd, db_pwd)):
             connection.update_user_signin_status('Milkman',milkman_id,True)
            
-            return redirect(url_for("milkman_dashboard1",milkman_id=milkman_id))   
+            return redirect(url_for("milkman_dashboard",milkman_id=milkman_id))   
         else:
             print('Invalid credentials!')
             display_error_message="Invalid credentials!"
