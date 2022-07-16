@@ -149,13 +149,19 @@ body {
     background-color: #FFD700;
     margin: auto;
     color:white;
-    padding: 30px;
+    /* padding: 30px; */
     border: 1px solid #888;
     width: 50%;
     /* height: 30%; */
-    font-size: clamp(1rem, 6vw, 5rem);
-    padding-top: 35px;
+    /* --font-size: clamp(1rem, 6vw, 5rem); */
+    /* padding-top: 35px; */
     text-align: center;
+    /* font-family: Garamond; */
+    /* font-size: 55px; */
+    /* font-size: clamp(2rem, 2vw, 7rem); */
+    padding: 30px; 
+    font-size: clamp(1.5rem,3vw,4rem);
+    /* font-weight: bold; */
 }
 
 /* The Close Button */
@@ -183,6 +189,12 @@ body {
     font-weight: bold;
 }
 
+.btn{
+    color:black;
+     margin-bottom:1px; 
+     background-color: white; 
+     width: 50%;
+}
 @media screen and (min-width: 500px){
     .signup-form{
         width: 500px;
