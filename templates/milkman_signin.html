@@ -50,7 +50,7 @@ h2{
 {%  if display_error_message|length %}
 <div  id="myModal" class="modal">
   <div class="modal-content">
-  <span class="close">&times;</span> 
+  <span class="close"></span> 
   <strong>{{ display_error_message }}</strong>
   </div>
 </div>
@@ -64,7 +64,7 @@ h2{
       <div class="input-group">
           <span class="input-group-addon"> <i class="fas fa-city" style="font-size: 11px;"></i></span> 
           <select class="form-select form-select-lg" name="city" id="city" required="required" onchange="display_area()" required>
-            <option>Please select your city</option>
+            <option value="">Please select your city</option>
             {% for city in city_list %}
               <option>{{city}}</option>
             {% endfor %}
@@ -75,7 +75,7 @@ h2{
         <div class="input-group">
           <span class="input-group-addon"> <i class="fas fa-map-marker-alt" style="font-size: 11px;"></i></span> 
           <select class="form-select form-select-lg" name="area" id="area"  required="required">
-            <option>Please select your area</option>
+            <option value="">Please select your area</option>
           </select>
     </div>
         </div>
@@ -116,7 +116,7 @@ function display_area(){
         console.log(data);
         console.log('Get success');
         console.log(data['milkman_area_list']);
-        var str = "<option>Please select your area</option>"
+        var str = "<option value=\"\">Please select your area</option>"
         for (var area of data['milkman_area_list']) {
           str += "<option value='"+area+"'>" + area + "</option>"
         }

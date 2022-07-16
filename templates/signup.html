@@ -22,8 +22,11 @@
 	}
 	@media screen and (min-width: 1060px){
 		.modal-content{
-			height: 30%;
+			height: 70%;
 		}
+	}
+	.btn :hover{
+		background-color: black;
 	}
 </style>
 </head>
@@ -48,6 +51,7 @@
   </div>
 </div>
 {% endif %} -->
+
 {% if submitted=="Yes" %}
 <div  id="myModal" class="modal">
 	<div class="modal-content">
@@ -56,7 +60,7 @@
 		<br>
 		<p>Please login to continue further</p>
 		<div style="width: auto;">
-			<button onclick="signupsuccess()" class="btn" style="color:black">Login</button>
+			<button onclick="signupsuccess()" class="btn" >Login</button>
 		</div>
 	</div>
 </div>
@@ -64,7 +68,7 @@
 
 <div  id="myModal" class="modal">
   <div class="modal-content">
-  <span class="close">&times;</span> 
+  <span class="close"></span> 
   <strong>{{ display_error_message }}</strong>
   </div>
 </div>
