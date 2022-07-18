@@ -36,6 +36,7 @@ def create(user_id):
     admin=user_details[1]
     user_email=user_details[2]
     email_id=connection.get_user_email(user_id)
+    user_name=connection.get_user_name(user_email)
     # print('display_date', display_date)
     print('user sign in status',signin)
     print('user admin status',admin)
@@ -67,7 +68,7 @@ def create(user_id):
             submitted = "Yes"
             return render_template("create.html", submitted=submitted, is_admin=admin,user_email=user_email,user_id=user_id,cm=cm,bm=bm,form_data=form_data)
         submitted = "No"
-        return render_template("create.html",submitted=submitted,is_admin=admin,user_email=user_email,user_id=user_id)
+        return render_template("create.html",submitted=submitted,is_admin=admin,user_email=user_email,user_id=user_id,user=user_name)
     else:
         return render_template("url_not_found.html") 
 
@@ -81,8 +82,8 @@ def report(user_id):
     user_email=user_details[2]    
     print('Report page: user sign in status',signin)
     print('Report page:user admin status',admin)
-    user=connection.get_user_name(user_email)
-    print('Report page: Name of user: ',user)
+    user_name=connection.get_user_name(user_email)
+    print('Report page: Name of user: ',user_name)
     if (signin): 
         # if user has not provided the month or year
         # find the system month and year
@@ -99,21 +100,16 @@ def report(user_id):
         pprint(report_list)
         print (len(report_list))
         print('REPORT TOTAL: ',total_price)
-        # if FromDate=='null':
-        #     FromDate= calendar.monthrange(int(year), int(month)) #get no. of days in that month, will be used to display data for all days in that month when page loads
-        #     FromDate=str(FromDate[1])  #The abv line returns a tuple e.g(4,30) which means APR month 30 days, we want 30 days so FromDate[1]
-        #     print('On pg load FRomDate:',FromDate)
-        # the above was previous logic which was already commented
-        # below logic has been newly commented
-        # if FromDate!='null':
-        #     FromDate=str(int(FromDate))+' '+month_string+' '+str(year)
-        # print('FRomDate after modifcation is:',FromDate)
-        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id,total_price=total_price,user=user)
+ 
+        # in the below line user_type will be U always for this path coz this URL is only for user/consumer
+        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id,total_price=total_price,user=user_name,user_type='U')  
     else:
         return render_template('url_not_found.html')
         
-@app.route("/report/<user_id>/<month>/<year>")
-def report_month_year(user_id,month, year):
+@app.route("/report/<user_type>-<user_id>/<month>/<year>")
+# user_type means who is accessing the url, is it user/consumer(U) or the milkman(M)
+def report_month_year(user_type,user_id,month, year):
+    print('Person accessing this URL is: ',user_type)
     todays_date = date.today()
     todays_month = int(todays_date.month)
     todays_year = int(todays_date.year)
@@ -124,8 +120,12 @@ def report_month_year(user_id,month, year):
     user_email=user_details[2]    
     print('user sign in status',signin)
     print('user admin status',admin)  
-    user=connection.get_user_name(user_email)
-    print('user name is:',user)
+    user_name=connection.get_user_name(user_email)
+    print('user name is:',user_name)
+    if user_type == 'M':
+        signin,milkman_store=connection.get_user_milkman_signin(user_id)
+        user_email=milkman_store
+   
     if (signin):
         num_days_in_month = calendar.monthrange(int(year), int(month))[1]   
         if (int(month)==todays_month and int(year)==todays_year): # if it is current month, report_list should diplay only till current date and not till end of month
@@ -142,13 +142,14 @@ def report_month_year(user_id,month, year):
         pprint (report_list)
         print (len(report_list))
         print('REPORT TOTAL: ',total_price)        
-        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id,total_price=total_price,user=user)
+        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id,total_price=total_price,user=user_name,user_type=user_type)
     else:
         return render_template('url_not_found.html') 
 
 # "/report/1000/2020-03-01:2020-04-21"
-@app.route("/report/<user_id>/<from_date>:<to_date>")
-def report_for_date_range(user_id, from_date, to_date):
+@app.route("/report/<user_type>-<user_id>/<from_date>:<to_date>")
+def report_for_date_range(user_type,user_id, from_date, to_date):
+    print('inside report_for_date_range() : Person accessing this URL is: ',user_type)
     user_details = connection.validate_user_signin(user_id)
     print('Report page (fromDate-toDate): in the server user details:',user_details)
     signin=user_details[0]
@@ -158,6 +159,9 @@ def report_for_date_range(user_id, from_date, to_date):
     print('Report page (fromDate-toDate): user admin status',admin)  
     user=connection.get_user_name(user_email)
     print('user name is:',user)
+    if user_type == 'M':
+        signin,milkman_store=connection.get_user_milkman_signin(user_id)
+        user_email=milkman_store
     if (signin):
         p_from_date = from_date  #storing the parameter values in string only before converting to timestamp format- this is reqd by the report.html pg (lenght function used there for from and todate won't work for timestamp values))
         p_to_date = to_date
@@ -175,7 +179,7 @@ def report_for_date_range(user_id, from_date, to_date):
         print (len(report_list)) 
         print('REPORT TOTAL: ',total_price)
         submitted="Yes"
-        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id,from_date=p_from_date,to_date=p_to_date,submitted=submitted,total_price=total_price,user=user) 
+        return render_template("report.html",is_admin=admin, report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_email=user_email,user_id=user_id,from_date=p_from_date,to_date=p_to_date,submitted=submitted,total_price=total_price,user=user,user_type=user_type) 
     else:
         return render_template('url_not_found.html')
 
@@ -185,9 +189,11 @@ def default(user_id):
     print('in the server user details:',user_details)
     signin=user_details[0]
     admin=user_details[1]
-    user_email=user_details[2]    
+    user_email=user_details[2]   
+    user=connection.get_user_name(user_email) 
     print('user sign in status',signin)
     print('user admin status',admin)
+    print('user name is',user)
     if (signin):
         if(request.method == "POST"):
             # print("Coming inside the post block - default")
@@ -220,10 +226,10 @@ def default(user_id):
                 print('connection.get_default_details('+str(item_id)+', '+str(user_id)+', '+str(eff_date_from)+')') # for debugging
             submitted="Yes"
             print("Submitted", submitted)
-            return render_template("default.html",submitted=submitted,is_admin=admin,user_email=user_email,user_id=user_id, eff_date_from=eff_date_from, cm_item_qty=cm_item_qty, bm_item_qty=bm_item_qty)
+            return render_template("default.html",submitted=submitted,is_admin=admin,user_email=user_email,user_id=user_id, eff_date_from=eff_date_from, cm_item_qty=cm_item_qty, bm_item_qty=bm_item_qty,user=user)
         submitted="No"
         print("Submitted is ", submitted)
-        return render_template("default.html",is_admin=admin,user_email=user_email,user_id=user_id,submitted=submitted)
+        return render_template("default.html",is_admin=admin,user_email=user_email,user_id=user_id,submitted=submitted,user=user)
     else:
         return render_template('url_not_found.html')
 
@@ -233,9 +239,11 @@ def items(user_id):
     print('in the server user details:',user_details)
     signin=user_details[0]
     admin=user_details[1]
-    user_email=user_details[2]    
+    user_email=user_details[2]  
+    user=connection.get_user_name(user_email)  
     print('user sign in status',signin)
     print('user admin status',admin)
+    print('user name is:',user)
     if (signin):
         if(request.method == "POST"):
             item_name = request.form.get("ItemName")
@@ -248,13 +256,13 @@ def items(user_id):
                 display_error_message = """We were unable to enter the item to the database. 
                                         Error details:
                                         """+str(e)
-                return render_template("admin.html", submitted=submitted,is_admin=admin, display_error_message=display_error_message,user_email=user_email,user_id=user_id)
+                return render_template("admin.html", submitted=submitted,is_admin=admin, display_error_message=display_error_message,user_email=user_email,user_id=user_id,uuser=user)
             submitted = "Yes"
-            return render_template("admin.html", submitted=submitted, is_admin=admin,user_email=user_email,user_id=user_id)
+            return render_template("admin.html", submitted=submitted, is_admin=admin,user_email=user_email,user_id=user_id,user=user)
 
         if ( admin ):
             submitted = "No"
-            return render_template("admin.html", submitted=submitted, is_admin=admin,user_email=user_email,user_id=user_id)
+            return render_template("admin.html", submitted=submitted, is_admin=admin,user_email=user_email,user_id=user_id,user=user)
         else:
             return redirect(url_for("create", user_id=user_id))
     else:
@@ -383,9 +391,11 @@ def milkman_selection(user_id):
     print('milkman_selection:in the server user details:',user_details)
     signin=user_details[0]
     admin=user_details[1]
-    user_email=user_details[2]    
+    user_email=user_details[2]   
+    user=connection.get_user_name(user_email) 
     print('user sign in status',signin)
     print('user admin status',admin)
+    print('username is',user)
     if (signin):
         area=None
         city=None  
@@ -425,7 +435,7 @@ def milkman_selection(user_id):
             #  return redirect(url_for("create",user_id=user_id))  
 
    
-        return  render_template("milkman_selection.html",user_id=user_id,city_list=city,area_list=area)
+        return  render_template("milkman_selection.html",user_id=user_id,city_list=city,area_list=area,user=user)
         # return city_list
     else:
         return render_template('url_not_found.html')
@@ -497,7 +507,8 @@ def view_milkman(user_id,rating):
     print('milkman_selection:in the server user details:',user_details)
     signin=user_details[0]
     admin=user_details[1]
-    user_email=user_details[2]    
+    user_email=user_details[2]   
+    user=connection.get_user_name(user_email) 
     print('user sign in status',signin)
     print('user admin status',admin)
     if (signin):
@@ -515,7 +526,7 @@ def view_milkman(user_id,rating):
             overall_rate=connection.get_overall_rating(milkman_store,location_id)
         print('overall_rate in server is :',overall_rate) 
         
-        return render_template('view_milkman.html',user_email=user_email,milkman_list=milkman_list,user_id=user_id,overall_rate=overall_rate)
+        return render_template('view_milkman.html',user_email=user_email,milkman_list=milkman_list,user_id=user_id,overall_rate=overall_rate,user=user)
         # city=city,area=area,milkman_store=milkman_store)
     else:
          return render_template('url_not_found.html')
@@ -602,7 +613,13 @@ def milkman_signin():
 
         location_id=connection.get_location_id(city,area)
         milkman_id=connection.milkman_id_store(None,milkman,location_id)
-        print('locatio id while milkman signin is:',location_id)
+        if milkman_id == 0:
+            print('Milkman  has not signed up, please signup')
+            area=None
+            city=None 
+            city=connection.get_milkman_area_city(area,city) 
+            display_error_message="Milkman has not signed up, please signup!"
+            return render_template("milkman_signin.html",display_error_message=display_error_message,city_list=city,area_list=area)
         print('milkman id while milkman signin is:',milkman_id)
         print('signin',milkman)
         print('signin',milkman_pwd)    
@@ -650,6 +667,9 @@ def milkman_signup():
             display_error_message = """This milkman name already exists in this area! 
                                        Please sign up with a different milkman name. 
                                         """ 
+            area=None
+            city=None  
+            city=connection.get_milkman_area_city(area,city)
             return render_template("milkman_signup.html",submitted=submitted,display_error_message=display_error_message)            
         submitted="Yes" 
         

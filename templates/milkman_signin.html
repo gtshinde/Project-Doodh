@@ -42,6 +42,41 @@ h1{
 h2{
   font-size: clamp(2rem, 5vw, 5rem);
 }
+/* the reason for writing the modal styling again here is that the styling written in css sheet is getting overridden by 1 of the bootstrap script link added in this file(additional bootstrap links are added to this html coz the dropdowns require those bootstrap links ) */
+/* The Modal (background) */
+.modal {
+    position: fixed; /* Stay in place */
+    z-index: 100; /* Sit on top */
+    padding-top: 250px; /* Location of the box */
+    left: 0;
+    top: 0;
+    display: block;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #FFD700;
+    margin: auto;
+    color:white;
+    /* padding: 30px; */
+    border: 1px solid #888;
+    width: 50%;
+    /* height: 30%; */
+    /* --font-size: clamp(1rem, 6vw, 5rem); */
+    /* padding-top: 35px; */
+    text-align: center;
+    /* font-family: Garamond; */
+    /* font-size: 55px; */
+    /* font-size: clamp(2rem, 2vw, 7rem); */
+    padding: 30px; 
+    font-size: clamp(1.5rem,3vw,4rem);
+    /* font-weight: bold; */
+}
 </style>
 <body>
 <div class="bg-image"></div>
@@ -142,6 +177,7 @@ window.onclick = function(event) {
   if (event.target == modal) {
     modal.style.display = "none";
   }
+  location.replace('localhost:5000/milkman/signin');
 }	
 </script>
 

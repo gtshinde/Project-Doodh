@@ -67,9 +67,16 @@
           </div>
         </div>
         {% endif %}
-        {% if user_email|length %}
-          <div id="usrname">Hello {{user_email}}!</div>
+      {% if user_email|length %}
+        {% if user_type=='U' %}
+          <!-- to display just the first name of the username, variable user consists of full name like 'Gig Shinde' -->
+        {% set firstname=user.split(' ') %}   
+            <div id="usrname">Hello {{firstname[0]}}!</div>
+        <!-- below piece of code is applicable only for milkman stores, just display milkman store name without hello -->
+        {% elif user_type=='M' %}
+           <div id="usrname">{{user_email}}</div>
         {% endif %}
+      {% endif %}
         <div style="text-align: center;">
           <button style="width: auto; font-size: clamp(0.75rem, 3vw, 2rem);" onclick="signOut();" class="btn">Sign Out</button>
         </div>
