@@ -4,7 +4,7 @@ h1{
     text-align: center;
     font-family: Garamond;
     /* font-size: 55px; */
-    font-size: clamp(4rem, 10vw, 10rem);
+    font-size: clamp(5rem, 10vw, 10rem);
     font-weight: bold;
   }
 .googlebtn{
@@ -94,7 +94,7 @@ body {
 .signup-form form a:hover {
     text-decoration: underline;
 }
-.signup-form .fa {
+.signup-form .fa, .signup-form .fas {
     font-size: 21px;
 }
 .signup-form .fa-paper-plane {
@@ -195,6 +195,10 @@ body {
      background-color: white; 
      width: 50%;
 }
+::placeholder{
+    color:black;
+    opacity: 1; /* for firefox */
+  }
 @media screen and (min-width: 500px){
     .signup-form{
         width: 500px;

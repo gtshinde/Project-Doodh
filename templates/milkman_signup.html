@@ -17,29 +17,16 @@
 <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='images/milk_1.png')}}">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/sign_in.css')}}">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
 <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
- <style>
-h1{
-    color: white;
-    /* margin-block-start: 70px; */
-    text-align: center;
-    font-family: Garamond;
-	font-weight: bold;
-    /* font-size: 55px; */
-    position: relative;
-    /* top: -145%; */
-    font-size: clamp(6rem, 10vw, 5rem);
-}
-h2{
-  font-size: clamp(2rem, 5vw, 5rem);
-}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/sign_in.css')}}">
+<style>
 /* the reason for writing the modal styling again here is that the styling written in css sheet is getting overridden by 1 of the bootstrap script link added in this file(additional bootstrap links are added to this html coz the dropdowns require those bootstrap links ) */
+/* in this case, we need to add the link tag for the css below the bootstrap, this way our css will overwrite the bootstrap! :) */
 /* The Modal (background) */
 .modal {
     position: fixed; /* Stay in place */
@@ -91,16 +78,20 @@ h2{
     text-decoration: none;
     cursor: pointer;
 }
-
 .btn{
     color:black;
      margin-bottom:1px; 
      background-color: white; 
      width: 50%;
 }
+.signup-form .input-group-addon{
+  width: auto;
+}
+p, .text-center{
+  font-size: 14px;
+}
 </style> 
 </head>
-
 
 <body>
 <h1>Project Doodh</h1>
@@ -122,7 +113,6 @@ h2{
 </div>
 {% endif %} -->
 
-{% set submitted="Yes" %}
 {% if submitted=="Yes" %}
 {{test}}
 <div  id="myModal" class="modal">
@@ -146,7 +136,7 @@ h2{
 
 
 {% endif %}
-{{city_list}}
+<!-- {{city_list}} -->
 <div class="signup-form">
     <!-- <form   onsubmit="signup()"> -->
 	<form action="/milkman/signup" method="POST">
@@ -155,7 +145,7 @@ h2{
 		<hr>
 		<div class="form-group">
         <div class="input-group">
-            <span class="input-group-addon"> <i class="fas fa-city" style="font-size: 11px;"></i></span> 
+            <span class="input-group-addon"> <i class="fas fa-city"></i></span> 
 			<select class="form-select form-select-lg" name="city" id="city" required="required" onchange="display_area()" >
         <!-- for 1st option the value should be "" such that required attribute works as expected -->
 				<option value="">Please select your city</option>  
@@ -167,7 +157,7 @@ h2{
           </div>
 		  <div class="form-group">
           <div class="input-group">
-            <span class="input-group-addon"> <i class="fas fa-map-marker-alt" style="font-size: 11px;"></i></span> 
+            <span class="input-group-addon"> <i class="fas fa-map-marker-alt"></i></span> 
 			<select class="form-select form-select-lg" name="area" id="area"  required>
          <!-- for 1st option the value should be "" such that required attribute works as expected -->
 				<option value="">Please select your area</option>
@@ -177,14 +167,14 @@ h2{
         <div class="form-group">
 			<div class="input-group">
 				<span class="input-group-addon"><i class="fa fa-user"></i></span>
-				<input type="text" class="form-control" name="username" id="username" placeholder="Milkman Store Name" required="required">
+				<input type="text" class="form-control" name="username" id="username" placeholder="Milkman Store Name" required="required" style="position: relative; height: auto; font-size: 1.25rem;">
 			</div>
         </div>
       
 		<div class="form-group">
 			<div class="input-group">
 				<span class="input-group-addon"><i class="fa fa-lock"></i></span>
-				<input type="password" class="form-control" name="password" placeholder="Password" required="required">
+				<input type="password" class="form-control" name="password" placeholder="Password" required="required" style="position: relative; height: auto; font-size: 1.25rem;">
 			</div>
         </div>
 		<div class="form-group">
@@ -193,7 +183,7 @@ h2{
 					<i class="fa fa-lock"></i>
 					<i class="fa fa-check"></i>
 				</span>
-				<input type="password" class="form-control" name="confirm_password" placeholder="Confirm Password" required="required">
+				<input type="password" class="form-control" name="confirm_password" placeholder="Confirm Password" required="required" style="position: relative; height: auto; font-size: 1.25rem;">
 			</div>
         </div>
         <div class="form-group">
