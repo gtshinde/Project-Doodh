@@ -43,7 +43,7 @@
   <br>
   <br>
   {% for month_year in past_months_list %}
-  <a href="{{url_for('report_month_year',user_id=user_id ,month=(month_year[0]), year=(month_year[1]))}}">{{month_year[2]}} {{month_year[1]}}</a>
+  <a href="{{url_for('report_month_year',user_type=user_type,user_id=user_id ,month=(month_year[0]), year=(month_year[1]))}}">{{month_year[2]}} {{month_year[1]}}</a>
   <br/>
   {% endfor %}
 </div>
@@ -121,7 +121,7 @@
     var fromDate = document.getElementById("fromDate").value;
     var toDate = document.getElementById("toDate").value;
     // (B) URL + REDIRECT
-    location.replace("/report"+'/{{user_id}}/' + fromDate + ':' + toDate);
+    location.replace("/report"+'/{{user_type}}-{{user_id}}/' + fromDate + ':' + toDate);
   }
 // Below function will by default set the todate value same as that of the fromdate initially, 
 //then user can change if required

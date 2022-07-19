@@ -7,7 +7,10 @@
         <link rel="stylesheet" type="text/css" href="http://cdn.webrupee.com/font">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    </head>
+        <!-- below script is for user icon -->
+        <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script> 
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+      </head>
 <style>
   #report_total_box
   {padding-right: 20px;
@@ -64,14 +67,33 @@ width: 208px;
         background-color: #DAA520;
         color:white;
       }
-      #usrname{
-        top: 13%;
-    position: absolute;
-    right: 1%;
-    font-size: 160%;
-    color: white;
-    text-transform: capitalize;
+      #userDetails{
+        display: none;
       }
+      #userDetails{
+  position: absolute;
+  z-index: 2;
+  background-color: white;
+  /* margin-left: 60%; */
+  border: 5px solid white;
+  border-radius: 6px;
+  top: clamp(3.5rem, 18vw, 9rem); 
+  right: 5%;
+}
+#usrname{
+        display: inline-block;
+        /* height: 40px; */
+        /* height: 3rem; */
+        color:white;
+        /* font-size: 35px; */
+        position: relative;
+        /* top:10%;
+        right:2%; */
+        font-size: clamp(1rem, 5vw, 2rem);
+        text-align: center;
+        vertical-align: middle;
+        color: #818181;
+        }
 </style>
 <span class="fa-stack fa-lg" onclick="view_dahsboard()" style="position: fixed; top:1%">
   <i class="fa fa-circle fa-stack-2x" onclick="view_dahsboard()"></i>
@@ -96,7 +118,7 @@ width: 208px;
   <br>
   <br>
   {% for month_year in past_months_list %}
-  <a href="{{url_for('report_month_year',user_id=user_id ,month=(month_year[0]), year=(month_year[1]))}}">{{month_year[2]}} {{month_year[1]}}</a>
+  <a href="{{url_for('report_month_year',user_type='M',user_id=user_id ,month=(month_year[0]), year=(month_year[1]))}}">{{month_year[2]}} {{month_year[1]}}</a>
   <br/>
   {% endfor %}
 </div>
@@ -152,9 +174,20 @@ margin-left: 25%;" required="required" onchange="changedateval()">
     <td style="font-size: 25px;"><strong>&#8377; {{ total_price }} </strong>  </td>
   </tr>  
 </table>
-<div style="text-align: center;">
+<!-- <div style="text-align: center;">
   <div id="usrname">Hello {{milkman_store}}!</div>
   <button style="width: auto; font-size: clamp(0.75rem, 3vw, 2rem);" onclick="signOut();" class="btn">Sign Out</button>
+</div> -->
+<div id="userDetails">
+  <div id="usrname">Hello {{milkman_store}}!</div>
+  <div style="text-align: center;">
+    <button style="width: auto; font-size: clamp(0.75rem, 3vw, 2rem);" onclick="signOut();" class="btn">Sign Out</button>
+  </div>
+  <!-- <button style="width: auto; font-size: clamp(0.75rem, 3vw, 2rem);" onclick="signOut();" class="btn">Sign Out</button> -->
+</div>
+<div style="display: inline; width: 15%;">
+  <i class='fas fa-user-circle' style='font-size:clamp(1rem, 8vw, 4rem); cursor:pointer; color:#ffd700; top:clamp(1rem,8vw,6rem);
+  right:clamp(1rem,8vw,6rem); position: absolute;' onclick="toggleUserDetails()"></i>
 </div>
 <script>
    function signOut() {
@@ -173,7 +206,7 @@ margin-left: 25%;" required="required" onchange="changedateval()">
     var fromDate = document.getElementById("fromDate").value;
     var toDate = document.getElementById("toDate").value;
     // (B) URL + REDIRECT
-    location.replace("/report"+'/{{user_id}}/' + fromDate + ':' + toDate);
+    location.replace("/report"+'/M-{{user_id}}/' + fromDate + ':' + toDate);
   }
 // Below function will by default set the todate value same as that of the fromdate initially, 
 //then user can change if required
@@ -211,6 +244,19 @@ margin-left: 25%;" required="required" onchange="changedateval()">
 
     }
   }
+  function toggleUserDetails() {
+  // console.log("Inside the toggleUserDetails() ");
+  // console.log(document.getElementById("userDetails").style.display);
+
+  // in the beginning "userDetails" has style display as an empty string ("")
+  // so we have added one more or conditio to check if it is an empty string
+  if (document.getElementById("userDetails").style.display == "none" || document.getElementById("userDetails").style.display == ""){
+    document.getElementById("userDetails").style.display = "block";
+  }
+  else if (document.getElementById("userDetails").style.display == "block"){
+    document.getElementById("userDetails").style.display = "none";
+  }
+}
   </script>
 </body>
     

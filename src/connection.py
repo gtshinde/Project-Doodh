@@ -646,9 +646,16 @@ def milkman_id_store(milkman_id,milkman_store,location_id):
     with conn:
         with conn.cursor() as cur:
             try:
+                sql_milkman_count="""SELECT count(MILKMAN_ID) FROM MILKMAN WHERE  upper(milkman_shop)=upper('"""+str(milkman_store)+"""') AND location_id=CAST ('"""+str(location_id)+"""' AS INTEGER);"""
                 sql_milkman_id="""SELECT MILKMAN_ID FROM MILKMAN WHERE  upper(milkman_shop)=upper('"""+str(milkman_store)+"""') AND location_id=CAST ('"""+str(location_id)+"""' AS INTEGER);"""
                 sql_milkman_store="""SELECT lower(MILKMAN_SHOP) FROM MILKMAN WHERE  MILKMAN_ID='"""+str(milkman_id)+"""';"""
-           
+                # below if written coz we do not need to validate the milkman existance when location=' ' which is passed to load the  milkman dashboard
+                if location_id == ' ': 
+                    cur.execute(sql_milkman_count)
+                    milkman_count=cur.fetchone()[0]
+                    print('milkman_count:',milkman_count)
+                    if milkman_count ==0:
+                        return 0
                 if milkman_id is None:
                     cur.execute(sql_milkman_id)
                     milkman_id=cur.fetchone()[0]
@@ -810,7 +817,7 @@ def insert_milkman( milkman_store, milkman_pwd,city,area):
         cur.execute(sql_txt_insert)
                             
     else:
-        print('This email already exists!')
+        print('This milkman already exists in this area!')
     
     conn.commit()
     cur.close()
@@ -835,3 +842,26 @@ def validate_milkman_signin(milkman_id):
                     print(e)
                     raise(e)
     return signed_in     
+
+#below function gets the user's milkman and returns he has signed or not
+def get_user_milkman_signin(user_id):
+    print('conn get_user_milkman() user_id:',user_id)
+    sql_txt="SELECT milkman_id FROM users WHERE user_id='"+str(user_id)+"';"
+    
+    conn=connect()
+    with conn:
+        with conn.cursor() as cur:
+            try:
+                cur.execute(sql_txt)
+                milkman_id = cur.fetchone()[0]      
+                print(' milkman_id : ', milkman_id)
+                signed_in=validate_milkman_signin(milkman_id)
+                sql_milkman_store="SELECT milkman_shop FROM milkman WHERE milkman_id='"+str(milkman_id)+"';"
+                cur.execute(sql_milkman_store)
+                milkman_store = cur.fetchone()[0]  
+                print(' milkman_store : ', milkman_store)
+                
+            except Exception as e:
+                print(e)
+                raise(e)
+    return signed_in,milkman_store     
