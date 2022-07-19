@@ -380,7 +380,7 @@ def signup():
 @app.route('/milkman_selection/<user_id>',methods=["GET","POST"])
 def milkman_selection(user_id):
     user_details=connection.validate_user_signin(user_id)
-    print('milkman_selection:in the server user details:',user_details)
+    print('milkman_selection: in the server user details:',user_details)
     signin=user_details[0]
     admin=user_details[1]
     user_email=user_details[2]    
@@ -423,8 +423,6 @@ def milkman_selection(user_id):
             #  return redirect(url_for("default",user_id=user_id))
             # else:
             #  return redirect(url_for("create",user_id=user_id))  
-
-   
         return  render_template("milkman_selection.html",user_id=user_id,city_list=city,area_list=area)
         # return city_list
     else:
