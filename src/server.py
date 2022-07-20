@@ -420,7 +420,7 @@ def milkman_selection(user_id):
             print('flat_no :',flat_no)
             building=form_data['building']
             print('flat_no :',building)
-            address='FL'+str(flat_no)+'/'+str(building)
+            address='FL'+str(flat_no)+', '+str(building)
             milkman_stores=form_data['milkman_stores']
             print('milkman_stores:',milkman_stores)
             location_id=connection.get_location_id(city,area)
@@ -519,7 +519,7 @@ def view_milkman(user_id,rating):
         location_id=connection.get_location_id(city,area)
         overall_rate=''
         if rating != ' ':
-            milkman_id=connection.milkman_id_store(None,milkman_store)
+            milkman_id=connection.milkman_id_store(None,milkman_store, location_id)
             
             connection.milkman_rating(milkman_id,rating,user_id,location_id)
         if milkman_list is not None:
