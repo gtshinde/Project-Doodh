@@ -530,7 +530,7 @@ def get_milkman_area_city(area,city):
                 sql_txt="""select distinct area from locations where upper(city)='"""+str(city).upper()+"""';"""
              else:
                 location_id=get_location_id(city,area)
-                sql_txt="""select milkman_shop from milkman where location_id=CAST ('"""+str(location_id)+"""' AS INTEGER);"""
+                sql_txt="""select upper(milkman_shop) from milkman where location_id=CAST ('"""+str(location_id)+"""' AS INTEGER);"""
                          
              try:
                  
@@ -656,12 +656,12 @@ def milkman_id_store(milkman_id,milkman_store,location_id):
                     print('milkman_count:',milkman_count)
                     if milkman_count ==0:
                         return 0
-                if milkman_id is None:
+                if milkman_id is None and milkman_store is not None:
                     cur.execute(sql_milkman_id)
                     milkman_id=cur.fetchone()[0]
                     print('milkman_id:',milkman_id)
                     return milkman_id
-                elif (milkman_store is None):
+                elif milkman_store is None and milkman_id is not None:
                     cur.execute(sql_milkman_store)
                     milkman_store=cur.fetchone()[0]
                     print('Milkman store:',milkman_store)
@@ -793,8 +793,11 @@ def get_location_id(city,area):
     print('conn city',city)
     print('conn area',area)
     sql_loc= "SELECT location_id FROM locations WHERE city='"+str(city)+"' AND area='"+str(area)+"';"   
-    cur.execute(sql_loc)
-    location_id = cur.fetchone()[0]
+    if city is not None:
+        cur.execute(sql_loc)
+        location_id = cur.fetchone()[0]
+    else:
+        location_id = 0
     return location_id
 
 def insert_milkman( milkman_store, milkman_pwd,city,area):
@@ -813,7 +816,7 @@ def insert_milkman( milkman_store, milkman_pwd,city,area):
     print('count is ', count)
     if  count == 0 :
         sql_txt_insert="""INSERT INTO milkman
-                        VALUES (nextval('milkman_id'), lower('"""+str(milkman_store)+"""'),CURRENT_DATE,CURRENT_DATE,CAST("""+str(location_id)+""" AS INTEGER),False, '"""+str(milkman_pwd)+"""');"""
+                        VALUES (nextval('milkman_id'), UPPER('"""+str(milkman_store)+"""'),CURRENT_DATE,CURRENT_DATE,CAST("""+str(location_id)+""" AS INTEGER),False, '"""+str(milkman_pwd)+"""');"""
         cur.execute(sql_txt_insert)
                             
     else:

@@ -513,14 +513,16 @@ def view_milkman(user_id,rating):
     print('user admin status',admin)
     if (signin):
         city,area,milkman_store=connection.view_user_milkman_details(user_id)
-        
         milkman_list=[milkman_store,area,city]
-      
+        print('In server view_milkman():printing the milkman list',milkman_list)
+        if city is None and area is None:
+            print('Oops no milkman was selected for this user!')
+            return render_template('view_milkman.html',user_email=user_email,milkman_list=milkman_list,user_id=user_id,user=user)
         location_id=connection.get_location_id(city,area)
         overall_rate=''
         if rating != ' ':
             milkman_id=connection.milkman_id_store(None,milkman_store)
-            
+           
             connection.milkman_rating(milkman_id,rating,user_id,location_id)
         if milkman_list is not None:
             overall_rate=connection.get_overall_rating(milkman_store,location_id)
