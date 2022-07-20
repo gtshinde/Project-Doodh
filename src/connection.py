@@ -650,12 +650,12 @@ def milkman_id_store(milkman_id,milkman_store,location_id):
                 sql_milkman_id="""SELECT MILKMAN_ID FROM MILKMAN WHERE  upper(milkman_shop)=upper('"""+str(milkman_store)+"""') AND location_id=CAST ('"""+str(location_id)+"""' AS INTEGER);"""
                 sql_milkman_store="""SELECT lower(MILKMAN_SHOP) FROM MILKMAN WHERE  MILKMAN_ID='"""+str(milkman_id)+"""';"""
                 # below if written coz we do not need to validate the milkman existance when location=' ' which is passed to load the  milkman dashboard
-                if location_id == ' ': 
-                    cur.execute(sql_milkman_count)
-                    milkman_count=cur.fetchone()[0]
-                    print('milkman_count:',milkman_count)
-                    if milkman_count ==0:
-                        return 0
+                # if location_id == ' ': 
+                cur.execute(sql_milkman_count)
+                milkman_count=cur.fetchone()[0]
+                print('milkman_count:',milkman_count)
+                if milkman_count ==0:
+                    return 0
                 if milkman_id is None:
                     cur.execute(sql_milkman_id)
                     milkman_id=cur.fetchone()[0]
