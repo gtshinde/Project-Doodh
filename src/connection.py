@@ -553,7 +553,7 @@ def update_users_with_milkman(milkman_shop,user_id,location_id,address):
                 sql_txt="""UPDATE USERS SET ADDRESS=lower('"""+str(address)+"""')
                             ,MILKMAN_ID=(SELECT MILKMAN_ID 
                             FROM MILKMAN
-                            WHERE MILKMAN_SHOP='"""+str(milkman_shop)+"""' AND location_id=CAST ('"""+str(location_id)+"""' AS INTEGER))
+                            WHERE upper(MILKMAN_SHOP)=upper('"""+str(milkman_shop)+"""') AND location_id=CAST ('"""+str(location_id)+"""' AS INTEGER))
                             ,USER_RATING=NULL
                             WHERE USER_ID='"""+str(user_id)+"""';"""
                 try:
@@ -810,7 +810,7 @@ def insert_milkman( milkman_store, milkman_pwd,city,area):
     print('conn area',area)
     
     location_id=get_location_id(city,area)
-    sql_txt = """SELECT COUNT(*) FROM milkman WHERE milkman_shop = '"""+str(milkman_store)+"""' AND location_id =CAST('"""+str(location_id)+"""' AS INTEGER);""" 
+    sql_txt = """SELECT COUNT(*) FROM milkman WHERE upper(milkman_shop )= upper('"""+str(milkman_store)+"""') AND location_id =CAST('"""+str(location_id)+"""' AS INTEGER);""" 
     cur.execute(sql_txt)
     count = cur.fetchone()[0]
     print('count is ', count)

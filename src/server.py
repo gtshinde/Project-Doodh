@@ -66,7 +66,7 @@ def create(user_id):
             if (item_qty != '0.0'):
                 connection.insert_into_change(item_id, item_qty,email_id,from_date,to_date) 
             submitted = "Yes"
-            return render_template("create.html", submitted=submitted, is_admin=admin,user_email=user_email,user_id=user_id,cm=cm,bm=bm,form_data=form_data)
+            return render_template("create.html", submitted=submitted, is_admin=admin,user_email=user_email,user_id=user_id,cm=cm,bm=bm,form_data=form_data,user=user_name)
         submitted = "No"
         return render_template("create.html",submitted=submitted,is_admin=admin,user_email=user_email,user_id=user_id,user=user_name)
     else:
