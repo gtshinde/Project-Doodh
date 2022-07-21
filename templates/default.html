@@ -23,9 +23,10 @@
 <div  id="box" class="box">
   <strong>Kindly help us know your daily default milk requirement!</strong>
   </div>
+
 {% if submitted=="Yes" %}
 <div  id="myModal" class="modal">
-  <div class="modal-content" style="height: fit-content; width:50%;">
+  <div class="modal-content" style="height: fit-content; width:50%;     font-size: clamp(1rem,4vw,6rem);">
     <span class="close">&times;</span> 
     <strong>Thank you, your request has been registered!</strong>
     <br>
@@ -34,9 +35,9 @@
       var cm = "{{ cm_item_qty }}"
       var bm = "{{ bm_item_qty }}"
       var dateValue = "{{ eff_date_from }}"
-      document.write("Effective From: "+dateValue+" &nbsp;")
-      document.write("Cow Milk: "+cm+" L &nbsp;") 
-      document.write("Buffalow Milk: "+bm+" L &nbsp;")
+      document.write("<strong>Effective From: </strong>"+dateValue+" <br>")
+      document.write("<strong>Cow Milk: </strong>"+cm+" L <br>") 
+      document.write("<strong>Buffalow Milk:</strong> "+bm+" L <br>")
     </script>
     <br>
     <br>

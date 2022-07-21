@@ -19,9 +19,10 @@
 </style>
 {% endblock %}
 {% block content %}
+
 {% if submitted=="Yes" %}
 <div  id="myModal" class="modal">
-  <div class="modal-content" style="height: 18%; width:50%;">
+  <div class="modal-content" style="height: fit-content; width:50%; font-size: clamp(1rem,4vw,6rem);">
   <span class="close">&times;</span> 
   <strong>Thank you, below inputs have been registered!</strong>
   <br>
@@ -35,10 +36,10 @@
 
     from_date= "{{ form_data['fromDate'] }}"
     to_date= "{{ form_data['toDate'] }}"
-    document.write("From Date:"+from_date+"&nbsp;&nbsp;&nbsp;")
-    document.write("To Date:"+to_date+"<br>")
-    document.write("Cow Milk:"+cm+"L &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;") 
-    document.write("Buffalow Milk:"+bm+"L &nbsp;&nbsp;&nbsp;<br>")
+    document.write("<strong>From Date:</strong>"+from_date+" <br>")
+    document.write("<strong>To Date:</strong>"+to_date+"<br>")
+    document.write("<strong>Cow Milk:</strong>"+cm+"L <br>") 
+    document.write("<strong>Buffalow Milk:</strong>"+bm+"L <br>")
   // if ('{{ display_date }}'=="True")
   // {
     // past_date='{{ past_date }}'
