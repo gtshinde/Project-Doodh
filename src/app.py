@@ -5,7 +5,12 @@ from passlib.hash import sha256_crypt
 from operator import is_
 from re import sub
 from flask import Flask, render_template, redirect, request, url_for
+import importlib
+
 import connection
+module_name = 'connection'
+special_module = importlib.import_module(module_name, package='./src')
+# import connection
 from datetime import date
 import calendar
 from pandas import DateOffset, to_datetime
