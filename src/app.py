@@ -517,7 +517,7 @@ def view_milkman(user_id,rating):
         print('In server view_milkman():printing the milkman list',milkman_list)
         if city is None and area is None:
             print('Oops no milkman was selected for this user!')
-            return render_template('view_milkman.html',user_email=user_email,milkman_list=milkman_list,user_id=user_id,user=user)
+            return render_template('view_modify_milkman.html',user_email=user_email,milkman_list=milkman_list,user_id=user_id,user=user)
         location_id=connection.get_location_id(city,area)
         overall_rate=''
         if rating != ' ':
@@ -528,7 +528,7 @@ def view_milkman(user_id,rating):
             overall_rate=connection.get_overall_rating(milkman_store,location_id)
         print('overall_rate in server is :',overall_rate) 
         
-        return render_template('view_milkman.html',user_email=user_email,milkman_list=milkman_list,user_id=user_id,overall_rate=overall_rate,user=user)
+        return render_template('view_modify_milkman.html',user_email=user_email,milkman_list=milkman_list,user_id=user_id,overall_rate=overall_rate,user=user)
         # city=city,area=area,milkman_store=milkman_store)
     else:
          return render_template('url_not_found.html')
