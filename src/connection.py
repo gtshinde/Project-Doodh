@@ -9,13 +9,23 @@ import calendar
 from pandas import DateOffset, to_datetime
 from pprint import pprint
 
+ENV = 'prod'
+# ENV = 'dev'
+
 def connect():
     try:
-        conn = psycopg2.connect(
-            host="localhost",
-            database="postgres",
-            user='postgres',
-            password='postgres')
+        if ENV == 'dev':
+            conn = psycopg2.connect(
+                host="localhost",
+                database="postgres",
+                user='postgres',
+                password='postgres')
+        else:
+            conn = psycopg2.connect(
+                host='ec2-54-157-79-121.compute-1.amazonaws.com',
+                database='d7rv438vcslm76',
+                user='sbzrtvknzgzfwa',
+                password='c373dc5b72de70f153397c7c5d658ca8a3fa167712670f75dbc473dab337d4c4')            
         return conn
     except psycopg2.Error as e:
         print("Error in connecting to PostgreSQL database")
