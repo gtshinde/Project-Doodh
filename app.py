@@ -6,11 +6,10 @@ from operator import is_
 from re import sub
 from flask import Flask, render_template, redirect, request, url_for
 import importlib
-
-import connection
-module_name = 'connection'
-special_module = importlib.import_module(module_name, package='./src')
 # import connection
+# module_name = 'connection'
+# special_module = importlib.import_module(module_name, package='./src')
+import src.connection as connection
 from datetime import date
 import calendar
 from pandas import DateOffset, to_datetime
@@ -21,7 +20,7 @@ is_admin = False
 first_usersigin = [None]*53687091  #global variable issue won't come for this var coz the array will be updated based
                                    # on user_id as the position so each user will have their own values,max postns that array can hold are 536870912 but it's giving memory error for this val
 
-app = Flask(__name__, template_folder='../templates', static_folder="../static")
+app = Flask(__name__, template_folder='templates', static_folder="static")
 
 @app.route("/")
 def redirect_to_create():
