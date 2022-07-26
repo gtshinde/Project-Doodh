@@ -1,11 +1,9 @@
-from logging import exception
-from tkinter import E
+# from logging import exception
 import psycopg2
-import calendar
 from pandas import to_datetime
 import datetime
 from datetime import date
-import calendar
+# import calendar
 from pandas import DateOffset, to_datetime
 from pprint import pprint
 
