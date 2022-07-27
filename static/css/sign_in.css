@@ -94,7 +94,7 @@ body {
 .signup-form form a:hover {
     text-decoration: underline;
 }
-.signup-form .fa, .signup-form .fas {
+.signup-form .fa, .signup-form .fas, .signup-form .fa-city {
     font-size: 21px;
 }
 .signup-form .fa-paper-plane {
