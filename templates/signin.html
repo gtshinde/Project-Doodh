@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Doodh</title>
+  <title>Sign In</title>
   
   <link rel="icon" type="image/x-icon" href="../static/images/milk_1.png">
   <!-- <link rel="stylesheet" type="text/css" href="../static/css/home_css.css"> -->
@@ -78,7 +78,7 @@
   console.log('Image URL: ' + profile.getImageUrl());
   console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
 
-  location.replace("http://localhost:5000/signin-success/Google/"+profile.getEmail()+"/"+profile.getName())
+  location.replace("https://project-doodh.herokuapp.com/signin-success/Google/"+profile.getEmail()+"/"+profile.getName())
   // document.querySelector('#usrname').innerText="Hello  "+googleUser.getBasicProfile().getGivenName()+"!";
 }
 

@@ -281,7 +281,7 @@ def signin():
         referrer = request.referrer
         print(type(referrer))
         print('req  is coming from:',referrer)
-        # if referrer=="http://localhost:5000/signup": 
+        # if referrer=="https://project-doodh.herokuapp.com/signup": 
         #     # connection.call_first_signin(first_sigin[1])
         #     first_usersigin[user_id]=True
         #     print('came to false')
@@ -328,7 +328,7 @@ def signin_success(social_media_platform, user_email, user_name):
     referrer=request.referrer
     print('req  is coming from:',referrer)
     #signin status should be true ONLY when on success route comes from signin page, nobody shd manually enter this url and let the insertion of the users happen in the db
-    if referrer=="http://localhost:5000/signin":
+    if referrer=="https://project-doodh.herokuapp.com/signin":
         signin=True
         admin=False
     print('user sign in status',signin)

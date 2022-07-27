@@ -108,7 +108,7 @@
             console.log('Image URL: ' + profile.getImageUrl());
             console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
 
-            // location.replace("http://localhost:5000")
+            // location.replace("https://project-doodh.herokuapp.com")
             document.querySelector('#usrname').innerText="Hello "+googleUser.getBasicProfile().getGivenName()+"!";
             // document.querySelector('#usrname').innerText="Hello  "+profile.getEmail()+"!";          
             // document.querySelector('#emailID').innerText=String(profile.getEmail());
@@ -123,7 +123,7 @@
            var string=document.querySelector('#usrname').innerText
           //  to remove Hello and '!' from the string
            var user_email=string.substring(6,string.length-1)  
-            location.replace("http://localhost:5000/signout/"+user_id)
+            location.replace("https://project-doodh.herokuapp.com/signout/"+user_id)
           }
 
           // Get the modal

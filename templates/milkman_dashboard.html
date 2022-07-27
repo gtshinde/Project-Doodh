@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+      <title>Milkman Dashboard</title>
         <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='images/milk_1.png')}}">
         
         <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/home_css.css')}}">	
@@ -383,13 +384,13 @@
   
   function signOut() {
     milkman_id='{{milkman_id}}'
- location.replace("http://localhost:5000/milkman/signout/"+milkman_id);
+ location.replace("https://project-doodh.herokuapp.com/milkman/signout/"+milkman_id);
   }
     function view_report(user_ID,user){
       milkman_id='{{milkman_id}}'
       console.log('user is:'+user)
-      // location.replace("http://localhost:5000/User_Report_Milkman/"+milkman_id+"/"+user_ID);
-      window.open("http://localhost:5000/User_Report_Milkman/"+milkman_id+"/"+user_ID+"/"+user, '_blank');
+      // location.replace("https://project-doodh.herokuapp.com/User_Report_Milkman/"+milkman_id+"/"+user_ID);
+      window.open("https://project-doodh.herokuapp.com/User_Report_Milkman/"+milkman_id+"/"+user_ID+"/"+user, '_blank');
     }
 
     function myfunc(user,total,tomo_type_qty){

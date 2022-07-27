@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
+
     <head>
+        <title>Consumer Milk Report</title>
         <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='images/milk_1.png')}}">
         <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/report_css.css')}}">
         <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/home_css.css')}}">	
@@ -13,7 +15,8 @@
       </head>
 <style>
   #report_total_box
-  {padding-right: 20px;
+  {
+    padding-right: 20px;
     padding-left: 20px;
     border-color: white;
     border-block-color: white;
@@ -192,13 +195,13 @@ margin-left: 25%;" required="required" onchange="changedateval()">
 <script>
    function signOut() {
     milkman_id='{{milkman_id}}'
- location.replace("http://localhost:5000/milkman/signout/"+milkman_id);
+ location.replace("https://project-doodh.herokuapp.com/milkman/signout/"+milkman_id);
   }
  function view_dahsboard(){
       milkman_id='{{milkman_id}}'
       console.log('Inside view dashboard');
-      location.replace("http://localhost:5000//milkman_dashboard/"+milkman_id);
-      // window.open('http://localhost:5000//milkman_dashboard1/', '_blank');
+      location.replace("https://project-doodh.herokuapp.com/milkman_dashboard/"+milkman_id);
+      // window.open('https://project-doodh.herokuapp.com/milkman_dashboard1/', '_blank');
       // window.history.back();
     }
   function get_reports_for_dates() {
