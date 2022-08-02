@@ -303,12 +303,13 @@ def signin():
         elif(sha256_crypt.verify(user_pwd, db_pwd)):
             connection.update_user_signin_status('User',user_id,True)
             print(first_usersigin[user_id])
-            if(first_usersigin[user_id] ):
+            if(first_usersigin[user_id]):
                 first_usersigin[user_id]=False
                 # return redirect(url_for("default",user_id=user_id))
                 return redirect(url_for("milkman_selection",user_id=user_id))
             else:
-                return redirect(url_for("create",user_id=user_id))
+                # we are doing this to make sure it redirects correctly between default and create pages.
+                return redirect(url_for("redirect_milkman",user_id=user_id))
             
         else:
             print('Invalid credentials!')
@@ -444,6 +445,9 @@ def milkman_selection(user_id):
     else:
         return render_template('url_not_found.html')
 
+# This route is used when we skip milkman selection
+# This route is also used whenever we need to check if user has added default milk requirements, and based on this we can correctly
+# redirect the user to either creaate or default page upon signin
 @app.route('/skip_milkman/<user_id>')
 def redirect_milkman(user_id):
     #function to check if user has entered any default details when they login 1st time, if not then  re-direct them to the default pg again            
