@@ -468,7 +468,11 @@ def milkman_selection_area(user_id,city):
     user_email=user_details[2]    
     print('user sign in status',signin)
     print('user admin status',admin)
-    if (signin):    
+    if (signin):
+        # when user selects 'Please select your city' in drop down, we send value City as 'None' string from JavaScript
+        # we need to convert the 'None' string to None datatype in python for getmilkman_area_city() logic
+        if(city == 'None'):
+            city = None
         milkman_area_list=connection.get_milkman_area_city(None,city)
         print(' Area list:')
         pprint(milkman_area_list)
