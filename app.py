@@ -607,7 +607,7 @@ def User_Report_milkman(milkman_id,user_id,user):
             print (len(report_list))
             print('REPORT TOTAL: ',total_price)
 
-            return render_template("User_Report_milkman.html", report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_id=user_id,total_price=total_price,user=user,milkman_id=milkman_id,milkman_store=milkman_store)
+            return render_template("User_Report_Milkman.html", report_list=report_list, month_string=month_string, past_months_list=past_months_list,user_id=user_id,total_price=total_price,user=user,milkman_id=milkman_id,milkman_store=milkman_store)
        
     else:
         return render_template('url_not_found.html')    
