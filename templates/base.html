@@ -87,7 +87,8 @@
         
         <!-- <div id="emailID" style="display: none;"></div> -->
         <div style="display: none;" class="g-signin2" data-onsuccess="onSignIn"></div>
-        
+        <!-- below if condition is bcoz the sidenav shd only be displayed for users n not milkmen -->
+        {% if user_type!='M' %} 
         <div id="mySidenav" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
             <a href="{{url_for('report',user_id=user_id,FromDate='null')}}">Report</a>
@@ -99,7 +100,7 @@
               <a href="{{url_for('items',user_id=user_id)}}">Items</a>
             {% endif %}            
         </div>
-       
+        {% endif %}
         {% block content %}
         {% endblock %}
         <script>
