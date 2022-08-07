@@ -49,9 +49,12 @@
     </style>
     <body onload="setdefaultdates()">
       <div style="width: 100%;">
+        <!-- below if condition is bcoz the sidenav shd only be displayed for users n not milkmen -->
+        {% if user_type!='M' %} 
         <div style="position: relative; display: inline-block; width: 15%;">
           <span style="font-size:clamp(1rem, 8vw, 4rem);cursor:pointer; color:white; " onclick="openNav()">&#9776;</span>
         </div>
+        {% endif %}
         <div style="width: 70%; display: inline-block;">
           <h1>Project Doodh</h1>
         </div>
