@@ -1,25 +1,22 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% extends "base.html" %}
+{% block head %}
   <title>View/Update Milkman</title>
   
-  <link rel="icon" type="image/x-icon" href="../static/images/milk_1.png">
   <!-- <link rel="stylesheet" type="text/css" href="../static/css/home_css.css"> -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="google-signin-client_id"
-    content="619500584057-gk7d4vh5v052kek376h4o64s7hbcafoe.apps.googleusercontent.com">
+  
   <script src="https://apis.google.com/js/platform.js" async defer></script>
-  <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='images/milk_1.png')}}">
+  
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
   <!-- <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script> -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/sign_in.css')}}">
-  <script src="https://kit.fontawesome.com/2275a501b1.js" crossorigin="anonymous"></script>
-</head>
+  
+
 <style>
   select option[selected]{
     background-color: yellow
@@ -45,6 +42,11 @@
   p, .text-center{
     font-size: 14px;
   }
+  a:hover {
+  
+    text-decoration: none; 
+}
+
 /* the reason for writing the modal styling again here is that the styling written in css sheet is getting overridden by 1 of the bootstrap script link added in this file(additional bootstrap links are added to this html coz the dropdowns require those bootstrap links ) */
 /* The Modal (background) */
 .modal {
@@ -120,6 +122,7 @@ select option[selected]{
   display: inline-block;
   position: relative;
   font-family: FontAwesome;
+  font-size: 244%;
 }
  
 .stars-outer::before {
@@ -139,10 +142,18 @@ select option[selected]{
   content: "\f005 \f005 \f005 \f005 \f005";
   color: #f8ce0b;
 }
+.sidenav {
+  z-index: 3;
+}
+.sidenav a:hover {
+  /* color:rgb(66, 66, 66); */
+  color: #5f5f5f;
+  font-weight: bold;
+}
 </style>
-<body>
+{% endblock %}
+{% block content %}
 <div class="bg-image"></div>
-<h1>Project Doodh</h1> 
 
 <div class="signup-form">
   <form action="/milkman_selection/{{user_id}}" method="GET">
@@ -154,7 +165,7 @@ select option[selected]{
       <div class="input-group">
           <span class="input-group-addon">
             <!-- <i class="fas fa-city"></i> -->
-            <i class="fa-solid fa-city"></i>
+            <i class="fas fa-male"></i>
           </span> 
           <input type="text" class="form-control" name="milkman_store" id="milkman_store" disabled style="position: relative; height: auto; font-size: 1.25rem;">   
   </div>
@@ -186,18 +197,18 @@ select option[selected]{
             document.getElementById('city').value=city;
             document.getElementById('milkman_store').value=milkman_store;
           </script>
-        <div><span style="font-size: 86%;
+        <div><span style="font-size: clamp(2rem,4vw,4rem);
           float: left;
       ">Overall Rating:</span>
           <div class="overallrate" id="overallrate" style="width:90% ;">
            
-            <div class="stars-outer">
+            <div class="stars-outer" style="font-size: clamp(2rem,4vw,4rem)">
               <div class="stars-inner" id="stars-inner"></div>
             </div>
            
           </div>
         </div>
-        <label style="width:50% ;">Rate your milkman</label>
+        <!-- <label style="width:50% ;">Rate your milkman</label>
      <div class="rate" style="width:63% ;">
        
       <input type="radio" id="star5" name="rate" value="5" onclick="ratings(value)" />
@@ -211,7 +222,7 @@ select option[selected]{
       <input type="radio" id="star1" name="rate" value="1"  onclick="ratings(value)"/>
       <label for="star1" title="text">1 star</label>
     </div>
-
+   -->
     <br><br>
     <div class="form-group">
       <div class="input-group">
@@ -266,5 +277,4 @@ function ratings(value){
 }
 </script>
 
-</body>
-</html>
+{% endblock %}
