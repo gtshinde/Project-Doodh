@@ -1,70 +1,70 @@
 <!DOCTYPE html>
 <html>
-
-    <head>
-        <title>Consumer Milk Report</title>
-        <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='images/milk_1.png')}}">
-        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/report_css.css')}}">
-        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/home_css.css')}}">	
-        <link rel="stylesheet" type="text/css" href="http://cdn.webrupee.com/font">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <!-- below script is for user icon -->
-        <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script> 
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-      </head>
-<style>
-  #report_total_box
-  {
-    padding-right: 20px;
-    padding-left: 20px;
-    border-color: white;
-    border-block-color: white;
-    background: #fffdf4;
-    /* border: double; */
-    color: black;
-    /* padding-block: 5px 5px; */
-  }
-  .fa-calendar, .fa-arrow-left {
-  background: #f9f5f4;
-    border-radius: 27px;
-  }
-  .fa-inverse {
-    color: #262626;
-}
-.fa-stack :hover{
-  color: #FFD700
-}
-#fa-arrow-left_c :hover{
-  color:#FFD700;
- 
-}
-#mySidenav{
-width: 208px;
-    margin-left: 3.3%;
-    border-radius: 30px;
-    overflow-x: hidden;
-    z-index: 1;
-    top: 30%;
-}
-#fa-arrow-left_c{
-  display: none;
-}
-.btn{
-        width: 8%;
-        background-color: #ffd700;
-        color: white;
-        padding: 9px 3px;
-        margin: 2px 0;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 20px;
-        right: 1%;
-    width: auto;
-    font-size: clamp(0.75rem, 3vw, 2rem);
-    position: absolute;
-    top: 1%;
+  <head>
+      <title>Consumer Milk Report</title>
+      <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='images/milk_1.png')}}">
+      <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/report_css.css')}}">
+      <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/home_css.css')}}">	
+      <link rel="stylesheet" type="text/css" href="http://cdn.webrupee.com/font">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <!-- below script is for user icon -->
+      <!-- <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>  -->
+      <script src="https://kit.fontawesome.com/2275a501b1.js" crossorigin="anonymous"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    </head>
+  <style>
+    #report_total_box{
+      padding-right: 20px;
+      padding-left: 20px;
+      border-color: white;
+      border-block-color: white;
+      background: #fffdf4;
+      /* border: double; */
+      color: black;
+      /* padding-block: 5px 5px; */
+    }
+    .fa-calendar, .fa-arrow-left {
+    background: #f9f5f4;
+      border-radius: 27px;
+    }
+    .fa-inverse {
+      color: #262626;
+    }
+    .fa-stack :hover{
+      color: #FFD700
+    }
+    #fa-arrow-left_c :hover{
+      color:#FFD700;
+    
+    }
+    #mySidenav{
+    width: 208px;
+        margin-left: 3.3%;
+        border-radius: 30px;
+        overflow-x: hidden;
+        z-index: 1;
+        top: 30%;
+    }
+    #fa-arrow-left_c{
+      display: none;
+    }
+    .btn{
+      /* width: 8%; */
+      background-color: #ffd700;
+      color: white;
+      padding: 9px 3px;
+      margin: 2px 0;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 20px;
+      /* right: 1%; */
+      width: auto;
+      font-size: clamp(0.75rem, 3vw, 2rem);
+      /* position: absolute; */
+      /* top: 1%; */
       }
       .btn:hover{
         background-color: #DAA520;
@@ -74,43 +74,52 @@ width: 208px;
         display: none;
       }
       #userDetails{
-  position: absolute;
-  z-index: 2;
-  background-color: white;
-  /* margin-left: 60%; */
-  border: 5px solid white;
-  border-radius: 6px;
-  top: clamp(3.5rem, 18vw, 9rem); 
-  right: 5%;
-}
-#usrname{
-        display: inline-block;
-        /* height: 40px; */
-        /* height: 3rem; */
-        color:white;
-        /* font-size: 35px; */
-        position: relative;
-        /* top:10%;
-        right:2%; */
-        font-size: clamp(1rem, 5vw, 2rem);
-        text-align: center;
-        vertical-align: middle;
-        color: #818181;
-        }
-</style>
-<span class="fa-stack fa-lg" onclick="view_dahsboard()" style="position: fixed; top:1%">
-  <i class="fa fa-circle fa-stack-2x" onclick="view_dahsboard()"></i>
- 
-  <i class="fa fa-arrow-left fa-stack-1x fa-inverse" onclick="view_dahsboard()" ></i>
-</span>
-<h1 style="font-size: 60px;">Project Doodh</h1>
-
-<h1 style="font-size: 30px; text-transform: capitalize;"><strong>{{user}}'s {{month_string}} Milk Report  </strong></h1>
-<!-- <span class="fa-stack fa-lg"   style="position: fixed;">
-  <i class="fa fa-circle fa-stack-2x"></i>
- 
-  <i class="fa fa-arrow-left fa-stack-1x fa-inverse" class="leftarrow" onclick="view_dahsboard(1)" ></i>
-</span> -->
+        position: absolute;
+        z-index: 2;
+        background-color: white;
+        /* margin-left: 60%; */
+        border: 5px solid white;
+        border-radius: 6px;
+        top: clamp(5.7rem, 25vw, 8.75rem); 
+        right: 1%;
+      }
+    #usrname{
+      display: inline-block;
+      /* height: 40px; */
+      /* height: 3rem; */
+      color:white;
+      /* font-size: 35px; */
+      position: relative;
+      /* top:10%;
+      right:2%; */
+      font-size: clamp(1rem, 5vw, 2rem);
+      text-align: center;
+      vertical-align: middle;
+      color: #818181;
+    }
+  </style>
+  <body>
+    <div style="width: 100%;">
+      <div style="position: relative; display: inline-block; width: 15%;">
+        <i class="fa-solid fa-circle-arrow-left" style="color: white; font-size:clamp(1rem, 8vw, 4rem); cursor:pointer;" onclick="view_dahsboard()"></i>
+        <!-- <i class="fa-duotone fa-circle-arrow-left" style="font-size:clamp(1rem, 8vw, 4rem); cursor:pointer;" onclick="view_dahsboard()"></i> -->
+      </div>
+      <!-- <span class="fa-stack fa-lg" style="position: fixed; top:1%"> -->
+        <!-- <i class="fa fa-circle fa-stack-2x" onclick="view_dahsboard()"></i>
+        <i class="fa fa-arrow-left fa-stack-1x fa-inverse" onclick="view_dahsboard()" ></i> -->
+      <!-- </span> -->
+      <div style="width: 70%; display: inline-block;">
+        <h1>Project Doodh</h1>
+      </div>
+      <div style="display: inline; width: 15%;">
+        <!-- <i class='fas fa-user-circle' style='font-size:clamp(1rem, 8vw, 4rem); cursor:pointer; color:#ffd700; top:clamp(1rem,8vw,6rem); -->
+        <!-- right:clamp(1rem,8vw,6rem); position: absolute;' onclick="toggleUserDetails()"></i> -->
+        <i class='fa-solid fa-circle-user' style='font-size:clamp(1rem, 8vw, 4rem); cursor:pointer; color:white' onclick="toggleUserDetails()"></i>
+      </div>
+    </div>
+    <div style="width: 100%; text-align: center; font-size: clamp(1.5rem, 5vw, 4rem); color: white;">
+      <strong style="text-transform: capitalize;">{{user}}'s {{month_string}} Milk Report</strong>
+    </div>
 <span class="fa-stack fa-lg"  onclick="months()" style="position: fixed;">
   <i class="fa fa-circle fa-stack-2x"></i>
   <i class="fa fa-calendar fa-stack-1x fa-inverse" id="fa-calendar_c"></i>
@@ -182,15 +191,11 @@ margin-left: 25%;" required="required" onchange="changedateval()">
   <button style="width: auto; font-size: clamp(0.75rem, 3vw, 2rem);" onclick="signOut();" class="btn">Sign Out</button>
 </div> -->
 <div id="userDetails">
-  <div id="usrname">Hello {{milkman_store}}!</div>
+  <div id="usrname">{{milkman_store}}</div>
   <div style="text-align: center;">
     <button style="width: auto; font-size: clamp(0.75rem, 3vw, 2rem);" onclick="signOut();" class="btn">Sign Out</button>
   </div>
   <!-- <button style="width: auto; font-size: clamp(0.75rem, 3vw, 2rem);" onclick="signOut();" class="btn">Sign Out</button> -->
-</div>
-<div style="display: inline; width: 15%;">
-  <i class='fas fa-user-circle' style='font-size:clamp(1rem, 8vw, 4rem); cursor:pointer; color:#ffd700; top:clamp(1rem,8vw,6rem);
-  right:clamp(1rem,8vw,6rem); position: absolute;' onclick="toggleUserDetails()"></i>
 </div>
 <script>
    function signOut() {
