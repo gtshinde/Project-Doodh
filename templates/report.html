@@ -27,6 +27,17 @@
 .fa-stack :hover{
   color: #FFD700
 }
+#box{
+  border: solid #f5d00c 4px;
+  width: 64%;
+  background-color: white;
+}
+.parameter_label{
+  color: black;
+}
+#totalBillAtAGlance{
+  color: black;
+}
 </style>
 {% endblock %}
 
@@ -51,6 +62,7 @@
 
 <div class="row">
   <div class="col-1" style="display: inline-block;"></div>
+  <div id="box">
   <div class="col-3" style="display: inline-block;">
     <!-- from date and input here -->
     <!-- have to make this float right -->
@@ -75,6 +87,7 @@
     <label>
       <strong id="report_total_box">&#8377;{{ total_price }}</strong>
     </label>
+  </div>
   </div>
 </div>
 
