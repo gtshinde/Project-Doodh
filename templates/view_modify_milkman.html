@@ -162,7 +162,82 @@ h1{
     /* font-size: 55px; */
     position: relative;
     /* top: -145%; */
-    font-size: clamp(4rem, 10vw, 8rem);
+    font-size: clamp(2rem, 10vw, 5rem);
+}
+#overall_rating_label{
+          font-size: clamp(2rem, 7vw, 5rem);
+          text-align: center;
+          position: relative; 
+          font-weight: 540;
+}
+.stars-outer{
+  font-size: clamp(1rem, 8vw, 5rem);
+  text-align: center;
+  position: relative;
+}
+*{
+    margin: 0;
+    padding: 0;
+}
+.rate {
+  width: 110%;
+    float: left;
+    height: 59px;
+    padding: 0px 8px;
+}
+.rate:not(:checked) > input {
+    position:absolute;
+    top:-9999px;
+}
+.rate:not(:checked) > label {
+    /* float: right; */
+    width: 0.9em;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+    font-size: 36px;
+    color: #ccc;
+}
+.rate:not(:checked) > label:before {
+    content: '★ ';
+}
+.rate > input:checked ~ label {
+    color: #ffc700;    
+}
+.rate:not(:checked) > label:hover,
+.rate:not(:checked) > label:hover ~ label {
+    color: #deb217;  
+}
+.rate > input:checked + label:hover,
+.rate > input:checked + label:hover ~ label,
+.rate > input:checked ~ label:hover,
+.rate > input:checked ~ label:hover ~ label,
+.rate > label:hover ~ input:checked ~ label {
+    color: #c59b08;
+}
+@media screen and (min-width:500px ){
+  #overall_rating_label{
+    font-size: clamp(4rem, 4vw, 4rem);
+  }
+  .stars-outer{
+    font-size: clamp(4rem, 4vw, 4rem);
+  }
+  .rate_label{
+    font-size: clamp(3rem, 4vw, 4rem);
+  }
+} 
+  @media screen and (min-width:370px ){
+  .rate {
+    width: 110%;
+    float: left;
+    height: 59px;
+    padding: 0px 8px;
+}
+}
+@media screen and (max-width:410px ){
+  .rate:not(:checked) > label {
+font-size: 22px;
+}
 }
 </style>
 {% endblock %}
@@ -211,19 +286,22 @@ h1{
             document.getElementById('city').value=city;
             document.getElementById('milkman_store').value=milkman_store;
           </script>
-        <div><span style=" font-size: clamp(2rem, 8vw, 5rem);
-          text-align: center;position: relative;
-      ">Overall Rating</span>
-          <div class="overallrate" id="overallrate" style="width:90% ;">
-           
-            <div class="stars-outer" style="font-size: clamp(1rem, 8vw, 5rem);text-align: center;position: relative;">
-              <div class="stars-inner" id="stars-inner"></div>
-            </div>
-           
-          </div>
+
+    <div><span id="overall_rating_label" >Overall Rating</span>
+      <div class="overallrate" id="overallrate" style="width:90% ;">
+       
+        <div class="stars-outer" >
+          <div class="stars-inner" id="stars-inner"></div>
         </div>
-        <!-- <label style="width:50% ;">Rate your milkman</label>
-     <div class="rate" style="width:63% ;">
+       
+      </div>
+    </div>
+        <label id="rate_label" style="    color: #969696;
+        font-size:clamp(2rem, 5vw, 4rem);
+        text-align: center;
+        position: relative;
+        font-weight: 545;">Rate your milkman</label>
+     <!-- <div class="rate" style="font-size: clamp(3rem, 4vw, 4rem) ;">
        
       <input type="radio" id="star5" name="rate" value="5" onclick="ratings(value)" />
       <label for="star5" title="text">5 stars</label>
@@ -235,8 +313,19 @@ h1{
       <label for="star2" title="text">2 stars</label>
       <input type="radio" id="star1" name="rate" value="1"  onclick="ratings(value)"/>
       <label for="star1" title="text">1 star</label>
+    </div> -->
+    <div class="rate">
+      <input type="radio" id="star5" name="rate" value="5" />
+      <label for="star5" title="text">5 stars</label>
+      <input type="radio" id="star4" name="rate" value="4" />
+      <label for="star4" title="text">4 stars</label>
+      <input type="radio" id="star3" name="rate" value="3" />
+      <label for="star3" title="text">3 stars</label>
+      <input type="radio" id="star2" name="rate" value="2" />
+      <label for="star2" title="text">2 stars</label>
+      <input type="radio" id="star1" name="rate" value="1" />
+      <label for="star1" title="text">1 star</label>
     </div>
-   -->
     <br><br>
     <div class="form-group">
       <div class="input-group">
