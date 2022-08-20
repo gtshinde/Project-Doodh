@@ -7,22 +7,22 @@
       <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/home_css.css')}}">	
       <link rel="stylesheet" type="text/css" href="http://cdn.webrupee.com/font">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <!-- below script is for user icon -->
       <!-- <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>  -->
+      <!-- below one is from our project doodh icon kit -->
       <script src="https://kit.fontawesome.com/2275a501b1.js" crossorigin="anonymous"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     </head>
   <style>
     #report_total_box{
-      padding-right: 20px;
-      padding-left: 20px;
+      /* padding-right: 20px;
+      padding-left: 20px; */
       border-color: white;
       border-block-color: white;
       background: #fffdf4;
       /* border: double; */
-      color: black;
+      color: #818181;
       /* padding-block: 5px 5px; */
     }
     .fa-calendar, .fa-arrow-left {
@@ -44,8 +44,10 @@
         margin-left: 3.3%;
         border-radius: 30px;
         overflow-x: hidden;
-        z-index: 1;
-        top: 30%;
+        z-index: 5;
+        top: clamp(11.5rem, 45vw, 50rem);
+        background: #f9f5f4;
+        border: solid black 0.5px;
     }
     #fa-arrow-left_c{
       display: none;
@@ -97,11 +99,32 @@
       vertical-align: middle;
       color: #818181;
     }
+    #box{
+      border: solid #f5d00c 4px;
+      width: 64%;
+      background-color: white;
+    }
+    .parameter_label{
+      color: #818181;
+    }
+    #totalBillAtAGlance{
+      color: #818181;
+    }
+    @media screen and (max-width: 329px) {
+      #mySidenav{
+        top: clamp(13.5rem, 30vw, 70rem);
+      }
+    }
+    @media screen and (min-width: 730px) {
+      #mySidenav{
+        top: clamp(17rem, 29vw, 19rem);
+      }
+    }
   </style>
   <body>
     <div style="width: 100%;">
       <div style="position: relative; display: inline-block; width: 15%;">
-        <i class="fa-solid fa-circle-arrow-left" style="color: white; font-size:clamp(1rem, 8vw, 4rem); cursor:pointer;" onclick="view_dahsboard()"></i>
+        <i class="fa-solid fa-circle-arrow-left" style="color: rgb(0 0 0 / 60%); font-size:clamp(1rem, 8vw, 4rem); cursor:pointer;" onclick="view_dahsboard()"></i>
         <!-- <i class="fa-duotone fa-circle-arrow-left" style="font-size:clamp(1rem, 8vw, 4rem); cursor:pointer;" onclick="view_dahsboard()"></i> -->
       </div>
       <!-- <span class="fa-stack fa-lg" style="position: fixed; top:1%"> -->
@@ -114,18 +137,22 @@
       <div style="display: inline; width: 15%;">
         <!-- <i class='fas fa-user-circle' style='font-size:clamp(1rem, 8vw, 4rem); cursor:pointer; color:#ffd700; top:clamp(1rem,8vw,6rem); -->
         <!-- right:clamp(1rem,8vw,6rem); position: absolute;' onclick="toggleUserDetails()"></i> -->
-        <i class='fa-solid fa-circle-user' style='font-size:clamp(1rem, 8vw, 4rem); cursor:pointer; color:white' onclick="toggleUserDetails()"></i>
+        <i class='fa-solid fa-circle-user' style='font-size:clamp(1rem, 8vw, 4rem); cursor:pointer; color:rgb(0 0 0 / 60%)' onclick="toggleUserDetails()"></i>
       </div>
     </div>
     <div style="width: 100%; text-align: center; font-size: clamp(1.5rem, 5vw, 4rem); color: white;">
       <strong style="text-transform: capitalize;">{{user}}'s {{month_string}} Milk Report</strong>
     </div>
-<span class="fa-stack fa-lg"  onclick="months()" style="position: fixed;">
+<!-- <span class="fa-stack fa-lg"  onclick="months()" style="position: fixed; z-index: 5;">
   <i class="fa fa-circle fa-stack-2x"></i>
   <i class="fa fa-calendar fa-stack-1x fa-inverse" id="fa-calendar_c"></i>
   <i class="fa fa-arrow-left fa-stack-1x fa-inverse" id="fa-arrow-left_c" style="display: none;"></i>
+</span> -->
+<span onclick="months()" style="position: fixed; z-index: 5;">
+  <i class="fa-solid fa-calendar-days" id="fa-calendar_c" style="color: rgb(0 0 0 / 60%); font-size: clamp(1rem, 8vw, 4rem); cursor:pointer;"></i>
+  <i class="fa-solid fa-circle-arrow-left" id="fa-arrow-left_c" style="color: rgb(0 0 0 / 60%); font-size:clamp(1rem, 8vw, 4rem); cursor:pointer; display: none;"></i>
 </span>
-<div id="mySidenav" class="sidenav_months" style="width: 0px;" >
+<div id="mySidenav" class="sidenav_months" style="width: 0px; display: none;" >
   <marquee style="font-size: 16px;" behavior="scroll" direction="left"><strong>Please note that the data only can be viewed for past six months...</strong> </marquee>
   <br>
   <br>
@@ -135,8 +162,8 @@
   {% endfor %}
 </div>
 
-
-<label style=" position: absolute; color:white; font-size: 20px;
+<!-- below commented code is the previous bad styling of the from and to date parameters  -->
+<!-- <label style=" position: absolute; color:white; font-size: 20px;
 margin-left: 17%;"><strong>From Date:</strong></label>
 <input type="date" name="fromDate" id="fromDate" style=" position: absolute; 
 margin-left: 25%;" required="required" onchange="changedateval()"> 
@@ -147,10 +174,42 @@ margin-left: 25%;" required="required" onchange="changedateval()">
 
 <input style="position: absolute; margin-left: 57%; height:4%; width: 5%;" type="button" value="Go" onclick="get_reports_for_dates()" id="Go">
 
-<label style="position: absolute; color: white; font-size: 24px; margin-left: 70%;"><strong>Total Bill: <strong id="report_total_box">&#8377; {{ total_price }}0</strong></strong></label>
+<label style="position: absolute; color: white; font-size: 24px; margin-left: 70%;"><strong>Total Bill: <strong id="report_total_box">&#8377; {{ total_price }}0</strong></strong></label> -->
 <!-- <p type="text" name="total" id="total" style="position: absolute; margin-left: 73%;" ><strong>{{ total_price }}</strong></p> -->
-<br><br>
+<!-- <br><br> -->
 <!-- The below code was added to set the from and to dates to the values which user had selected before clicking on GO -->
+
+<div class="row">
+  <div class="col-1" style="display: inline-block;"></div>
+  <div id="box">
+    <div class="col-3" style="display: inline-block;">
+      <!-- from date and input here -->
+      <strong class="parameter_label">From Date:</strong>
+      <input type="date" name="fromDate" id="fromDate" style=" position: relative;" required="required" onchange="changedateval()"> 
+    </div>
+    <div class="col-3" style="display: inline-block;">
+      <!-- to date label and input here -->
+      <label class="parameter_label"><strong>To Date:</strong></label>
+      <input type="date" name="toDate" id="toDate" style="position: relative;" required="required">
+    </div>
+    <div class="col-1" style="display: inline-block;">
+      <input style="position: relative; width: 60%; padding: 0.5%;" type="button" value="Go" onclick="get_reports_for_dates()" id="Go">
+    </div>
+    <div class="col-3" style="display: inline-block;">
+      <!-- Total Bill -->
+      <label id="totalBillAtAGlance">
+        <strong>Total Bill: </strong>
+      </label>
+      <label>
+        <strong id="report_total_box">&#8377;{{ total_price }}</strong>
+      </label>
+    </div>
+  </div>
+</div>
+
+<br>
+<br>
+
 {% if submitted=="Yes" %}
 {{ from_date }}
   <script>
@@ -239,12 +298,14 @@ margin-left: 25%;" required="required" onchange="changedateval()">
     if (arrow.style.display=="none")
     {
       document.getElementsByClassName("sidenav_months")[0].style.width="196px";
+      document.getElementsByClassName("sidenav_months")[0].style.display="block";
       arrow.style.display="block";
       calendar.style.display="none";
     }
     else if (calendar.style.display=="none")
     {
       document.getElementsByClassName("sidenav_months")[0].style.width="0px";
+      document.getElementsByClassName("sidenav_months")[0].style.display="none";
       arrow.style.display="none";
       calendar.style.display="block";     
     }
