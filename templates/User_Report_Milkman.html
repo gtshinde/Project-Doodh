@@ -150,8 +150,6 @@
 </span> -->
 
 <div id="mySidenav" class="sidenav_months" style="width: 0px; display: none;" >
-  <marquee style="font-size: 16px;" behavior="scroll" direction="left"><strong>Please note that the data only can be viewed for past six months...</strong> </marquee>
-  <br>
   <br>
   <table>
     <tr>
@@ -168,7 +166,6 @@
     </tr>
     {% endfor %}
   </table>
-  <br>
   <br>
 </div>
 
@@ -254,8 +251,8 @@ margin-left: 25%;" required="required" onchange="changedateval()">
   {% endfor %}
   <tr>
   
-    <td colspan="3" style="text-align: center; font-size: 25px;"> <strong>TOTAL BILL AMOUNT</strong> </td>
-    <td style="font-size: 25px;"><strong>&#8377; {{ total_price }} </strong>  </td>
+    <td colspan="3" style="text-align: center; font-size: clamp(1rem, 5vw, 2rem); color: #818181;"> <strong>TOTAL BILL AMOUNT</strong> </td>
+    <td style="font-size: clamp(1rem, 5vw, 2rem); color: #818181;"><strong>&#8377;{{ total_price }} </strong>  </td>
   </tr>  
 </table>
 <!-- <div style="text-align: center;">
