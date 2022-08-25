@@ -425,7 +425,7 @@ def milkman_selection(user_id):
             print('flat_no :',flat_no)
             building=form_data['building']
             print('flat_no :',building)
-            address='FL'+str(flat_no)+', '+str(building)
+            address = str(flat_no)+', '+str(building)
             milkman_stores=form_data['milkman_stores']
             print('milkman_stores:',milkman_stores)
             location_id=connection.get_location_id(city,area)
