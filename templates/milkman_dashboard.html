@@ -18,11 +18,9 @@
   </head>
 
   <style>
-      /* body {
-      background-image:url("../static/css/bg5.jpg");
-      background-size: 1600px 1500px;
-      background-repeat: no-repeat;
-      } */
+      body{
+        font-family: Garamond;
+      }
   /* h1{
       color: white;
       margin-block-start: 70px;
@@ -101,6 +99,7 @@
     border: 0.5px;
     border-radius: 9px;
     padding-right: 15px;
+    background: white;
   }
   /* .btn{
         width: 8%;
@@ -135,6 +134,7 @@
       }
       .btn:hover{
         background-color: #DAA520;
+        color: white;
       }
       #userDetails{
         display: none;
@@ -179,8 +179,8 @@
   /* margin-left: 60%; */
   border: 5px solid white;
   border-radius: 6px;
-  top: clamp(3.5rem, 18vw, 9rem); 
-  right: 5%;
+  top: clamp(5.3rem, 23.5vw, 8.75rem); 
+  right: 1%;
 }
 .dropdown{
   /* top: clamp(7rem,8rem,4rem); */
@@ -281,7 +281,13 @@
     <i class='fa-solid fa-circle-user' style='font-size:clamp(1rem, 8vw, 4rem); cursor:pointer; color:white; top:clamp(1rem,8vw,6rem); right:clamp(1rem,8vw,6rem);' onclick="toggleUserDetails()"></i>
   </div>
 </div>
-  
+<div id="userDetails">
+  <div id="usrname">{{milkman_store}}</div>
+  <div style="text-align: center;">
+    <button style="width: auto; font-size: clamp(0.75rem, 3vw, 2rem);" onclick="signOut();" class="btn">Sign Out</button>
+  </div>
+  <!-- <button style="width: auto; font-size: clamp(0.75rem, 3vw, 2rem);" onclick="signOut();" class="btn">Sign Out</button> -->
+</div>
   <!-- <h2 style="font-size: 40px;color: white;margin-left: 35%;"> -->
 <div style="position: relative; top: 3.2rem;">
   <div style="width: 100%; text-align: center; font-size: clamp(1.5rem, 5vw, 4rem); color: white; font-family: Garamond;">
@@ -294,14 +300,12 @@
     <button class="btn1 btn-primary dropdown-toggle" type="button" data-toggle="dropdown" >Select Customer
     <span class="caret"></span></button>
     <ul class="dropdown-menu">
-      <li style="text-transform:capitalize ; text-align:center;"><a href="{{url_for('milkman_dashboard',milkman_id=milkman_id)}}">All customers</a></li>
+      <li style="text-transform:capitalize ; text-align:center;"><a href="{{url_for('milkman_dashboard',milkman_id=milkman_id)}}" style="color: #818181;">All customers</a></li>
       {% for users in user_list %}
       {% set username=users['user'] %}
       {% set address=users['address'] %}
-     
       <li style="text-transform:capitalize ;">
-     
-        <a href="{{url_for('milkman_dashboard_single_user',milkman_id=milkman_id,Social_Media_Name=username,address=address)}}"><p style="text-align:left ;">{{username}}<span style="float:right; ">{{address}}</span></p></a> </li>
+        <a href="{{url_for('milkman_dashboard_single_user',milkman_id=milkman_id,Social_Media_Name=username,address=address)}}" style="color: #818181;"><p style="text-align:left ;">{{username}}<span style="float:right; ">{{address}}</span></p></a> </li>
       {% endfor %}
     </ul>
   </div>
@@ -318,11 +322,13 @@
         {% set user_li=user['user'] %}
         {% set user_ID=user['user_id'] %}
         {% set user_total=user['total_price'] %}
+        {% set user_address=user['address'] %}
         {% set tomo_type_qty=user['tomo_type_qty'] %}
     
           <div class="card bg-primary">
-            <div class="card-body text-center" style="background: #ffc107;border: whitesmoke;border-radius: 30px;height: 42%; padding: 1%;">
-              <p class="card-text" style="color: white; font-size: 29px; text-transform: uppercase">{{user['user']}}</p>
+            <div class="card-body text-center" style="background: #ffc107;border: whitesmoke;border-radius: 30px;height: 42%; padding: 1%; font-weight: bold;">
+              <p class="card-text" style="color: white; font-size: 29px; text-transform: uppercase; margin-bottom: unset;">{{user['user']}}</p>
+              <i class="card-text" id="card-text1" style="color: white; text-transform: capitalize;">{{user_address}}</i>
               <p class="card-text" id="card-text1" style="color: white;">Report Total: {{user_total}}</p>
               {% if tomo_type_qty != [] %}
               {% for items in tomo_type_qty  %}
@@ -332,6 +338,7 @@
               <p class="card-text" id="card-text3" style="color: white;">No data entered by customer <br></p>
               {% endif %}
               <button id="View_Report" onclick="view_report('{{user_ID}}','{{user_li}}')">View Report</button>
+              <br>
             </div> 
             <p></p>
           </div>
@@ -345,11 +352,13 @@
         {% set user_li=single_user_list[0]['user'] %}
         {% set user_ID=single_user_list[0]['user_id'] %}
         {% set user_total=single_user_list[0]['total_price'] %}
+        {% set user_address=user['address'] %}
         {% set tomo_type_qty=single_user_list[0]['tomo_type_qty'] %}
     
           <div class="card bg-primary"  >
-            <div class="card-body text-center" style="background: #ffc107;border: whitesmoke;border-radius: 30px;height: 42%; padding: 1%;">
-              <p class="card-text" style="color: white; font-size: 29px; text-transform: uppercase">{{user_li}}</p>
+            <div class="card-body text-center" style="background: #ffc107;border: whitesmoke;border-radius: 30px;height: 42%; padding: 1%; font-weight: bold;">
+              <p class="card-text" style="color: white; font-size: 29px; text-transform: uppercase; margin-bottom: unset;">{{user_li}}</p>
+              <i class="card-text" id="card-text1" style="color: white; text-transform: capitalize;">{{user_address}}</i>
               <p class="card-text" id="card-text1" style="color: white;">Report Total: {{user_total}}</p>
               {% if tomo_type_qty != [] %}
               {% for items in tomo_type_qty  %}
@@ -378,13 +387,7 @@
     
     <br><br>
 
-      <div id="userDetails">
-        <div id="usrname">{{milkman_store}}</div>
-        <div style="text-align: center;">
-          <button style="width: auto; font-size: clamp(0.75rem, 3vw, 2rem);" onclick="signOut();" class="btn">Sign Out</button>
-        </div>
-        <!-- <button style="width: auto; font-size: clamp(0.75rem, 3vw, 2rem);" onclick="signOut();" class="btn">Sign Out</button> -->
-      </div>
+      
   
   <script>
   function signOut() {
