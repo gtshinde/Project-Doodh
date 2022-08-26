@@ -174,7 +174,7 @@ table.Tbl{
   border: 5px solid white;
   border-radius: 6px;
   top: clamp(3.5rem, 18vw, 9rem); 
-  right: 5%;
+  right: 1%;
 }
 /* the below is for the tooltip which is not aligned correctly */
 /* #userDetails::after{
