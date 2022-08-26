@@ -13,7 +13,7 @@
     border-block-color: white;
     background: #fffdf4;
     /* border: double; */
-    color: black;
+    color: #818181;
     /* padding-block: 5px 5px; */
   }
   .fa-calendar, .fa-arrow-left {
@@ -22,21 +22,58 @@
   }
   .fa-inverse {
     color: #262626;
-}
-.fa-stack :hover{
-  color: #FFD700
-}
-#box{
-  border: solid #f5d00c 4px;
-  width: 64%;
-  background-color: white;
-}
-.parameter_label{
-  color: black;
-}
-#totalBillAtAGlance{
-  color: black;
-}
+  }
+  .fa-stack :hover{
+    color: #FFD700
+  }
+  #fa-arrow-left_c :hover{
+    color:#FFD700;
+  }
+  .sidenav_months{
+    /* width: 208px; */
+    margin-left: 3.3%;
+    border-radius: 30px;
+    overflow-x: hidden;
+    z-index: 5;
+    top: clamp(11.5rem, 45vw, 50rem);
+    background: #f9f5f4;
+    border: solid black 0.5px;
+  }
+  #box{
+    border: solid #f5d00c 4px;
+    width: 64%;
+    background-color: white;
+  }
+  .parameter_label{
+    color: #818181;
+  }
+  #totalBillAtAGlance{
+    color: #818181;
+  }
+  #userDetails{
+        position: absolute;
+        z-index: 2;
+        background-color: white;
+        /* margin-left: 60%; */
+        border: 5px solid white;
+        border-radius: 6px;
+        top: clamp(5.7rem, 25vw, 8.75rem); 
+        right: 1%;
+  }
+  .sidenav_months a:hover{
+    color: #5f5f5f;
+    font-weight: bold;
+  }
+  @media screen and (max-width: 329px) {
+    .sidenav_months{
+      top: clamp(13.5rem, 30vw, 70rem);
+    }
+  }
+  @media screen and (min-width: 730px) {
+    .sidenav_months{
+      top: clamp(17rem, 29vw, 19rem);
+    }
+  }
 </style>
 {% endblock %}
 
@@ -44,19 +81,24 @@
 <div style="width: 100%; text-align: center; font-size: clamp(1.5rem, 5vw, 4rem); color: white;">
     <strong style="text-transform: capitalize;">{{user}}'s {{month_string}} Milk Report  </strong>
 </div>
-<span class="fa-stack fa-lg"  onclick="months()" style="position: fixed; z-index: 5;">
-  <i class="fa fa-circle fa-stack-2x"></i>
-  <i class="fa fa-calendar fa-stack-1x fa-inverse"></i>
-  <i class="fa fa-arrow-left fa-stack-1x fa-inverse" style="display: none;"></i>
-</span>
-<div id="mySidenav" class="sidenav_months" style="width: 0px; margin-left: 4%; border-radius:44px; z-index: 5;">
-  <marquee style="font-size: 16px;" behavior="scroll" direction="left"><strong>Please note that the data only can be viewed for past six months...</strong> </marquee>
+<div id="mySidenav" class="sidenav_months" style="width: 0px; display: none;" >
   <br>
+  <table>
+    <tr>
+      <td rowspan="6"> 
+        <!-- for rowspan: by trial and error, we noticed it shuold be number of months displayed + 1 (5+1 = 6) -->
+        <i onclick="months()" class="fa-solid fa-circle-arrow-left" id="fa-arrow-left_c" style="color: #818181; font-size:clamp(1rem, 8vw, 4rem); cursor:pointer; display: none;"></i>
+      </td>
+    </tr>
+    {% for month_year in past_months_list %}
+    <tr>
+      <td>
+        <a href="{{url_for('report_month_year',user_type='M',user_id=user_id ,month=(month_year[0]), year=(month_year[1]))}}">{{month_year[2]}} {{month_year[1]}}</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
   <br>
-  {% for month_year in past_months_list %}
-  <a href="{{url_for('report_month_year',user_type=user_type,user_id=user_id ,month=(month_year[0]), year=(month_year[1]))}}">{{month_year[2]}} {{month_year[1]}}</a>
-  <br/>
-  {% endfor %}
 </div>
 
 <div class="row">
@@ -89,10 +131,13 @@
 </div>
 
 <!-- <p type="text" name="total" id="total" style="position: absolute; margin-left: 73%;" ><strong>{{ total_price }}</strong></p> -->
-<br><br>
+<br>
+<span onclick="months()" style="position: fixed; z-index: 5; left: 1rem;">
+  <i class="fa-solid fa-calendar-days" id="fa-calendar_c" style="color: white; font-size: clamp(1rem, 8vw, 4rem); cursor:pointer;"></i>
+</span>
+<br>
 <!-- The below code was added to set the from and to dates to the values which user had selected before clicking on GO -->
 {% if submitted=="Yes" %}
-{{ from_date }}
   <script>
     document.getElementById("fromDate").value='{{ from_date }}';
     document.getElementById("toDate").value='{{ to_date }}';
@@ -121,8 +166,12 @@
     {% endif %}  
   {% endfor %}
   <tr>
-    <td colspan="3" style="text-align: center; font-size: clamp(0.75rem, 3.75vw, 2.25rem);"> <strong>TOTAL BILL AMOUNT</strong> </td>
-    <td style="font-size: clamp(0.75rem, 3.75vw, 2.25rem);"><strong>&#8377;{{ total_price }} </strong>  </td>
+    <td colspan="3" style="text-align: center; font-size: clamp(1rem, 5vw, 2rem); color: #818181;">
+      <strong>TOTAL BILL AMOUNT</strong>
+    </td>
+    <td style="font-size: clamp(1rem, 5vw, 2rem); color: #818181;">
+      <strong>&#8377;{{ total_price }} </strong> 
+    </td>
   </tr>  
 </table>
 <script>
@@ -149,19 +198,22 @@
       }
   function months(){
     console.log('inside months')
-    var arrow=document.getElementsByClassName("fa-arrow-left")[0];
-    var calendar=document.getElementsByClassName("fa-calendar")[0];
+    // var arrow=document.getElementsByClassName("fa-arrow-left_c")[0];
+    var arrow=document.getElementById("fa-arrow-left_c");
+    var calendar=document.getElementById("fa-calendar_c");
     console.log('arrow:',arrow);
     console.log('calendar:',calendar);
     if (arrow.style.display=="none")
     {
-      document.getElementsByClassName("sidenav_months")[0].style.width="196px";
+      document.getElementsByClassName("sidenav_months")[0].style.width="clamp(9rem, 40vw, 18rem)";
+      document.getElementsByClassName("sidenav_months")[0].style.display="block";
       arrow.style.display="block";
       calendar.style.display="none";
     }
     else if (calendar.style.display=="none")
     {
       document.getElementsByClassName("sidenav_months")[0].style.width="0px";
+      document.getElementsByClassName("sidenav_months")[0].style.display="none";
       arrow.style.display="none";
       calendar.style.display="block";     
     }
