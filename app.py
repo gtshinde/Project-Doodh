@@ -139,7 +139,7 @@ def report_month_year(user_type,user_id,month, year):
         month_string = calendar.month_name[int(month)]
         past_months_list = []
         todays_date = date.today()
-        for i in range(0, 6):
+        for i in range(0, 5):
             offset_date = todays_date - DateOffset(months=i)
             past_months_list.append([str(offset_date.month), str(offset_date.year), calendar.month_name[offset_date.month]])
         # past_month_list = [ [3, 2022, March], [2, 2022, February], [1, 2022, January], ... ] considering current_date is in APRIL 2022
