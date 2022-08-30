@@ -244,25 +244,31 @@
     }
   </style>
   <!-- when 2 user cards are displayed in the dashboard take 50-50% width of the pg -->
-{% elif user_count == 2 %}
+  {% elif user_count == 2 %}  
   <style>
     .card{
-      width: 50%;
+      width: 45%;
       display: inline-block;
+    }
+    @media screen and (max-width:426px){
+      .card{
+        width: 100%;
+        display: inline-block;
+      }
     }
   </style>
 {% else %}
 <style>
 
-@media screen and (max-width:376px)  {
+/* @media screen and (max-width:376px)  {
   .card{
     width: 45%;
     display: inline-block;
   }
-}
-@media screen and (max-width:320px){
+} */
+@media screen and (max-width:426px){
   .card{
-    width: 90%;
+    width: 100%;
     display: inline-block;
   }
 }
@@ -313,13 +319,10 @@
   <br>
 
   <div class="container" style="background-color: black; opacity: 70%; border-radius: 13px; border: 2px solid white; padding: 5%;">
-   
-
   {% if single_user_list == '' %}
         {% for user in user_list %} 
-       
-      
-        {% set user_li=user['user'] %}
+
+        {% set user_li=user['user'].split()[0] %}
         {% set user_ID=user['user_id'] %}
         {% set user_total=user['total_price'] %}
         {% set user_address=user['address'] %}
@@ -327,7 +330,7 @@
     
           <div class="card bg-primary">
             <div class="card-body text-center" style="background: #ffc107;border: whitesmoke;border-radius: 30px;height: 42%; padding: 1%; font-weight: bold;">
-              <p class="card-text" style="color: white; font-size: 29px; text-transform: uppercase; margin-bottom: unset;">{{user['user']}}</p>
+              <p class="card-text" style="color: white; font-size: 29px; text-transform: uppercase; margin-bottom: unset;">{{user_li[:12]}}</p>
               <i class="card-text" id="card-text1" style="color: white; text-transform: capitalize;">{{user_address}}</i>
               <p class="card-text" id="card-text1" style="color: white;">Report Total: {{user_total}}</p>
               {% if tomo_type_qty != [] %}
@@ -336,15 +339,16 @@
               {% endfor %}
               {% else %}
               <p class="card-text" id="card-text3" style="color: white;">No data entered by customer <br></p>
+              <p class="card-text" style="color: white;">  <br></p>
+              <!-- if there are more than two items, then this will not work -->
+              <!-- this above 2 p tags are written considering that there will be only 2 - CM, BM items. -->
               {% endif %}
               <button id="View_Report" onclick="view_report('{{user_ID}}','{{user_li}}')">View Report</button>
               <br>
             </div> 
             <p></p>
           </div>
-         
-          
-        
+
         {% endfor %}  
   <!-- when milkman wants to view specific customer details -->
  {% else %}
@@ -352,7 +356,7 @@
         {% set user_li=single_user_list[0]['user'] %}
         {% set user_ID=single_user_list[0]['user_id'] %}
         {% set user_total=single_user_list[0]['total_price'] %}
-        {% set user_address=user['address'] %}
+        {% set user_address=single_user_list[0]['address'] %}
         {% set tomo_type_qty=single_user_list[0]['tomo_type_qty'] %}
     
           <div class="card bg-primary"  >
@@ -366,6 +370,9 @@
               {% endfor %}
               {% else %}
               <p class="card-text" id="card-text3" style="color: white;">No data entered by customer <br></p>
+              <p class="card-text" style="color: white;">  <br></p>
+              <!-- if there are more than two items, then this will not work -->
+              <!-- this above 2 p tags are written considering that there will be only 2 - CM, BM items. -->
               {% endif %}
               <button id="View_Report" onclick="view_report('{{user_ID}}','{{user_li}}')">View Report</button>
             </div> 
