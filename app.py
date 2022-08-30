@@ -573,7 +573,8 @@ def milkman_dashboard_single_user(milkman_id,Social_Media_Name,address):
         #we need the single_user_list to display the customer searched by milkman
         user_count,single_user_list=connection.milkman_dashboard_single_user_logic(milkman_id,Social_Media_Name,address)
         print('in server user_count:',user_count)
-        print('server: printing the single user list-',single_user_list)
+        print('server: printing the single user list:')
+        pprint(single_user_list)
         return render_template('milkman_dashboard.html',user_email='',user_id='',user_count=user_count,user_list=user_list,milkman_id=milkman_id,milkman_store=milkman_store,single_user_list=single_user_list)
     else:
         return render_template('url_not_found.html')
