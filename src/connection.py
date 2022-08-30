@@ -781,7 +781,7 @@ def milkman_dashboard_single_user_logic(milkman_id,Social_Media_Name,address):
                     print('calling the report logic from milkmandashboard')
                     report_list,total_price,tomo_type_qty =report_logic(str(year)+"-"+str(month)+"-01", str(todays_date), user_id)
                     if(users_list[i] is None):
-                        users_list[i] = {"user": user_name,"user_id":user_id, "report": report_list, "total_price": total_price, "tomo_type_qty":tomo_type_qty}
+                        users_list[i] = {"user": user_name,"user_id":user_id, "report": report_list, "total_price": total_price, "tomo_type_qty":tomo_type_qty, "address":address}
                         i=i+1
 
                     print('user is:',user)
