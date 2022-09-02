@@ -73,6 +73,11 @@ def create(user_id):
             return render_template("create.html", submitted=submitted, is_admin=admin,user_email=user_email,user_id=user_id,cm=cm,bm=bm,form_data=form_data,user=user_name)
         submitted = "No"
         return render_template("create.html",submitted=submitted,is_admin=admin,user_email=user_email,user_id=user_id,user=user_name)
+        # return redirect(url_for("redirect_milkman",user_id=user_id)) --> this will not work
+        # we need to have an if condition here
+            # in order to check if we need to redirect to default or create
+        # for modal pass a new variable - like redirect_default
+            #  when we click outside, it should still redirect to the default page.
     else:
         return render_template("url_not_found.html") 
 
@@ -448,6 +453,9 @@ def milkman_selection(user_id):
 # This route is used when we skip milkman selection
 # This route is also used whenever we need to check if user has added default milk requirements, and based on this we can correctly
 # redirect the user to either creaate or default page upon signin
+# This route is also used when no default milkl data is entered by user 
+    # --> and user goes to change page --> user has to be directed to enter default qty first.
+    # --> Change qty should not be registered until default is provided
 @app.route('/skip_milkman/<user_id>')
 def redirect_milkman(user_id):
     #function to check if user has entered any default details when they login 1st time, if not then  re-direct them to the default pg again            
