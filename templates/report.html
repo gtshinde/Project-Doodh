@@ -93,7 +93,7 @@
     {% for month_year in past_months_list %}
     <tr>
       <td>
-        <a href="{{url_for('report_month_year',user_type='M',user_id=user_id ,month=(month_year[0]), year=(month_year[1]))}}">{{month_year[2]}} {{month_year[1]}}</a>
+        <a href="{{url_for('report_month_year',user_type=user_type,user_id=user_id ,month=(month_year[0]), year=(month_year[1]))}}">{{month_year[2]}} {{month_year[1]}}</a>
       </td>
     </tr>
     {% endfor %}
