@@ -46,6 +46,16 @@ def create(user_id):
     print('user admin status',admin)
     if (signin):
         if (request.method == "POST"):
+             #function to check if user has entered any default details when they login 1st time, if not then  re-direct them to the default pg again            
+            default_details_count=connection.check_default_details(user_id) 
+            print('Inside Create page: user has entered default details? default_details_count:',default_details_count)
+            if (default_details_count==0):
+                # return redirect(url_for("default",user_id=user_id))
+                redirect_default="Yes"
+                return render_template("create.html",submitted="No",is_admin=admin,user_email=user_email,user_id=user_id,user=user_name,redirect_default=redirect_default)  
+            else:
+                redirect_default="No"
+           
             form_data=request.form 
         #   if (display_date=='True'):
                  #request.form gets all the form data and returns it as a dictionary of key value pairs
@@ -72,14 +82,24 @@ def create(user_id):
             submitted = "Yes"
             return render_template("create.html", submitted=submitted, is_admin=admin,user_email=user_email,user_id=user_id,cm=cm,bm=bm,form_data=form_data,user=user_name)
         submitted = "No"
-        return render_template("create.html",submitted=submitted,is_admin=admin,user_email=user_email,user_id=user_id,user=user_name)
+        # return render_template("create.html",submitted=submitted,is_admin=admin,user_email=user_email,user_id=user_id,user=user_name)
         # return redirect(url_for("redirect_milkman",user_id=user_id)) --> this will not work
         # we need to have an if condition here
             # in order to check if we need to redirect to default or create
         # for modal pass a new variable - like redirect_default
             #  when we click outside, it should still redirect to the default page.
+        
+        #function to check if user has entered any default details when they login 1st time, if not then  re-direct them to the default pg again            
+        default_details_count=connection.check_default_details(user_id) 
+        print('Inside Create page: user has entered default details? default_details_count:',default_details_count)
+        if (default_details_count==0):
+            # return redirect(url_for("default",user_id=user_id))
+            redirect_default="Yes"
+        else:
+            redirect_default="No"
+        return render_template("create.html",submitted=submitted,is_admin=admin,user_email=user_email,user_id=user_id,user=user_name,redirect_default=redirect_default)  
     else:
-        return render_template("url_not_found.html") 
+            return render_template("url_not_found.html") 
 
 @app.route("/report/<user_id>")
 def report(user_id):

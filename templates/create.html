@@ -17,9 +17,30 @@
   .alignh{
     height: 5%;
   }
+  #redirect_default_modal{
+    text-align: center;
+    width: 80%;
+    height: 40%;
+    font-size: clamp(1.5rem,4vw,4rem);
+  }
 </style>
 {% endblock %}
 {% block content %}
+{% if redirect_default=="Yes" %}
+<div  id="myModal" class="modal">
+	<div class="modal-content" id="redirect_default_modal">
+		<span class="close"></span> 
+		<strong>Sorry, you have not entered any default data!</strong>
+    <p>You can only change the milk quantity, when you have some default quantity</p>
+		
+		<p>You will be redirected to default milk page, click on default button below to continue further</p>
+		<div style="width: auto;">
+			<button onclick="func_redirect_default()" class="btn" style="color:black; background-color:white; font-weight: bold; font-family: initial;width: 40%;">Default</button>
+		</div>
+
+	</div>
+</div>
+{% endif %}
 
 {% if submitted=="Yes" %}
 <div  id="myModal" class="modal">
@@ -159,6 +180,16 @@ function minmaxdate() {
         var fromDate=document.getElementById("fromDate").value;
         document.getElementById("toDate").value = fromDate;
         // toDate.setAttribute("value",fromDate);  --this should hv worked, but it did not
+      }
+
+      function func_redirect_default()
+      {
+        var user_id='{{user_id}}'
+       console.log('user id: ',user_id)
+        location.replace("https://project-doodh.herokuapp.com/default/"+user_id);
+        // location.replace("http://localhost:5000/default/"+user_id);
+        
+     
       }
   </script>
 {% endblock %}
