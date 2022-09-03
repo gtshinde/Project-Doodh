@@ -101,6 +101,7 @@ def create(user_id):
     else:
             return render_template("url_not_found.html") 
 
+# Whenever a user has logged in, it will come to this route
 @app.route("/report/<user_id>")
 def report(user_id):
     # print('FRomDate is:',FromDate)
