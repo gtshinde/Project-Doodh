@@ -415,7 +415,7 @@ def default_report_logic(from_date, to_date, user_id):
                                         FROM items i 
                                         WHERE TO_DATE('"""+str((from_date+datetime.timedelta(days=day)))+"""','YYYY-MM-DD') 
                                             BETWEEN i.Effective_From AND COALESCE(i.Effective_To, TO_DATE('5874897-01-01','YYYY-MM-DD'))
-                                            AND i.item_id = dd.item_id)
+                                            AND i.item_type_id = dd.item_id)
                                 FROM default_details dd
                                 WHERE TO_DATE('"""+str((from_date+datetime.timedelta(days=day)))+"""','YYYY-MM-DD') between dd.Effective_From AND COALESCE(dd.Effective_To, TO_DATE('5874897-01-01','YYYY-MM-DD')) 
                                     AND dd.user_id = '"""+str(user_id)+"""';"""
@@ -468,7 +468,7 @@ def change_report_logic(from_date, to_date, user_id, report_list):
                                         FROM items i 
                                         WHERE TO_DATE('"""+str((from_date+datetime.timedelta(days=day)))+"""','YYYY-MM-DD') 
                                             BETWEEN i.Effective_From AND COALESCE(i.Effective_To, TO_DATE('5874897-01-01','YYYY-MM-DD'))
-                                            AND i.item_id = cd.item_id)
+                                            AND i.item_type_id = cd.item_id)
                             FROM change_details cd
                             WHERE cd.user_id = '"""+str(user_id)+"""'
                                 AND TO_DATE('"""+str((from_date+datetime.timedelta(days=day)))+"""','YYYY-MM-DD')
