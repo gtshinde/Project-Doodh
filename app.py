@@ -17,7 +17,7 @@ from pandas import DateOffset, to_datetime
 
 is_admin = False
 
-first_usersigin = [None]*53687091  #global variable issue won't come for this var coz the array will be updated based
+first_usersigin = [None]*5000  #global variable issue won't come for this var coz the array will be updated based
                                    # on user_id as the position so each user will have their own values,max postns that array can hold are 536870912 but it's giving memory error for this val
 
 app = Flask(__name__, template_folder='templates', static_folder="static")
