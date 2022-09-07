@@ -22,6 +22,10 @@ first_usersigin = [None]*5000  #global variable issue won't come for this var co
 
 app = Flask(__name__, template_folder='templates', static_folder="static")
 
+@app.route("/landing-page")
+def landing_page():
+    return render_template("landing_page.html")
+
 @app.route("/")
 def redirect_to_create():
     return redirect(url_for("signin"))
