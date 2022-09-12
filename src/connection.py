@@ -527,6 +527,23 @@ def check_default_details(user_id): #function to check if user has entered any d
                 raise e
     return count
 
+def check_default_details_with_dates(user_id, from_date):
+    conn = connect()
+    with conn:
+        with conn.cursor() as cur:
+            sql_txt="""SELECT count(default_id) 
+                        FROM DEFAULT_DETAILS 
+                        WHERE USER_ID='"""+str(user_id)+"""'
+                        AND TO_DATE('"""+str(from_date)+"""', 'YYYY-MM-DD') 
+                            BETWEEN effective_from AND COALESCE(effective_to, TO_DATE('5874897-01-01','YYYY-MM-DD'));"""
+            try:
+                cur.execute(sql_txt)
+                count=cur.fetchone()[0]
+            except Exception as e:
+                print(e)
+                raise e
+    return count
+
 def get_milkman_area_city(area,city):
     milkman_list=[]
     conn=connect()
