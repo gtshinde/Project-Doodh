@@ -157,8 +157,11 @@ window.onclick = function(event) {
     
     let d = new Date()
     // d will have value like - "Wed Apr 20 2022 12:58:53 GMT+0530 (India Standard Time)"
-    let today = d.toISOString().substr(0, 10);
-    document.getElementById("effectiveFrom").value = today;
+    let today = d.toISOString().substr(0, 8);
+    // d.toISOString() --> 2022-09-12T07:15:09.998Z 
+    // we take substring from 0 to 8 --> 2022-09-
+    let firstDayOfMonth = today + "01"
+    document.getElementById("effectiveFrom").value = firstDayOfMonth;
    
 }
 </script>
