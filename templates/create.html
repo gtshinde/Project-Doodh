@@ -72,7 +72,7 @@
 {% endif %}
 
   <div id="box" class="box">
-    <strong>Change Milk Quantity for Past/Future date</strong>
+    <strong>Change Milk Quantity for Past/Future Date</strong>
   </div>
 <br>
 <br>
@@ -92,7 +92,7 @@
   </tr>
   <tr>
     <th class="alignh">To Date</th>
-    <th><input type="date" name="toDate" id="toDate" required="required"></th>
+    <th><input type="date" name="toDate" id="toDate" required="required" onchange="dateValidations()"></th>
   </tr>
     <tr>
       <th class="alignh">Cow Milk</th>
@@ -187,6 +187,17 @@ function minmaxdate() {
         document.getElementById("toDate").value = fromDate;
         // toDate.setAttribute("value",fromDate);  --this should hv worked, but it did not
       }
+      function dateValidations(){
+        var toDate = document.getElementById("toDate").value;
+        var fromDate = document.getElementById("fromDate").value;
+        // console.log("Inside dateValidations()");
+        // console.log("To Date "+toDate);
+        // console.log("From Date "+fromDate);
+        if (toDate < fromDate) {
+          alert("'To Date' cannot be before 'From Date'!");
+          document.getElementById("toDate").value = fromDate;
+        }
+      }
 
       function func_redirect_default()
       {
@@ -194,8 +205,6 @@ function minmaxdate() {
        console.log('user id: ',user_id)
         location.replace("https://project-doodh.herokuapp.com/default/"+user_id);
         // location.replace("http://localhost:5000/default/"+user_id);
-        
-     
       }
   </script>
 {% endblock %}
