@@ -19,11 +19,13 @@ def connect():
                 user='postgres',
                 password='postgres')
         else:
+            # PGPASSWORD=rywUZaMNPlUjH87qIv3a psql -h containers-us-west-114.railway.app -U postgres -p 6995 -d railway
             conn = psycopg2.connect(
-                host='ec2-54-157-79-121.compute-1.amazonaws.com',
-                database='d7rv438vcslm76',
-                user='sbzrtvknzgzfwa',
-                password='c373dc5b72de70f153397c7c5d658ca8a3fa167712670f75dbc473dab337d4c4')            
+                host='containers-us-west-114.railway.app',
+                dbanme='railway',
+                user='postgres',
+                password='rywUZaMNPlUjH87qIv3a',
+                port='6995')            
         return conn
     except psycopg2.Error as e:
         print("Error in connecting to PostgreSQL database")
